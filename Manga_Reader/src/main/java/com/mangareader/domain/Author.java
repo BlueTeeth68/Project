@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class Author {
     private String name;
 
     @Column(name = "created_date", updatable = false)
-    private Instant createdDate = Instant.now();
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToMany(mappedBy = "authors")
     private Set<Manga> mangas = new HashSet<>();

@@ -1,11 +1,13 @@
 package com.mangareader.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notification")
@@ -18,6 +20,7 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    @NotBlank
     @Column(columnDefinition = "text")
     private String content;
 
@@ -25,9 +28,9 @@ public class Notification {
     private Boolean isRead = false;
 
     @Column(updatable = false)
-    private Instant date = Instant.now();
+    private LocalDateTime date = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

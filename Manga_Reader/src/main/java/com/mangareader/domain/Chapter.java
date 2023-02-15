@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "chapter")
@@ -21,7 +22,7 @@ public class Chapter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @Column(length = 50, nullable = true)
+    @Column(length = 50)
     private String name;
 
     //need to check that a manga can not have two similar chapter
@@ -30,9 +31,9 @@ public class Chapter {
     private Float chapterNumber;
 
     @Column(name = "created_date", updatable = false)
-    private Instant createdDate = Instant.now();
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "manga_id")
+    @JoinColumn(name = "manga_id", nullable = false)
     private Manga manga;
 }

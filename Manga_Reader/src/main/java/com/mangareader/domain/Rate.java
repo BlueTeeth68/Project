@@ -15,11 +15,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(RateId.class)
 public class Rate {
 
-    @Id
+/*    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long Id;*/
 
     @NotNull
     @Min(0)
@@ -27,10 +28,12 @@ public class Rate {
     @Column(nullable = false)
     private Integer point;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "manga_id", nullable = false)
     private Manga manga;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

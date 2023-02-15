@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reply-comment")
@@ -20,14 +21,14 @@ public class ReplyComment {
     private Long Id;
 
     @NotBlank
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "NVARCHAR(256)")
     private String content;
 
     @Column(name = "is_change", columnDefinition = "bit")
     private Boolean isChange = false;
 
-    @Column(name = "created_date")
-    private Instant createdDate = Instant.now();
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -19,10 +19,10 @@ public class Bookmark {
     private Long Id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "manga_id")
+    @ManyToOne()
+    @JoinColumn(name = "manga_id", nullable = false)
     private Manga manga;
 }

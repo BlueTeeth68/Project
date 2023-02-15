@@ -2,14 +2,11 @@ package com.mangareader.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +15,8 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class User {
 
     @Id
@@ -26,10 +25,9 @@ public class User {
     private Long id;
 
     @NotNull
-    @Email
-    @Size(min = 5, max = 50)
+    @Size(min = 1, max = 50)
     @Column(length = 50, unique = true)
-    private String email;
+    private String username;
 
     @JsonIgnore
     @Size(min = 8, max = 80)
@@ -37,30 +35,33 @@ public class User {
     private String password;
 
     @Size(min = 1, max = 80)
-    @Column(length = 80)
-    private String google_id;
+    @Column(name = "google_id", length = 80)
+    private String googleId;
 
     @Size(min = 1, max = 80)
-    @Column(length = 80)
-    private String facebook_id;
+    @Column(name = "facebook_id", length = 80)
+    private String facebookId;
 
-    //need to set default avatar, not allow to null
-    @Size(max = 80)
-    @Column(nullable = false)
-    private String avatar_url;
+    @Size(max = 50)
+    @Column(name = "display_name", columnDefinition = "NVARCHAR(50)", unique = true)
+    private String displayName;
 
-    @NotNull
+    @Lob
+    @Column()
+    private byte[] avatar;
+
+    /*    @NotNull*/
     @Column(columnDefinition = "bit")
     private Boolean activate = true;
 
-    @Column(updatable = false)
-    private Instant createdDate = Instant.now();
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate = LocalDateTime.now();
 
-    @JsonIgnore
-    @ManyToMany(cascade = CascadeType.PERSIST)
+/*    @JsonIgnore*/
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles = new HashSet<>();
 

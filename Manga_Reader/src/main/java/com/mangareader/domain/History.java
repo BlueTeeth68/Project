@@ -6,12 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "history")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(HistoryId.class)
 public class History {
 
     @Id
@@ -25,5 +27,5 @@ public class History {
     private Chapter chapter;
 
     @Column()
-    private Instant date = Instant.now();
+    private LocalDateTime date = LocalDateTime.now();
 }

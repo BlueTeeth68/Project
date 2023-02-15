@@ -11,17 +11,21 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(KeywordId.class)
 public class Keyword {
 
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    */
 
-    @NotNull
-    @Column(nullable = false/*, unique = true*/)
+    @Id
+    @Column(nullable = false)
     private String name;
 
+    @Id
     @ManyToOne()
-    @JoinColumn(name = "manga_id")
+    @JoinColumn(name = "manga_id", nullable = false)
     private Manga manga;
 }

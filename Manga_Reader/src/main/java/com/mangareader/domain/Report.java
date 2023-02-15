@@ -1,12 +1,13 @@
 package com.mangareader.domain;
 
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "report")
@@ -19,11 +20,12 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "text")
+    @NotBlank
+    @Column(columnDefinition = "NVARCHAR(256)")
     private String reason;
 
-    @Column(updatable = false)
-    private Instant createdDay = Instant.now();
+    @Column(updatable = false, name = "created_date")
+    private LocalDateTime createdDay = LocalDateTime.now();
 
     @Column(columnDefinition = "bit")
     private Boolean status = false;

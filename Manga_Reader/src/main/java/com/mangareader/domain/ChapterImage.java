@@ -19,11 +19,11 @@ public class ChapterImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 0, max = 80)
-    @Column(name = "image_url", length = 80)
-    private String imageUrl;
+    @Lob
+    @Column(name = "image_url")
+    private byte[] imageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "chapter_id")
+    @JoinColumn(name = "chapter_id", nullable = false)
     private Chapter chapter;
 }

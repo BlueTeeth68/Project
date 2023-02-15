@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,19 +27,21 @@ public class Manga {
 
     @NotNull
     @Size(min = 1, max = 256)
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(256)")
     private String name;
 
-    @Size(min = 1, max = 256)
-    @Column(name = "cover_image_url", length = 80)
-    private String coverImageUrl;
+    @Lob
+    @NotNull
+    @Column(name = "cover_image", nullable = false)
+    private String coverImage;
 
     @Min(0)
     @Column(name = "view")
     private Integer view = 0;
 
-    @Column(name = "sumary", columnDefinition = "text")
-    private String sumary;
+    @Size(max = 1000)
+    @Column(name = "summary", columnDefinition = "NVARCHAR(1000)")
+    private String summary;
 
     @Min(0)
     @Max(10)
@@ -49,19 +52,19 @@ public class Manga {
     @Column(name = "total_vote")
     private Integer totalVote = 0;
 
-    @Column(name = "status")
+    @Column(name = "status", columnDefinition = "NVARCHAR(20)")
     private MangaStatus status = MangaStatus.Ongoing;
 
-    @Column(name = "lastest_update")
-    private Instant lastestUpdate;
+    @Column(name = "latest_update")
+    private LocalDateTime latestUpdate = LocalDateTime.now();
 
     @Min(1900)
     @Max(2100)
     @Column(name = "year_of_publication")
     private Integer yearOfPublication;
 
-    @Column(name = "created_Date", updatable = false)
-    private Instant createdDate;
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
