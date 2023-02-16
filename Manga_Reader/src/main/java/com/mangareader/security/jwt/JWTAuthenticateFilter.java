@@ -1,6 +1,5 @@
 package com.mangareader.security.jwt;
 
-import com.mangareader.service.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

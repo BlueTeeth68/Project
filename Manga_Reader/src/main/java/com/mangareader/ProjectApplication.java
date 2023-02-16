@@ -28,9 +28,9 @@ public class ProjectApplication {
         String password = encoder.encode("0000");
 
         return args -> {
-            userService.saveRole(new Role(null, "user", new HashSet<>()));
-            userService.saveRole(new Role(null, "admin", new HashSet<>()));
-            userService.saveRole(new Role(null, "translator", new HashSet<>()));
+            userService.saveRole(new Role(null, "user"));
+            userService.saveRole(new Role(null, "admin"));
+            userService.saveRole(new Role(null, "translator"));
 
             /*userService.saveUser(new User(null, "admin", password, null, null, "admin", null, true, null, new HashSet<>()));
             userService.getRoles();

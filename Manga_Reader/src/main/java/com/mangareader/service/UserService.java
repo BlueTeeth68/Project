@@ -14,9 +14,9 @@ public interface UserService {
 
     public void deleteUser(Long id);
 
-    public User getUser(Long id);
+    public User getUserById(Long id);
 
-    public User getUser(String username);
+    public User getUserByUsername(String username);
 
     public List<User> getUsers();
 
@@ -28,5 +28,8 @@ public interface UserService {
 
     public List<Role> getRoles();
 
+    public Role getRoleById(Long id);
+
+    public Role getRoleByName(String name);
     public User addRoleToUser(String username, String roleName);
 }

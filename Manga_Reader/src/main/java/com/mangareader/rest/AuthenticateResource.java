@@ -1,7 +1,7 @@
 package com.mangareader.rest;
 
 import com.mangareader.service.AuthenticationService;
-import com.mangareader.vm.UsernamePasswordVM;
+import com.mangareader.rest.vm.UsernamePasswordVM;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

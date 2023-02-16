@@ -1,4 +1,4 @@
-package com.mangareader.service;
+package com.mangareader.security.jwt;
 
 import com.mangareader.domain.User;
 import io.jsonwebtoken.Claims;

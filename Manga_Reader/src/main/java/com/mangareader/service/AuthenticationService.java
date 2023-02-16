@@ -1,25 +1,21 @@
 package com.mangareader.service;
 
 import com.mangareader.domain.Role;
-import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
+import com.mangareader.repository.RoleRepository;
 import com.mangareader.repository.UserRepository;
+import com.mangareader.security.jwt.JWTService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
 import com.mangareader.service.error.UsernameAlreadyUsedException;
-import com.mangareader.vm.UsernamePasswordVM;
+import com.mangareader.rest.vm.UsernamePasswordVM;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -28,6 +24,8 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
 
+
+    private final RoleRepository roleRepository;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
@@ -58,9 +56,17 @@ public class AuthenticationService {
         user.setUsername(request.getUsername());
         user.setDisplayName(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        Role role = roleRepository.findByName("admin");
+        user.getRoles().add(role);
         userService.saveUser(user);
-        user = userService.addRoleToUser(user.getUsername(), "admin");
-        var jwtToken = jwtService.generateToken(user);
+
+        /*Map<String, Object> extraClaim = new HashMap<>();
+        List<String> roles = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+        extraClaim.put("Roles", roles);*/
+
+        String jwtToken = jwtService.generateToken(user);
         return jwtToken;
     }
 
@@ -73,22 +79,18 @@ public class AuthenticationService {
                 )
         );
 
-        Map<String, Object> extraClaim = new HashMap<>();
+        /*Map<String, Object> extraClaim = new HashMap<>();
         if (authentication != null) {
-            User user = userService.getUser(request.getUsername());
-
-            /*List<String> roles = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());*/
+            User user = userService.getUser(request.getUsername().toLowerCase());
 
             List<String> roles = user.getRoles().stream()
                     .map(Role::getName)
                     .collect(Collectors.toList());
             extraClaim.put("Roles", roles);
-        }
+        }*/
 
         User user = userRepository.findByUsername(request.getUsername());
-        var jwtToken = jwtService.generateToken(extraClaim, user);
+        var jwtToken = jwtService.generateToken(user);
         return jwtToken;
     }
 

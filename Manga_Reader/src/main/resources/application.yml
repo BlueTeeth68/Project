@@ -8,11 +8,12 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
+    generate-ddl: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
-        auto_quote_keyword: true
+#        auto_quote_keyword: true
 
 ## Hibernate Logging
 logging:

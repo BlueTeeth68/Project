@@ -1,4 +1,4 @@
-package com.mangareader.vm;
+package com.mangareader.rest.vm;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
