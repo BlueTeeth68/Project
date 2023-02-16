@@ -23,14 +23,9 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-
-
     private final RoleRepository roleRepository;
-    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-
     private final JWTService jwtService;
-
     private final AuthenticationManager authenticationManager;
 
     public String register(UsernamePasswordVM request) /*throws Exception */ {
@@ -58,7 +53,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role role = roleRepository.findByName("admin");
         user.getRoles().add(role);
-        userService.saveUser(user);
+        userRepository.save(user);
 
         /*Map<String, Object> extraClaim = new HashMap<>();
         List<String> roles = user.getRoles().stream()
