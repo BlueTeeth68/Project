@@ -137,11 +137,3 @@
 1.15 Change Facebook account
 
 
-
-
-
-- Get user by Id (admin) (Get "/api/admin/users/{id}")
-- Get user by username (admin) (Get "/api/admin/users/{username}")
-- Create user (admin) (Post "api/admin/users")
-- Add/remove role to user (admin)
-- Deactivate/activate user (admin) (Patch "api/admin/users")
