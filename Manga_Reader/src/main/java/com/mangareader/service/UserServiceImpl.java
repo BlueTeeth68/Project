@@ -45,14 +45,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) throws ResourceNotFoundException {
+        log.info("Find user by username: {}", username);
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User " + username + " does not exist."));
     }
 
     @Override
+    public List<User> getUsersByActivateStatus(Boolean activate) throws ResourceNotFoundException {
+        log.info("Find users by activate status {}", activate);
+        List<User> result = userRepository.findByActivate(activate);
+        if (result.isEmpty()) {
+            log.error("User list is empty");
+            throw new ResourceNotFoundException("There are no such user in the database.");
+        }
+        return result;
+    }
+
+    @Override
     public List<User> getUsers() throws ResourceNotFoundException {
+        log.info("Get all user from database....");
         List<User> result = userRepository.findAll();
         if (result.isEmpty()) {
+            log.error("User list is empty");
             throw new ResourceNotFoundException("There are no user in the database.");
         }
         return result;

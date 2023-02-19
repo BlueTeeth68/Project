@@ -2,6 +2,7 @@ package com.mangareader.service;
 
 import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
+import com.mangareader.rest.vm.Token;
 import com.mangareader.security.jwt.JWTService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
@@ -25,7 +26,7 @@ public class AuthenticationService {
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public String register(UsernamePasswordVM request) /*throws Exception */ {
+    public Token register(UsernamePasswordVM request) /*throws Exception */ {
 
         if (request.getUsername() == null) {
             log.error("Username is null.");
@@ -52,10 +53,10 @@ public class AuthenticationService {
         userService.saveUser(user);
 
         String jwtToken = jwtService.generateToken(user);
-        return jwtToken;
+        return new Token(jwtToken);
     }
 
-    public String authenticate(UsernamePasswordVM request) {
+    public Token authenticate(UsernamePasswordVM request) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -66,7 +67,7 @@ public class AuthenticationService {
 
         User user = userService.getUserByUsername(request.getUsername());
         var jwtToken = jwtService.generateToken(user);
-        return jwtToken;
+        return new Token(jwtToken);
     }
 
 }

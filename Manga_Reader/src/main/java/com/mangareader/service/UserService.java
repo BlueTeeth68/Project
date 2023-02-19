@@ -19,6 +19,8 @@ public interface UserService {
 
     public User getUserByUsername(String username) throws ResourceNotFoundException;
 
+    public List<User> getUsersByActivateStatus(Boolean activate) throws ResourceNotFoundException;
+
     public List<User> getUsers() throws ResourceNotFoundException;
 
     public Boolean existsByUsername(String username);
