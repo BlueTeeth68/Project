@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 @Configuration
 @EnableWebSecurity
@@ -25,21 +26,21 @@ public class SecurityConfig {
         http
                 //disable csrf
                 .csrf().disable()
-                //permit all request from /api/auth/
-                .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**")
-                .permitAll()
-                // any request must be authenticated
-                .anyRequest()
-                .authenticated()
-                .and()
+                //add our custom filter before UsernamePasswordAuthenticationFilter
+//                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticateFilter, UsernamePasswordAuthenticationFilter.class)
                 //set session to stateless
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                //add our custom filter before UsernamePasswordAuthenticationFilter
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticateFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests()
+                //permit all request from /api/auth/
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                // any request must be authenticated
+                .anyRequest()
+                .authenticated()
+        ;
 
         return http.build();
     }

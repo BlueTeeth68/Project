@@ -1,6 +1,5 @@
 package com.mangareader.rest;
 
-import com.mangareader.domain.Role;
 import com.mangareader.domain.User;
 import com.mangareader.repository.UserRepository;
 import com.mangareader.service.UserService;

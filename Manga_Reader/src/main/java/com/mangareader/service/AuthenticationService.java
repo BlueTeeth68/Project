@@ -1,9 +1,7 @@
 package com.mangareader.service;
 
-import com.mangareader.domain.Role;
+import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
-import com.mangareader.repository.RoleRepository;
-import com.mangareader.repository.UserRepository;
 import com.mangareader.security.jwt.JWTService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
@@ -22,8 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -42,7 +39,7 @@ public class AuthenticationService {
             log.error("Password must have at least 4 character.");
             throw new InvalidPasswordException("Password must have at least 4 character.");
         }
-        if (userRepository.existsByUsername(request.getUsername().toLowerCase())) {
+        if (userService.existsByUsername(request.getUsername().toLowerCase())) {
             log.error("Username {} has been used", request.getUsername());
             throw new UsernameAlreadyUsedException();
         }
@@ -51,15 +48,8 @@ public class AuthenticationService {
         user.setUsername(request.getUsername());
         user.setDisplayName(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        Role role = roleRepository.findByName("admin");
-        user.getRoles().add(role);
-        userRepository.save(user);
-
-        /*Map<String, Object> extraClaim = new HashMap<>();
-        List<String> roles = user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toList());
-        extraClaim.put("Roles", roles);*/
+        user.setRole(RoleName.USER.toString());
+        userService.saveUser(user);
 
         String jwtToken = jwtService.generateToken(user);
         return jwtToken;
@@ -74,17 +64,7 @@ public class AuthenticationService {
                 )
         );
 
-        /*Map<String, Object> extraClaim = new HashMap<>();
-        if (authentication != null) {
-            User user = userService.getUser(request.getUsername().toLowerCase());
-
-            List<String> roles = user.getRoles().stream()
-                    .map(Role::getName)
-                    .collect(Collectors.toList());
-            extraClaim.put("Roles", roles);
-        }*/
-
-        User user = userRepository.findByUsername(request.getUsername());
+        User user = userService.getUserByUsername(request.getUsername());
         var jwtToken = jwtService.generateToken(user);
         return jwtToken;
     }

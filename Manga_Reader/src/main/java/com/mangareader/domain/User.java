@@ -57,12 +57,15 @@ public class User {
     private LocalDateTime createdDate = LocalDateTime.now();
 
     /*    @JsonIgnore*/
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JsonIgnoreProperties(value = {"id"}, allowSetters = true)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    private Set<Role> roles = new HashSet<>();
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JsonIgnoreProperties(value = {"id"}, allowSetters = true)
+//    @JoinTable(name = "user_role",
+//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+//    )
+//    private Set<Role> roles = new HashSet<>();
+
+    @Column(name = "role", columnDefinition = "VARCHAR(20)", nullable = false)
+    private String role;
 
 }

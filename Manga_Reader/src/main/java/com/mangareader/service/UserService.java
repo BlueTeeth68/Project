@@ -1,10 +1,11 @@
 package com.mangareader.service;
 
-import com.mangareader.domain.Role;
+import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
-import org.springframework.stereotype.Service;
+import com.mangareader.exception.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
@@ -14,22 +15,14 @@ public interface UserService {
 
     public void deleteUser(Long id);
 
-    public User getUserById(Long id);
+    public User getUserById(Long id) throws ResourceNotFoundException;
 
-    public User getUserByUsername(String username);
+    public User getUserByUsername(String username) throws ResourceNotFoundException;
 
-    public List<User> getUsers();
+    public List<User> getUsers() throws ResourceNotFoundException;
 
-    public Role saveRole(Role role);
+    public Boolean existsByUsername(String username);
 
-    public Role updateRole(Role role);
+    public User changeUserRole(Long id, RoleName roleName);
 
-    public void deleteRole(Long id);
-
-    public List<Role> getRoles();
-
-    public Role getRoleById(Long id);
-
-    public Role getRoleByName(String name);
-    public User addRoleToUser(String username, String roleName);
 }

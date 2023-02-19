@@ -1,18 +1,13 @@
 package com.mangareader;
 
-import com.mangareader.domain.Role;
+import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 
 @SpringBootApplication
 public class ProjectApplication {
@@ -23,20 +18,32 @@ public class ProjectApplication {
 
     @Bean
     CommandLineRunner run(UserService userService) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        String password = encoder.encode("0000");
+        String password = passwordEncoder.encode("0000");
 
         return args -> {
-            userService.saveRole(new Role(null, "user"));
-            userService.saveRole(new Role(null, "admin"));
-            userService.saveRole(new Role(null, "translator"));
+//            userService.saveRole(new Role(null, "USER"));
+//            userService.saveRole(new Role(null, "TRANSLATOR"));
+//            userService.saveRole(new Role(null, "ADMIN"));
 
             /*userService.saveUser(new User(null, "admin", password, null, null, "admin", null, true, null, new HashSet<>()));
             userService.getRoles();
 
             userService.addRoleToUser("admin", "user");
             userService.addRoleToUser("admin", "admin");*/
+
+            User user = new User();
+            user.setUsername("SystemAdmin");
+            user.setDisplayName("System Admin");
+            user.setPassword(password);
+
+            /*Role roleAdmin = userService.getRoleByName("ADMIN");
+            Role roleUser = userService.getRoleByName("USER");
+            user.getRoles().add(roleUser);
+            user.getRoles().add(roleAdmin);*/
+            user.setRole(RoleName.ADMIN.toString());
+            userService.saveUser(user);
         };
     }
 

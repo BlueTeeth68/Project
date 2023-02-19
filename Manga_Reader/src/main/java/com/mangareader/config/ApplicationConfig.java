@@ -1,13 +1,9 @@
 package com.mangareader.config;
 
-import com.mangareader.domain.Role;
 import com.mangareader.domain.User;
 import com.mangareader.repository.UserRepository;
-import com.mangareader.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 @Configuration
 @RequiredArgsConstructor
@@ -42,7 +37,7 @@ public class ApplicationConfig {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                User user = userRepository.findByUsername(username);
+                User user = userRepository.findByUsername(username).orElse(null);
                 if (user == null) {
                     log.error("User {} not found.", username);
                     throw new UsernameNotFoundException("User " + username + " does not exist");
@@ -51,11 +46,8 @@ public class ApplicationConfig {
                 }
 
                 Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                user.getRoles().forEach(
-                        role -> {
-                            authorities.add(new SimpleGrantedAuthority(role.getName()));
-                        }
-                );
+
+                authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
                 return new org.springframework.security.core.userdetails.User(
                         user.getUsername(),
@@ -78,7 +70,6 @@ public class ApplicationConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
 
 
 }
