@@ -1,13 +1,13 @@
-[# Read manga online website
+_# Read manga online website
 
 # Function list:
 
 - Register by Email, facebook or username and password
 - Reset password
-- Update profile (display name, avatar)
+- Update profile (display name, avatar, password)
 - Manage user (change role, activate, deactivate)
 - Notification
-- Search mangas by name, genre, author, translator,...
+- Search mangas by name, genre, author, translator, keyword
 - Sort mangas by views (day, week, month,...)
 - Suggest manga
 - Register for translator account
@@ -32,14 +32,14 @@
 
 # API:
 
-**0. Authenticate and Authorize:**
+### 0. Authenticate and Authorize:
 
 - Default admin account:
 
 + admin: username: SystemAdmin, password: 0000
 + user: username: user, password: 0000
 
-**0.1 Register new account:**
+#### 0.1 Register new account:
 
 - Require: none
 - URL: /api/auth/register
@@ -49,7 +49,7 @@
 - Response body: Token(String token)
 - Description: User can register new account by providing username and password
 
-**0.2 Authorize account:**
+#### 0.2 Authorize account:
 
 - Require: none
 - URL: /api/auth/authenticate
@@ -59,9 +59,9 @@
 - Response body: Token(String token)
 - Description: User can log in to the system by using username and password
 
-**1. User:**
+### 1. User:
 
-**1.1 Get user list:**
+#### 1.1 Get user list:
 
 - Require: ADMIN
 - URL: /admin/users
@@ -71,17 +71,17 @@
 - Response body: List<<User>> or not found exception
 - Description: Admin can get all user in the database
 
-**1.2 Get user by id/username:**
+#### 1.2 Get user by id/username:
 
 - Require: ADMIN
 - URL: /admin/user
 - Method: GET
 - Request param: id/username
 - Request body: none
-- Response body: User or not found
+- Response body: User or ResourceNotFoundException
 - Description: Admin can get user by id or username. The response is User with almost properties.
 
-**Change user role**
+#### Change user role
 
 - Require: ADMIN
 - URL: /admin/user/role
@@ -91,7 +91,7 @@
 - Response body: User or BadRequestException
 - Description: Admin can change role of a user
 
-**Activate/Deactivate user**
+#### Activate/Deactivate user
 
 - Require: ADMIN
 - URL: /admin/user/activate-status
@@ -101,7 +101,7 @@
 - Response body: User or BadRequestException
 - Description: Admin can activate or deactivate a user. User is deactivated can not log in to website
 
-**Get current user**
+#### Get current user
 
 - Require: authenticated account
 - URL: /account
@@ -111,7 +111,7 @@
 - Response body: User
 - Description: Return the user is logging into the website
 
-**Update displayName**
+#### Update displayName
 
 - Require: authenticated account
 - URL: /account/display-name
@@ -121,7 +121,7 @@
 - Response body: User or DataAlreadyExistsException
 - Description: user can change display name that has not been existed in the system
 
-**Update avatar:**
+#### Update avatar:
 
 - Require: authenticated user
 - URL: /account/avatar
@@ -131,7 +131,7 @@
 - Response body: User
 - Description: user can update avatar by providing an image
 
-**Get user by id/username:**
+#### Get user by id/username:
 
 - Require: authenticated user
 - URL: /account/user
@@ -141,74 +141,120 @@
 - Response body: CommonUserDTO or ResourceNotFoundException
 - Description: user can view others profile with public information
 
-**Change password**
+#### Change password
 
-**Reset password**
+#### Reset password
 
-**Link with Google account**
+#### Link with Google account
 
-**Link with Facebook account**
+#### Link with Facebook account
 
-**Remove Google account**
+#### Remove Google account
 
-**Remove Facebook account**
+#### Remove Facebook account
 
-**Change Google account**
+#### Change Google account
 
-**Change Facebook account**
+#### Change Facebook account
 
-**Delete account**
+#### Delete account
 
-**2. Manga**
+#### View reading history
 
-**Get all manga from database**
+#### Create notification
 
-**Get manga by name and keyword**
+#### Get notification
 
-**Get manga by genre**
+### 2. Manga
 
-**Get manga by id**
+#### Get all manga from database
 
-**Get manga by author name**
+#### Get mangas by name and keyword
 
-**Get manga by status**
+#### Get mangas by genre
 
-**Create manga**
+#### Get manga by id
 
-**Change manga information**
+#### Get mangas by author name
 
-**Change manga cover image**
+#### Get mangas by translator name
 
-**Vote manga**
+#### Sort manga by view
 
-**Add chapter to manga**
+#### Sort manga by lasted update
 
-**Change chapter information**
+#### Sort manga by rate
 
-**Add image to manga**
+#### Suggest manga (sort by rate * view)
 
-**Delete chapter**
+#### Get mangas by status
 
-**3. Genre**
+#### Create manga
 
-**Get all genre from database**
+#### Change manga information
 
-**Create new genre**
+#### Change manga cover image
 
-**Change genre name**
+#### Vote manga
 
-**Delete genre**
+#### Add chapter to manga
 
-**4. Author**
+#### Change chapter information
 
-**Get all author from database**
+#### Add images to manga chapter
 
-**Get authors by created user**
+#### Delete chapter
 
-**Create new author**
+#### Delete Manga
 
-**Change author name**
+#### Report manga
 
-**Delete author**
+#### Add manga to bookmark
 
-]()
+### 3. Genre
+
+#### Get all genre from database
+
+#### Create new genre
+
+#### Change genre name
+
+#### Delete genre
+
+### 4. Author
+
+#### Get all author from database
+
+#### Get authors by created user
+
+#### Create new author
+
+#### Change author name
+
+#### Delete author
+
+### 5.Key word
+
+#### Get all key word of manga
+
+#### Add keyword to a manga
+
+#### Change keyword name
+
+#### Delete keyword
+
+### 6.Comment
+
+#### Get all comment and reply comment of manga
+
+#### Comment on manga
+
+#### Change comment content
+
+#### Delete comment
+
+#### Reply comment
+
+#### Change reply comment
+
+#### Report comment
