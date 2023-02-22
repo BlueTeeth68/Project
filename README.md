@@ -1,10 +1,10 @@
-# Read manga online website
+[# Read manga online website
 
 # Function list:
 
 - Register by Email, facebook or username and password
 - Reset password
-- Update profile (display name, avatar,...)
+- Update profile (display name, avatar)
 - Manage user (change role, activate, deactivate)
 - Notification
 - Search mangas by name, genre, author, translator,...
@@ -32,108 +32,183 @@
 
 # API:
 
-0. Authenticate and Authorize:
+**0. Authenticate and Authorize:**
 
-- Default admin account: username: SystemAdmin, password: 0000
+- Default admin account:
 
-0.1 Register new account:
++ admin: username: SystemAdmin, password: 0000
++ user: username: user, password: 0000
+
+**0.1 Register new account:**
 
 - Require: none
 - URL: /api/auth/register
 - Method: POST
-- Request param: UsernamePasswordVM (String username, String password)
+- Request param: none
+- Request body: UsernamePasswordVM (String username, String password)
 - Response body: Token(String token)
+- Description: User can register new account by providing username and password
 
-0.2 Authorize account:
+**0.2 Authorize account:**
 
 - Require: none
 - URL: /api/auth/authenticate
 - Method: POST
-- Request param: UsernamePasswordVM (String username, String password)
+- Request param: none
+- Request body: UsernamePasswordVM (String username, String password)
 - Response body: Token(String token)
+- Description: User can log in to the system by using username and password
 
-1. User:
+**1. User:**
 
-1.1 Get user list:
+**1.1 Get user list:**
 
 - Require: ADMIN
-- URL: /api/admin/users
+- URL: /admin/users
 - Method: GET
 - Request param: none
-- Response body: List<User>
+- Request body: none
+- Response body: List<<User>> or not found exception
+- Description: Admin can get all user in the database
 
-1.2 Get user by id:
+**1.2 Get user by id/username:**
 
 - Require: ADMIN
-- URL: /api/admin/users/{id}
+- URL: /admin/user
 - Method: GET
-- Request param: none
-- Response body: User
+- Request param: id/username
+- Request body: none
+- Response body: User or not found
+- Description: Admin can get user by id or username. The response is User with almost properties.
 
-1.3 Get user by username:
-
-- Require: ADMIN
-- URL: /api/admin/users/username/{username}
-- Method: GET
-- Request param: none
-- Response body: User
-
-1.4 Get user by activate status:
+**Change user role**
 
 - Require: ADMIN
-- URL: /api/admin/users/activate/{activate}
-- Method: GET
-- Request param: none
-- Response body: List<User>
-
-1.5 Change user role
-
-- Require: ADMIN
-- URL: /api/admin/users/{id}/change-role
+- URL: /admin/user/role
 - Method: PATCH
-- Request param: User (Long id, String role)
-- Response body: User
+- Request param: id, role (USER, ADMIN, TRANSLATOR)
+- Request body: none
+- Response body: User or BadRequestException
+- Description: Admin can change role of a user
 
-1.6 Activate/Deactivate user
+**Activate/Deactivate user**
 
 - Require: ADMIN
-- URL: /api/admin/users/{id}/change-activate-status
+- URL: /admin/user/activate-status
 - Method: PATCH
-- Request param: User (Long id, Boolean activate)
-- Response body: User
+- Request param: id, status (true/false)
+- Request body: none
+- Response body: User or BadRequestException
+- Description: Admin can activate or deactivate a user. User is deactivated can not log in to website
 
-1.7 Get current user
+**Get current user**
 
 - Require: authenticated account
-- URL: /api/account/profile/{username}
+- URL: /account
 - Method: GET
 - Request param: None
+- Request body: none
 - Response body: User
+- Description: Return the user is logging into the website
 
-1.8 Update user information (displayName, avatar)
+**Update displayName**
 
 - Require: authenticated account
-- URL: /api/account/profile/{username}
+- URL: /account/display-name
 - Method: PATCH
-- Request param: User (Long id, String displayName, byte[] avatar)
+- Request param: id, displayName
+- Request body: none
+- Response body: User or DataAlreadyExistsException
+- Description: user can change display name that has not been existed in the system
+
+**Update avatar:**
+
+- Require: authenticated user
+- URL: /account/avatar
+- Method: PATCH (Thường thì phải dùng post, patch thì chưa test nên không biết được không)
+- Request param: none
+- Request body: id, file image
 - Response body: User
+- Description: user can update avatar by providing an image
 
-1.7 Register account
+**Get user by id/username:**
 
-1.8 Change password
+- Require: authenticated user
+- URL: /account/user
+- Method: GET
+- Request param: id/username
+- Request body: none
+- Response body: CommonUserDTO or ResourceNotFoundException
+- Description: user can view others profile with public information
 
-1.9 Reset password
+**Change password**
 
-1.10 Link with Google account
+**Reset password**
 
-1.11 Link with Facebook account
+**Link with Google account**
 
-1.12 Remove Google account
+**Link with Facebook account**
 
-1.13 Remove Facebook account
+**Remove Google account**
 
-1.14 Change Google account
+**Remove Facebook account**
 
-1.15 Change Facebook account
+**Change Google account**
 
+**Change Facebook account**
 
+**Delete account**
+
+**2. Manga**
+
+**Get all manga from database**
+
+**Get manga by name and keyword**
+
+**Get manga by genre**
+
+**Get manga by id**
+
+**Get manga by author name**
+
+**Get manga by status**
+
+**Create manga**
+
+**Change manga information**
+
+**Change manga cover image**
+
+**Vote manga**
+
+**Add chapter to manga**
+
+**Change chapter information**
+
+**Add image to manga**
+
+**Delete chapter**
+
+**3. Genre**
+
+**Get all genre from database**
+
+**Create new genre**
+
+**Change genre name**
+
+**Delete genre**
+
+**4. Author**
+
+**Get all author from database**
+
+**Get authors by created user**
+
+**Create new author**
+
+**Change author name**
+
+**Delete author**
+
+]()

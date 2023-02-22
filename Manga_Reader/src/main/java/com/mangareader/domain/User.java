@@ -45,16 +45,17 @@ public class User {
     @Column(name = "display_name", columnDefinition = "NVARCHAR(50)", unique = true)
     private String displayName;
 
-    @Lob
-    @Column()
-    private byte[] avatar;
+    @Column(name = "avatar_url", columnDefinition = "NVARCHAR(100)")
+    private String avatarUrl;
 
-    /*    @NotNull*/
     @Column(columnDefinition = "bit")
     private Boolean activate = true;
 
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
+
+    @Column(name = "role", columnDefinition = "VARCHAR(20)", nullable = false)
+    private String role;
 
     /*    @JsonIgnore*/
 //    @ManyToMany(fetch = FetchType.EAGER)
@@ -64,8 +65,5 @@ public class User {
 //            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
 //    )
 //    private Set<Role> roles = new HashSet<>();
-
-    @Column(name = "role", columnDefinition = "VARCHAR(20)", nullable = false)
-    private String role;
 
 }

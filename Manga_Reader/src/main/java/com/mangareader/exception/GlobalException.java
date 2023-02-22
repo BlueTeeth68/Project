@@ -20,7 +20,7 @@ public class GlobalException extends ResponseEntityExceptionHandler {
 
         String error = "Resource not found.";
         ErrorDetails errorDetails =
-                new ErrorDetails(HttpStatus.NOT_FOUND, ex.getMessage(), error);
+                new ErrorDetails(HttpStatus.NOT_FOUND, error, ex.getMessage());
         return new ResponseEntity<Object>(
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }
@@ -31,7 +31,7 @@ public class GlobalException extends ResponseEntityExceptionHandler {
             Exception ex, WebRequest request) {
         String error = "Access denied.";
         ErrorDetails errorDetails =
-                new ErrorDetails(HttpStatus.FORBIDDEN, ex.getMessage(), error);
+                new ErrorDetails(HttpStatus.FORBIDDEN, error, ex.getMessage());
         return new ResponseEntity<Object>(
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }
@@ -42,8 +42,20 @@ public class GlobalException extends ResponseEntityExceptionHandler {
             Exception ex, WebRequest request) {
         String error = "Data is already existed.";
         ErrorDetails errorDetails =
-                new ErrorDetails(HttpStatus.CONFLICT, ex.getMessage(), error);
+                new ErrorDetails(HttpStatus.CONFLICT, error, ex.getMessage());
         return new ResponseEntity<Object>(
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }
+
+    @ExceptionHandler({BadRequestException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleBadRequestException(
+            Exception ex, WebRequest request) {
+        String error = "Bad request.";
+        ErrorDetails errorDetails =
+                new ErrorDetails(HttpStatus.BAD_REQUEST, error, ex.getMessage());
+        return new ResponseEntity<Object>(
+                errorDetails, new HttpHeaders(), errorDetails.getStatus());
+    }
+
 }

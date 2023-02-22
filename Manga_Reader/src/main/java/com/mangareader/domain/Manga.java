@@ -32,8 +32,8 @@ public class Manga {
 
     @Lob
     @NotNull
-    @Column(name = "cover_image", nullable = false)
-    private String coverImage;
+    @Column(name = "cover_image_url", columnDefinition = "NVARCHAR(100)",nullable = false)
+    private String coverImageUrl;
 
     @Min(0)
     @Column(name = "view")

@@ -44,6 +44,13 @@ public class ProjectApplication {
             user.getRoles().add(roleAdmin);*/
             user.setRole(RoleName.ADMIN.toString());
             userService.saveUser(user);
+
+            User commonUser = new User();
+            commonUser.setUsername("User");
+            commonUser.setDisplayName("Common User");
+            commonUser.setPassword(password);
+            commonUser.setRole(RoleName.USER.toString());
+            userService.saveUser(commonUser);
         };
     }
 

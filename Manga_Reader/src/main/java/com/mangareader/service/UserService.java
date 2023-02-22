@@ -27,4 +27,6 @@ public interface UserService {
 
     public User changeUserRole(Long id, RoleName roleName);
 
+    public User changeDisplayName(Long id, String displayName);
+
 }

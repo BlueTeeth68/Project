@@ -5,6 +5,7 @@ import com.mangareader.domain.User;
 import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,17 +22,20 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public User saveUser(User user) {
 
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public User updateUser(User user) {
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
@@ -79,10 +83,25 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public User changeUserRole(Long id, RoleName roleName) {
         User user = getUserById(id);
         log.info("Change role {} to user {}", roleName, user.getUsername());
         user.setRole(roleName.toString());
         return saveUser(user);
+    }
+
+    @Override
+    @Transactional
+    public User changeDisplayName(Long id, String displayName) {
+        User user = getUserById(id);
+        if (userRepository.existsByDisplayName(displayName)) {
+            log.error("Error when save display name {}", displayName);
+            throw new DataAlreadyExistsException("Display name " + displayName + " already exists.");
+        }
+        log.info("Set display name {} for user {}", displayName, id);
+        user.setDisplayName(displayName);
+        user = userRepository.save(user);
+        return user;
     }
 }

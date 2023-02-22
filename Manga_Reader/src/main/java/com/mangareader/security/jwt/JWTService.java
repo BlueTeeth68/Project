@@ -18,13 +18,15 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    public static final String SECRECT_KEY = "413F4428472B4B6250655368566D597133743677397A244326462948404D6351";
+//    private static final String SECRECT_KEY = "413F4428472B4B6250655368566D597133743677397A244326462948404D6351";
 
+    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     //create a secret key with HMAC-SHA algorithms
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRECT_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
+//        byte[] keyBytes = Decoders.BASE64.decode(SECRECT_KEY);
+//        return Keys.hmacShaKeyFor(keyBytes);
+        return key;
     }
 
     //get all information of claim

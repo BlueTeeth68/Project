@@ -19,9 +19,8 @@ public class ChapterImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(name = "image_url")
-    private byte[] imageUrl;
+    @Column(name = "image_url", columnDefinition = "NVARCHAR(100)")
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "chapter_id", nullable = false)
