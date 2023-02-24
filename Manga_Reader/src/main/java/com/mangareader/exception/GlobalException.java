@@ -58,4 +58,15 @@ public class GlobalException extends ResponseEntityExceptionHandler {
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }
 
+    @ExceptionHandler({StorageException.class})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Object> handleStorageException(
+            Exception ex, WebRequest request) {
+        String error = "File is empty.";
+        ErrorDetails errorDetails =
+                new ErrorDetails(HttpStatus.NO_CONTENT, error, ex.getMessage());
+        return new ResponseEntity<Object>(
+                errorDetails, new HttpHeaders(), errorDetails.getStatus());
+    }
+
 }

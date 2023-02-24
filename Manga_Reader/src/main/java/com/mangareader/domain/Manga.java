@@ -5,18 +5,17 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "manga")
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Manga {
@@ -32,7 +31,7 @@ public class Manga {
 
     @Lob
     @NotNull
-    @Column(name = "cover_image_url", columnDefinition = "NVARCHAR(100)",nullable = false)
+    @Column(name = "cover_image_url", columnDefinition = "NVARCHAR(100)", nullable = false)
     private String coverImageUrl;
 
     @Min(0)

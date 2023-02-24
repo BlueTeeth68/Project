@@ -17,13 +17,9 @@ public class CommonUserDTO {
 
     private Long id;
 
-    private String googleId;
-
-    private String facebookId;
-
     private String displayName;
 
-    private byte[] avatar;
+    private String avatarUrl;
 
     private Boolean activate = true;
 

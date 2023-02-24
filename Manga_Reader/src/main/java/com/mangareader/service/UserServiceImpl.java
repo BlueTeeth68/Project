@@ -11,15 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
-
 
     @Override
     @Transactional
@@ -80,7 +78,6 @@ public class UserServiceImpl implements UserService {
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
-
 
     @Override
     @Transactional

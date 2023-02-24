@@ -5,9 +5,8 @@ import com.mangareader.domain.User;
 import com.mangareader.exception.ResourceNotFoundException;
 
 import java.util.List;
-import java.util.Set;
 
-public interface UserService {
+public interface IUserService {
 
     public User saveUser(User user);
 

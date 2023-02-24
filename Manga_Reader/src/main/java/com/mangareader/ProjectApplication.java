@@ -2,7 +2,7 @@ package com.mangareader;
 
 import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
-import com.mangareader.service.UserService;
+import com.mangareader.service.IUserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +17,7 @@ public class ProjectApplication {
     }
 
     @Bean
-    CommandLineRunner run(UserService userService) {
+    CommandLineRunner run(IUserService userService) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         String password = passwordEncoder.encode("0000");

@@ -32,14 +32,14 @@ _# Read manga online website
 
 # API:
 
-### 0. Authenticate and Authorize:
+### 0. Authenticate and Authorize: 
 
-- Default admin account:
+- Default account:
 
 + admin: username: SystemAdmin, password: 0000
 + user: username: user, password: 0000
 
-#### 0.1 Register new account:
+#### 0.1 Register new account: *
 
 - Require: none
 - URL: /api/auth/register
@@ -49,7 +49,7 @@ _# Read manga online website
 - Response body: Token(String token)
 - Description: User can register new account by providing username and password
 
-#### 0.2 Authorize account:
+#### 0.2 Authorize account: *
 
 - Require: none
 - URL: /api/auth/authenticate
@@ -61,7 +61,7 @@ _# Read manga online website
 
 ### 1. User:
 
-#### 1.1 Get user list:
+#### 1.1 Get user list: *
 
 - Require: ADMIN
 - URL: /admin/users
@@ -71,7 +71,7 @@ _# Read manga online website
 - Response body: List<<User>> or not found exception
 - Description: Admin can get all user in the database
 
-#### 1.2 Get user by id/username:
+#### 1.2 Get user by id/username: *
 
 - Require: ADMIN
 - URL: /admin/user
@@ -81,7 +81,7 @@ _# Read manga online website
 - Response body: User or ResourceNotFoundException
 - Description: Admin can get user by id or username. The response is User with almost properties.
 
-#### Change user role
+#### Change user role: *
 
 - Require: ADMIN
 - URL: /admin/user/role
@@ -91,17 +91,17 @@ _# Read manga online website
 - Response body: User or BadRequestException
 - Description: Admin can change role of a user
 
-#### Activate/Deactivate user
+#### Activate/Deactivate user: *
 
 - Require: ADMIN
-- URL: /admin/user/activate-status
+- URL: /admin/user/active-status
 - Method: PATCH
 - Request param: id, status (true/false)
 - Request body: none
 - Response body: User or BadRequestException
 - Description: Admin can activate or deactivate a user. User is deactivated can not log in to website
 
-#### Get current user
+#### Get current user: *
 
 - Require: authenticated account
 - URL: /account

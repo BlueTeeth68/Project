@@ -4,13 +4,13 @@ import com.mangareader.Util.APIUtil;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
-import com.mangareader.service.UserService;
-import jakarta.transaction.Transactional;
+import com.mangareader.service.IUserService;
+import com.mangareader.service.dto.CommonUserDTO;
+import com.mangareader.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +24,13 @@ import java.net.URISyntaxException;
 @Slf4j
 public class AccountResource {
 
-    private final UserService userService;
+    private final IUserService userService;
+
+    private final UserMapper userMapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+
     public ResponseEntity<User> getCurrentUser() throws URISyntaxException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -39,24 +42,25 @@ public class AccountResource {
 
     @GetMapping("/user")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<User> getUserById(
+    public ResponseEntity<CommonUserDTO> getUserByIdOrUsername(
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String username
     ) throws URISyntaxException, ResourceNotFoundException {
-        User result;
+        User user;
 
         //find by id
         if (id != null && username == null) {
             Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
-            result = userService.getUserById(idNum);
+            user = userService.getUserById(idNum);
         }
         //find by username
         else if (id == null && username != null) {
-            result = userService.getUserByUsername(username);
+            user = userService.getUserByUsername(username);
         } else {
             throw new BadRequestException("Bad request for id and username value.");
         }
 
+        CommonUserDTO result = userMapper.entityToCommonUserDTO(user);
         return ResponseEntity
                 .created(new URI("/account/user/" + result.getId()))
                 .body(result);
@@ -64,7 +68,6 @@ public class AccountResource {
 
     @PatchMapping()
     @ResponseStatus(HttpStatus.OK)
-    @Transactional
     public ResponseEntity<User> changeDisplayName(
             @RequestParam String id,
             @RequestParam String displayName

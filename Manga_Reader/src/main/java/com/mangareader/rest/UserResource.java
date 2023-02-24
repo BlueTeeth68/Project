@@ -5,11 +5,9 @@ import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
-import com.mangareader.service.UserService;
-import jakarta.transaction.Transactional;
+import com.mangareader.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,38 +23,37 @@ import java.util.List;
 @Slf4j
 public class UserResource {
 
-    private final UserService userService;
+    private final IUserService userService;
 
+    @GetMapping("/user")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<User> getUserByIdOrUsername(
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String username
+    ) throws URISyntaxException, ResourceNotFoundException {
+        User result;
 
-//    @GetMapping("/users/username/{username}")
-//    @PreAuthorize("hasAuthority('ADMIN')")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity<User> getUserByUsername(
-//            @PathVariable(value = "username") String username
-//    ) throws URISyntaxException, ResourceNotFoundException {
-//        User result = userService.getUserByUsername(username);
-//        return ResponseEntity
-//                .created(new URI("/api/admin/users/username/" + result.getUsername()))
-//                .body(result);
-//    }
+        //find by id
+        if (id != null && username == null) {
+            Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
+            result = userService.getUserById(idNum);
+        }
+        //find by username
+        else if (id == null && username != null) {
+            result = userService.getUserByUsername(username);
+        } else {
+            throw new BadRequestException("Bad request for id and username value.");
+        }
 
-//    @GetMapping("users/activate/{activate}")
-//    @PreAuthorize("hasAuthority('ADMIN')")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity<List<User>> getUsersByActiveStatus(
-//            @PathVariable(value = "activate") Boolean activate
-//    ) throws URISyntaxException, ResourceNotFoundException {
-//        List<User> result = userService.getUsersByActivateStatus(activate);
-//        return ResponseEntity
-//                .created(new URI("/api/users/active/" + activate))
-//                .body(result);
-//    }
-
+        return ResponseEntity
+                .created(new URI("/account/user/" + result.getId()))
+                .body(result);
+    }
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    @Transactional
     //if we want to use hasRole() instead, the role must have prefix "ROLE_"
     // or the function will not work
     public ResponseEntity<List<User>> getAllUser()
@@ -67,10 +64,9 @@ public class UserResource {
                 .body(users);
     }
 
-    @PatchMapping("/user/change-role")
+    @PatchMapping("/user/role")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    @Transactional
     public ResponseEntity<User> changeRoleOfUser(
             @RequestParam String id,
             @RequestParam String role
@@ -82,14 +78,13 @@ public class UserResource {
         user.setRole(roleName.toString());
         user = userService.saveUser(user);
         return ResponseEntity
-                .created(new URI("/admin/user/change-role"))
+                .created(new URI("/admin/user/role"))
                 .body(user);
     }
 
-    @PatchMapping("user/change-active-status")
+    @PatchMapping("user/active-status")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    @Transactional
     public ResponseEntity<User> changeActiveStatus(
             @RequestParam String id,
             @RequestParam String status
@@ -100,7 +95,7 @@ public class UserResource {
         user.setActivate(activate);
         user = userService.saveUser(user);
         return ResponseEntity
-                .created(new URI("/admin/user/change-active-status"))
+                .created(new URI("/admin/user/active-status"))
                 .body(user);
     }
 

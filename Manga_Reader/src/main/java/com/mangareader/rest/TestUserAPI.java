@@ -2,7 +2,7 @@ package com.mangareader.rest;
 
 import com.mangareader.domain.User;
 import com.mangareader.repository.UserRepository;
-import com.mangareader.service.UserService;
+import com.mangareader.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 public class TestUserAPI {
 
-    private final UserService userService;
+    private final IUserService userService;
     private final UserRepository userRepo;
 
     @GetMapping("/users")
