@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 //permit all request from /api/auth/
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/image/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 // any request must be authenticated
                 .anyRequest()

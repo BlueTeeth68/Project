@@ -4,20 +4,28 @@ import com.mangareader.Util.APIUtil;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
+import com.mangareader.service.IStorageService;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 
 @RestController
 @RequestMapping("/account")
@@ -29,11 +37,17 @@ public class AccountResource {
 
     private final UserMapper userMapper;
 
+    @Autowired
+    private HttpServletRequest request;
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
 
     public ResponseEntity<User> getCurrentLoginUser() throws URISyntaxException {
         User user = getCurrentUser();
+        if (user.getAvatarUrl() != null) {
+            user.setAvatarUrl(getServerName() + user.getAvatarUrl());
+        }
         return ResponseEntity
                 .created(new URI("/account/" + user.getDisplayName()))
                 .body(user);
@@ -60,6 +74,10 @@ public class AccountResource {
         }
 
         CommonUserDTO result = userMapper.entityToCommonUserDTO(user);
+
+        if (result.getAvatarUrl() != null) {
+            result.setAvatarUrl(getServerName() + result.getAvatarUrl());
+        }
         return ResponseEntity
                 .created(new URI("/account/user/" + result.getId()))
                 .body(result);
@@ -80,18 +98,30 @@ public class AccountResource {
 
         User result = userService.changeDisplayName(user.getId(), displayName);
 
+        if (result.getAvatarUrl() != null) {
+            result.setAvatarUrl(getServerName() + result.getAvatarUrl());
+        }
         return ResponseEntity
                 .created(new URI("/account"))
                 .body(result);
     }
 
-//    @PostMapping("/avatar")
-//    public ResponseEntity<User> changeUserAvatar(
-//            @RequestParam
-//    ) {
-//
-//    }
+    @PostMapping("/avatar")
+    public ResponseEntity<User> changeUserAvatar(
+            @RequestParam("file") MultipartFile file
+    ) throws URISyntaxException {
+        User user = getCurrentUser();
 
+        User result = userService.updateAvatar(user, file);
+
+        if (user.getAvatarUrl() != null) {
+            user.setAvatarUrl(getServerName() + user.getAvatarUrl());
+        }
+
+        return ResponseEntity
+                .created(new URI("/avatar"))
+                .body(result);
+    }
 
     private User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -99,6 +129,11 @@ public class AccountResource {
         User user = userService.getUserByUsername(username);
 
         return user;
+    }
+
+    private String getServerName() {
+        String serverName = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+        return serverName;
     }
 
 }

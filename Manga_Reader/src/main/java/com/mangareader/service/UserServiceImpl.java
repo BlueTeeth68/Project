@@ -8,8 +8,13 @@ import com.mangareader.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,6 +23,13 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
+
+    private final IStorageService storageService;
+
+    private final String AVATAR_FOLDER = "./image/avatar";
+
+//    @Value("${server.name}")
+//    private String SERVER_NAME;
 
     @Override
     @Transactional
@@ -100,5 +112,26 @@ public class UserServiceImpl implements IUserService {
         user.setDisplayName(displayName);
         user = userRepository.save(user);
         return user;
+    }
+
+    @Override
+    public User updateAvatar(User user, MultipartFile file) {
+
+        String fileName = user.getId().toString();
+
+        fileName = storageService.store(file, AVATAR_FOLDER, fileName);
+
+        String avatarUrl = /*SERVER_NAME + */ "/image/avatar/" + fileName;
+
+        user.setAvatarUrl(avatarUrl);
+        user = saveUser(user);
+
+        return user;
+    }
+
+    @Override
+    public Resource getAvatar(String fileName) {
+        Resource file = storageService.loadAsResource(fileName, AVATAR_FOLDER);
+        return file;
     }
 }

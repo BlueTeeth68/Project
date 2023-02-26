@@ -9,7 +9,9 @@ import java.util.stream.Stream;
 public interface IStorageService {
     void init(String location);
 
-    void store(MultipartFile file, String location);
+    String store(MultipartFile file, String location);
+
+    String store(MultipartFile file, String location, String fileName);
 
     Stream<Path> loadAll(String location);
 

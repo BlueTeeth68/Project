@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,15 +30,38 @@ public class FileSystemStorageService implements IStorageService {
 //    }
 
     @Override
-    public void store(MultipartFile file, String location) {
+    public String store(MultipartFile file, String location) {
         try {
             if (file.isEmpty()) {
                 log.error("Failed to store empty file {}", file.getOriginalFilename());
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
-            this.rootLocation = Paths.get(location);
+            Path pathLocation = Paths.get(location);
             log.info("Creating file {}", file.getOriginalFilename());
-            Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+            Path target = pathLocation.resolve(file.getOriginalFilename());
+            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+//            String url = target.toFile().toURI().toURL().toString();
+            return file.getOriginalFilename();
+        } catch (IOException e) {
+            log.error("Failed to store file {}", file.getOriginalFilename());
+            throw new StorageException("Failed to store file " + file.getOriginalFilename());
+        }
+    }
+
+    @Override
+    public String store(MultipartFile file, String location, String fileName) {
+        try {
+            if (file.isEmpty()) {
+                log.error("Failed to store empty file {}", file.getOriginalFilename());
+                throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
+            }
+            Path pathLocation = Paths.get(location);
+            log.info("Creating file {}", file.getOriginalFilename());
+            Path target = pathLocation.resolve(fileName);
+            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+//            String url = target.relativize(pathLocation).toFile().toURI().toURL().toString();
+//            String url = target.toFile().toURI().toURL().toString();
+            return fileName;
         } catch (IOException e) {
             log.error("Failed to store file {}", file.getOriginalFilename());
             throw new StorageException("Failed to store file " + file.getOriginalFilename());
@@ -72,11 +96,11 @@ public class FileSystemStorageService implements IStorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new ResourceNotFoundException("Could not read file: " + filename);
+                throw new ResourceNotFoundException("Could not read file: " + location + "/" + filename);
 
             }
         } catch (MalformedURLException e) {
-            throw new ResourceNotFoundException("Could not read file: " + filename);
+            throw new ResourceNotFoundException("Could not read file: " + location + "/" + filename);
         }
     }
 
