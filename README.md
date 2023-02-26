@@ -111,27 +111,27 @@ _# Read manga online website
 - Response body: User
 - Description: Return the user is logging into the website
 
-#### Update displayName
+#### Update displayName: *
 
 - Require: authenticated account
 - URL: /account/display-name
 - Method: PATCH
-- Request param: id, displayName
+- Request param: displayName
 - Request body: none
 - Response body: User or DataAlreadyExistsException
 - Description: user can change display name that has not been existed in the system
 
-#### Update avatar:
+#### Update avatar: 
 
 - Require: authenticated user
 - URL: /account/avatar
-- Method: PATCH (Thường thì phải dùng post, patch thì chưa test nên không biết được không)
+- Method: POST
 - Request param: none
 - Request body: id, file image
 - Response body: User
 - Description: user can update avatar by providing an image
 
-#### Get user by id/username:
+#### Get user by id/username: *
 
 - Require: authenticated user
 - URL: /account/user

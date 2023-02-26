@@ -9,6 +9,7 @@ import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,12 +32,10 @@ public class AccountResource {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
 
-    public ResponseEntity<User> getCurrentUser() throws URISyntaxException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        User user = userService.getUserByUsername(username);
+    public ResponseEntity<User> getCurrentLoginUser() throws URISyntaxException {
+        User user = getCurrentUser();
         return ResponseEntity
-                .created(new URI("/account/" + username))
+                .created(new URI("/account/" + user.getDisplayName()))
                 .body(user);
     }
 
@@ -69,19 +68,37 @@ public class AccountResource {
     @PatchMapping()
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<User> changeDisplayName(
-            @RequestParam String id,
             @RequestParam String displayName
     ) throws URISyntaxException {
-        Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
+
+        User user = getCurrentUser();
+
         if (displayName == null || displayName.isBlank()) {
             log.error("Error when retrieve displayName: {}.", displayName);
             throw new BadRequestException("displayName is empty.");
         }
-        User result = userService.changeDisplayName(idNum, displayName);
+
+        User result = userService.changeDisplayName(user.getId(), displayName);
 
         return ResponseEntity
                 .created(new URI("/account"))
                 .body(result);
+    }
+
+//    @PostMapping("/avatar")
+//    public ResponseEntity<User> changeUserAvatar(
+//            @RequestParam
+//    ) {
+//
+//    }
+
+
+    private User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        User user = userService.getUserByUsername(username);
+
+        return user;
     }
 
 }
