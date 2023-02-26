@@ -127,7 +127,7 @@ _# Read manga online website
 - URL: /account/avatar
 - Method: POST
 - Request param: none
-- Request body: id, file image
+- Request body: file image
 - Response body: User
 - Description: user can update avatar by providing an image
 
