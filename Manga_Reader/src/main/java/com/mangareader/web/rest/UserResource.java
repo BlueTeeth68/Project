@@ -1,4 +1,4 @@
-package com.mangareader.rest;
+package com.mangareader.web.rest;
 
 import com.mangareader.Util.APIUtil;
 import com.mangareader.domain.RoleName;
@@ -6,6 +6,7 @@ import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.service.IUserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 @RestController
@@ -27,13 +26,15 @@ public class UserResource {
 
     private final IUserService userService;
 
+    private final HttpServletRequest request;
+
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<User> getUserByIdOrUsername(
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String username
-    ) throws URISyntaxException, ResourceNotFoundException, UnknownHostException {
+    ) throws URISyntaxException, ResourceNotFoundException {
         User result;
 
         //find by id
@@ -63,7 +64,7 @@ public class UserResource {
     //if we want to use hasRole() instead, the role must have prefix "ROLE_"
     // or the function will not work
     public ResponseEntity<List<User>> getAllUser()
-            throws URISyntaxException, ResourceNotFoundException, UnknownHostException {
+            throws URISyntaxException, ResourceNotFoundException {
         List<User> users = userService.getUsers();
 
         //need to improve here
@@ -89,7 +90,7 @@ public class UserResource {
     public ResponseEntity<User> changeRoleOfUser(
             @RequestParam String id,
             @RequestParam String role
-    ) throws URISyntaxException, UnknownHostException {
+    ) throws URISyntaxException {
         Long idNum = APIUtil.parseStringToLong(id, "id is not number exception");
         RoleName roleName = APIUtil.parseStringToRoleNameEnum(role.toUpperCase(),
                 "Role must be 'USER', 'TRANSLATOR' or 'ADMIN'");
@@ -111,7 +112,7 @@ public class UserResource {
     public ResponseEntity<User> changeActiveStatus(
             @RequestParam String id,
             @RequestParam String status
-    ) throws URISyntaxException, UnknownHostException {
+    ) throws URISyntaxException {
         Long idNum = APIUtil.parseStringToLong(id, "id is not number exception");
         Boolean activate = APIUtil.parseStringToBoolean(status, "status is not a boolean variable.");
         User user = userService.getUserById(idNum);
@@ -125,9 +126,8 @@ public class UserResource {
                 .body(user);
     }
 
-    private String getServerName() throws UnknownHostException {
-        InetAddress inetAddress = InetAddress.getLocalHost();
-        String serverName = inetAddress.getHostName();
+    private String getServerName() {
+        String serverName = request.getRequestURL().toString().replace(request.getRequestURI(), "");
         return serverName;
     }
 

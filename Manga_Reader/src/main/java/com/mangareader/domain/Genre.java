@@ -1,5 +1,7 @@
 package com.mangareader.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -24,7 +26,9 @@ public class Genre {
     @Column(length = 50, nullable = false, unique = true)
     private String name;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "genres")
+    @JsonIgnoreProperties(value = "genres", allowSetters = true)
     private Set<Manga> mangas = new HashSet<>();
 
 }

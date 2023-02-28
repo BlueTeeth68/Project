@@ -1,4 +1,4 @@
-package com.mangareader.rest;
+package com.mangareader.web.rest;
 
 import com.mangareader.domain.User;
 import com.mangareader.repository.UserRepository;

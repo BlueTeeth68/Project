@@ -8,13 +8,10 @@ import com.mangareader.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -133,5 +130,11 @@ public class UserServiceImpl implements IUserService {
     public Resource getAvatar(String fileName) {
         Resource file = storageService.loadAsResource(fileName, AVATAR_FOLDER);
         return file;
+    }
+
+    @Override
+    public void deleteUserById(Long id) {
+        log.debug("Delete user by id: {}", id);
+        userRepository.deleteById(id);
     }
 }

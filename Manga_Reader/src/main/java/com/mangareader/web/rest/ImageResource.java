@@ -1,4 +1,4 @@
-package com.mangareader.rest;
+package com.mangareader.web.rest;
 
 import com.mangareader.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.*;
-
 @RestController
 @RequestMapping("/image")
 @RequiredArgsConstructor
@@ -20,7 +18,7 @@ public class ImageResource {
     private final IUserService userService;
 
     @GetMapping("/avatar/{filename:.+}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> loadFile(@PathVariable String filename) {
 
         Resource file = userService.getAvatar(filename);
 

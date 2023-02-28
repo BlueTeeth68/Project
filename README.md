@@ -32,7 +32,7 @@ _# Read manga online website
 
 # API:
 
-### 0. Authenticate and Authorize: 
+### 0. Authenticate and Authorize:
 
 - Default account:
 
@@ -121,7 +121,7 @@ _# Read manga online website
 - Response body: User or DataAlreadyExistsException
 - Description: user can change display name that has not been existed in the system
 
-#### Update avatar: 
+#### Update avatar: *
 
 - Require: authenticated user
 - URL: /account/avatar
@@ -157,7 +157,15 @@ _# Read manga online website
 
 #### Change Facebook account
 
-#### Delete account
+#### Delete account: (Testing with other table)
+
+- Require: authenticated user
+- URL: /account
+- Method: DELETE
+- Request param: none
+- Request body: none
+- Response body: no content
+- Description: user can delete their account from system
 
 #### View reading history
 
@@ -167,7 +175,15 @@ _# Read manga online website
 
 ### 2. Manga
 
-#### Get all manga from database
+#### Get all manga from database - doing
+
+- Require: none
+- URL: /manga/list
+- Method: GET
+- Request param: none
+- Request body: none
+- Response body: List<<Manga>>
+- Description: user can load all manga from database sort by latest update time.
 
 #### Get mangas by name and keyword
 
@@ -213,35 +229,77 @@ _# Read manga online website
 
 ### 3. Genre
 
-#### Get all genre from database
+#### Get all genre from database 
 
-#### Create new genre
+- Require: none
+- URL: /genre/list
+- Method: GET
+- Request param: none
+- Request body: none
+- Response body: List<<Genre>>
+- Description: user can load all genre from database sorted by id
 
-#### Change genre name
+#### Get genre by name or id
 
-#### Delete genre
+- Require: none
+- URL: /genre
+- Method: GET
+- Request param: id/name (depend on the purpose but just send 1 in 2)
+- Request body: none
+- Response body: Genre
+- Description: User can find genre by genreName or id
+
+#### Create new genre 
+
+- Require: ADMIN
+- URL: /genre
+- Method: POST
+- Request param: none
+- Request body: Genre genre (can not have id)
+- Response body: Genre
+- Description: Admin user can add a new genre to database
+
+#### Change genre name 
+
+- Require: ADMIN
+- URL: /genre
+- Method: PATCH
+- Request param: none
+- Request body: Genre genre (id, name,...)
+- Response body: Genre
+- Description: Admin user can change the name of genre
+
+#### Delete genre 
+
+- Require: ADMIN
+- URL: /genre
+- Method: DELETE
+- Request param: id
+- Request body: none
+- Response body: none
+- Description: Admin can delete a genre
 
 ### 4. Author
 
-#### Get all author from database
+#### Get all author from database - doing
 
-#### Get authors by created user
+#### Get authors by created user - doing
 
-#### Create new author
+#### Create new author - doing
 
-#### Change author name
+#### Change author name - doing
 
-#### Delete author
+#### Delete author - doing
 
 ### 5.Key word
 
-#### Get all key word of manga
+#### Get all key word of manga - doing
 
-#### Add keyword to a manga
+#### Add keyword to a manga - doing
 
-#### Change keyword name
+#### Change keyword name - doing
 
-#### Delete keyword
+#### Delete keyword - doing
 
 ### 6.Comment
 

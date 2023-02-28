@@ -34,4 +34,6 @@ public interface IUserService {
 
     public Resource getAvatar(String fileName);
 
+    public void deleteUserById(Long id);
+
 }

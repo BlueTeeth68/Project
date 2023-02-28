@@ -1,8 +1,8 @@
-package com.mangareader.rest;
+package com.mangareader.web.rest;
 
-import com.mangareader.rest.vm.Token;
+import com.mangareader.web.rest.vm.Token;
 import com.mangareader.service.AuthenticationService;
-import com.mangareader.rest.vm.UsernamePasswordVM;
+import com.mangareader.web.rest.vm.UsernamePasswordVM;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

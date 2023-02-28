@@ -2,12 +2,12 @@ package com.mangareader.service;
 
 import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
-import com.mangareader.rest.vm.Token;
+import com.mangareader.web.rest.vm.Token;
 import com.mangareader.security.jwt.JWTService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
 import com.mangareader.service.error.UsernameAlreadyUsedException;
-import com.mangareader.rest.vm.UsernamePasswordVM;
+import com.mangareader.web.rest.vm.UsernamePasswordVM;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,10 +1,9 @@
-package com.mangareader.rest;
+package com.mangareader.web.rest;
 
 import com.mangareader.Util.APIUtil;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
-import com.mangareader.service.IStorageService;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
@@ -12,20 +11,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 
 @RestController
 @RequestMapping("/account")
@@ -37,8 +31,7 @@ public class AccountResource {
 
     private final UserMapper userMapper;
 
-    @Autowired
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -123,11 +116,20 @@ public class AccountResource {
                 .body(result);
     }
 
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> deleteUserById(
+    ) {
+        User user = getCurrentUser();
+        userService.deleteUserById(user.getId());
+        return ResponseEntity.noContent().build();
+    }
+
     private User getCurrentUser() {
+        log.debug("Get current user from Security Context Holder....");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         User user = userService.getUserByUsername(username);
-
         return user;
     }
 

@@ -37,6 +37,8 @@ public class SecurityConfig {
                 //permit all request from /api/auth/
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/image/**").permitAll()
+                .requestMatchers("/manga/**").permitAll()
+                .requestMatchers("/genre/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 // any request must be authenticated
                 .anyRequest()
