@@ -28,7 +28,7 @@ public class AuthenticationService {
 
     public Token register(UsernamePasswordVM request) /*throws Exception */ {
 
-        if (request.getUsername() == null) {
+        if (request.getUsername() == null || request.getUsername().isBlank()) {
             log.error("Username is null.");
             throw new InvalidUsernameException("Username is null.");
         }
@@ -40,16 +40,12 @@ public class AuthenticationService {
             log.error("Password must have at least 4 character.");
             throw new InvalidPasswordException("Password must have at least 4 character.");
         }
-        if (userService.existsByUsername(request.getUsername().toLowerCase())) {
-            log.error("Username {} has been used", request.getUsername());
-            throw new UsernameAlreadyUsedException();
-        }
 
         User user = new User();
         user.setUsername(request.getUsername());
         user.setDisplayName(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(RoleName.USER.toString());
+        user.setRole(RoleName.USER);
         userService.saveUser(user);
 
         String jwtToken = jwtService.generateToken(user);

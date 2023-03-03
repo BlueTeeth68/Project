@@ -1,9 +1,11 @@
-package com.mangareader.service;
+package com.mangareader.service.impl;
 
 import com.mangareader.domain.Genre;
 import com.mangareader.domain.Manga;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.MangaRepository;
+import com.mangareader.service.IGenreService;
+import com.mangareader.service.IMangaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,11 +57,19 @@ public class MangaServiceImpl implements IMangaService {
     @Override
     public List<Manga> getAllMangaSortByLatestUpdate() {
         log.info("Get all manga from database sorted by latest update desc.");
-        List<Manga> result = mangaRepository.findAllOrderByLatestUpdateDesc();
+        List<Manga> result = mangaRepository.findAllByOrderByLatestUpdateDesc();
 
         if (result.isEmpty()) {
             throw new ResourceNotFoundException("There are no manga in the database.");
         }
+
+        return result;
+    }
+
+    @Override
+    public List<Manga> getAllPaginateMangaOrderByLatestUpdate(int limit, int offset) {
+
+        List<Manga> result = mangaRepository.findAllAndPaginateOrderByLatestUpdate(limit, offset);
 
         return result;
     }

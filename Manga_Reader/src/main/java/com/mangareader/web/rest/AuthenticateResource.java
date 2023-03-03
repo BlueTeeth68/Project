@@ -5,9 +5,11 @@ import com.mangareader.service.AuthenticationService;
 import com.mangareader.web.rest.vm.UsernamePasswordVM;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -17,9 +19,9 @@ public class AuthenticateResource {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Token> register(@Valid @RequestBody UsernamePasswordVM register) {
-        return ResponseEntity.ok(authenticationService.register(register));
+    public ResponseEntity<Token> register(@Valid @RequestBody UsernamePasswordVM register) throws URISyntaxException {
+        Token token = authenticationService.register(register);
+        return ResponseEntity.created(new URI("/auth/register")).body(token);
     }
 
     @PostMapping("/authenticate")

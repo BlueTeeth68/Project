@@ -2,6 +2,7 @@ package com.mangareader.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -23,12 +24,12 @@ public class User {
     private Long id;
 
     @NotNull
+    @NotBlank
     @Size(min = 1, max = 50)
     @Column(length = 50, unique = true)
     private String username;
 
     @JsonIgnore
-    @Size(min = 8, max = 80)
     @Column(length = 80)
     private String password;
 
@@ -41,6 +42,7 @@ public class User {
     private String facebookId;
 
     @Size(max = 50)
+    @NotBlank
     @Column(name = "display_name", columnDefinition = "NVARCHAR(50)", unique = true)
     private String displayName;
 
@@ -53,16 +55,7 @@ public class User {
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", columnDefinition = "VARCHAR(20)", nullable = false)
-    private String role;
-
-    /*    @JsonIgnore*/
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JsonIgnoreProperties(value = {"id"}, allowSetters = true)
-//    @JoinTable(name = "user_role",
-//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-//    )
-//    private Set<Role> roles = new HashSet<>();
-
+    private RoleName role;
 }

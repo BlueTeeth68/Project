@@ -10,7 +10,11 @@ public interface IGenreService {
 
     Genre getGenreByName(String genreName);
 
+    List<Genre> getGenreByNameContaining(String genreName);
+
     List<Genre> getAllGenre();
+
+    List<Genre> getAllPaginateGenreSortedByName(int limit, int offset);
 
     List<Genre> getAllGenreSortedByName();
 

@@ -61,15 +61,15 @@ _# Read manga online website
 
 ### 1. User:
 
-#### 1.1 Get user list: *
+#### 1.1 Get user list (with paginate): *
 
 - Require: ADMIN
-- URL: /admin/users
+- URL: /admin/user/list
 - Method: GET
-- Request param: none
+- Request param: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<<User>> or not found exception
-- Description: Admin can get all user in the database
+- Response body: List<<User>>
+- Description: Admin can get limit user from database (paginate). If limit or page is null, return all user.
 
 #### 1.2 Get user by id/username: *
 
@@ -175,15 +175,16 @@ _# Read manga online website
 
 ### 2. Manga
 
-#### Get all manga from database - doing
+#### Get all manga from database *
 
 - Require: none
 - URL: /manga/list
 - Method: GET
-- Request param: none
+- Request param: limit, page (limit > 0, page >= 1)
 - Request body: none
 - Response body: List<<Manga>>
-- Description: user can load all manga from database sort by latest update time.
+- Description: user can load limit number of manga, sorted by latest update (paginate). If limit or page is null
+  return the first 1000 manga from database.
 
 #### Get mangas by name and keyword
 
@@ -229,27 +230,28 @@ _# Read manga online website
 
 ### 3. Genre
 
-#### Get all genre from database 
+#### Get all genre from database *
 
 - Require: none
 - URL: /genre/list
 - Method: GET
-- Request param: none
+- Request param: limit, page (optional) (limit > 0, page >=1)
 - Request body: none
 - Response body: List<<Genre>>
-- Description: user can load all genre from database sorted by id
+- Description: user can load a limit genre form database (paginate) or load the first 50 genre by set
+  limit or page to null
 
-#### Get genre by name or id
+#### Get genre by name or id *
 
 - Require: none
 - URL: /genre
 - Method: GET
 - Request param: id/name (depend on the purpose but just send 1 in 2)
 - Request body: none
-- Response body: Genre
-- Description: User can find genre by genreName or id
+- Response body: List<<Genre>>
+- Description: User can find genre by id or genre name
 
-#### Create new genre 
+#### Create new genre *
 
 - Require: ADMIN
 - URL: /genre
@@ -259,7 +261,7 @@ _# Read manga online website
 - Response body: Genre
 - Description: Admin user can add a new genre to database
 
-#### Change genre name 
+#### Change genre name *
 
 - Require: ADMIN
 - URL: /genre
@@ -269,7 +271,7 @@ _# Read manga online website
 - Response body: Genre
 - Description: Admin user can change the name of genre
 
-#### Delete genre 
+#### Delete genre (Testing)
 
 - Require: ADMIN
 - URL: /genre
@@ -281,15 +283,65 @@ _# Read manga online website
 
 ### 4. Author
 
-#### Get all author from database - doing
+#### Get all author from database *
 
-#### Get authors by created user - doing
+- Require: none
+- URL: /author/list
+- Method: GET
+- Request param: limit, page (limit > 0, page >= 1)
+- Request body: none
+- Response body: List<<Author>>
+- Description: User can find a limit author (paginate). Leave limit empty to retrieve the first 50 Author
 
-#### Create new author - doing
+#### Get author by id or a part of name *
 
-#### Change author name - doing
+- Require: none
+- URL: /author
+- Method: GET
+- Request param: id/ name 
+- Request body: none
+- Response body: List<<Author>>
+- Description: User can find author by id or author name (using LIKE (%name%))
 
-#### Delete author - doing
+#### Get authors by created user *
+
+- Require: none
+- URL: /author/created-by
+- Method: GET
+- Request param: userId
+- Request body: none
+- Response body: List<<Author>>
+- Description: User can find author by user's id who created this author
+
+#### Create new author *
+
+- Require: ADMIN, TRANSLATOR
+- URL: /author
+- Method: POST
+- Request param: none
+- Request body: Author (name)
+- Response body: Author
+- Description: Admin user can create new Genre 
+
+#### Change author name  *
+
+- Require: ADMIN, TRANSLATOR
+- URL: /author
+- Method: PATCH
+- Request param: id, name
+- Request body: none
+- Response body: Author
+- Description: User can change author's name that they have created (except admin)
+
+#### Delete author  *
+
+- Require: ADMIN, TRANSLATOR
+- URL: /author
+- Method: DELETE
+- Request param: id
+- Request body: none
+- Response body: none
+- Description: User can delete author's name that they have created (except admin)
 
 ### 5.Key word
 

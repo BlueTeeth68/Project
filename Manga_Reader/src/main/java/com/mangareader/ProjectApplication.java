@@ -23,34 +23,29 @@ public class ProjectApplication {
         String password = passwordEncoder.encode("0000");
 
         return args -> {
-//            userService.saveRole(new Role(null, "USER"));
-//            userService.saveRole(new Role(null, "TRANSLATOR"));
-//            userService.saveRole(new Role(null, "ADMIN"));
-
-            /*userService.saveUser(new User(null, "admin", password, null, null, "admin", null, true, null, new HashSet<>()));
-            userService.getRoles();
-
-            userService.addRoleToUser("admin", "user");
-            userService.addRoleToUser("admin", "admin");*/
 
             User user = new User();
             user.setUsername("SystemAdmin");
             user.setDisplayName("System Admin");
             user.setPassword(password);
-
-            /*Role roleAdmin = userService.getRoleByName("ADMIN");
-            Role roleUser = userService.getRoleByName("USER");
-            user.getRoles().add(roleUser);
-            user.getRoles().add(roleAdmin);*/
-            user.setRole(RoleName.ADMIN.toString());
+            user.setRole(RoleName.ADMIN);
             userService.saveUser(user);
 
             User commonUser = new User();
             commonUser.setUsername("User");
             commonUser.setDisplayName("Common User");
             commonUser.setPassword(password);
-            commonUser.setRole(RoleName.USER.toString());
+            commonUser.setRole(RoleName.USER);
             userService.saveUser(commonUser);
+
+            for (int i = 0; i < 20; i++) {
+                commonUser = new User();
+                commonUser.setUsername("User" + (i + 1));
+                commonUser.setDisplayName("Common User " + (i + 1));
+                commonUser.setPassword(password);
+                commonUser.setRole(RoleName.USER);
+                userService.saveUser(commonUser);
+            }
         };
     }
 

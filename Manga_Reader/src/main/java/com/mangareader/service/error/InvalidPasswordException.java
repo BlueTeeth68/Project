@@ -1,6 +1,8 @@
 package com.mangareader.service.error;
 
-public class InvalidPasswordException extends RuntimeException {
+import com.mangareader.exception.BadRequestException;
+
+public class InvalidPasswordException extends BadRequestException {
 
     public InvalidPasswordException(String message) {
         super(message);

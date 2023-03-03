@@ -1,25 +1,20 @@
 package com.mangareader.web.rest;
 
-import com.mangareader.Util.APIUtil;
+import com.mangareader.service.util.APIUtil;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
-import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("/account")
@@ -34,24 +29,19 @@ public class AccountResource {
     private final HttpServletRequest request;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-
-    public ResponseEntity<User> getCurrentLoginUser() throws URISyntaxException {
+    public ResponseEntity<User> getCurrentLoginUser() {
         User user = getCurrentUser();
         if (user.getAvatarUrl() != null) {
             user.setAvatarUrl(getServerName() + user.getAvatarUrl());
         }
-        return ResponseEntity
-                .created(new URI("/account/" + user.getDisplayName()))
-                .body(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/user")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<CommonUserDTO> getUserByIdOrUsername(
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String username
-    ) throws URISyntaxException, ResourceNotFoundException {
+    ) {
         User user;
 
         //find by id
@@ -71,16 +61,13 @@ public class AccountResource {
         if (result.getAvatarUrl() != null) {
             result.setAvatarUrl(getServerName() + result.getAvatarUrl());
         }
-        return ResponseEntity
-                .created(new URI("/account/user/" + result.getId()))
-                .body(result);
+        return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
     @PatchMapping()
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<User> changeDisplayName(
             @RequestParam String displayName
-    ) throws URISyntaxException {
+    ) {
 
         User user = getCurrentUser();
 
@@ -94,30 +81,25 @@ public class AccountResource {
         if (result.getAvatarUrl() != null) {
             result.setAvatarUrl(getServerName() + result.getAvatarUrl());
         }
-        return ResponseEntity
-                .created(new URI("/account"))
-                .body(result);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/avatar")
     public ResponseEntity<User> changeUserAvatar(
             @RequestParam("file") MultipartFile file
-    ) throws URISyntaxException {
+    ) {
         User user = getCurrentUser();
 
         User result = userService.updateAvatar(user, file);
 
-        if (user.getAvatarUrl() != null) {
-            user.setAvatarUrl(getServerName() + user.getAvatarUrl());
+        if (result.getAvatarUrl() != null) {
+            result.setAvatarUrl(getServerName() + result.getAvatarUrl());
         }
 
-        return ResponseEntity
-                .created(new URI("/avatar"))
-                .body(result);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deleteUserById(
     ) {
         User user = getCurrentUser();

@@ -6,19 +6,21 @@ import java.util.List;
 
 public interface IMangaService {
 
-    public Manga getMangaById(Long id);
+    Manga getMangaById(Long id);
 
-    public List<Manga> getMangaByGenre(Long genreId);
+    List<Manga> getMangaByGenre(Long genreId);
 
-    public List<Manga> getMangaByNameOrKeyword(String keyword);
+    List<Manga> getMangaByNameOrKeyword(String keyword);
 
-    public List<Manga> getAllMange();
+    List<Manga> getAllMange();
 
-    public List<Manga> getAllMangaSortByLatestUpdate();
+    List<Manga> getAllMangaSortByLatestUpdate();
 
-    public Manga addGenreToManga(Long mangaId, String genreName);
+    List<Manga> getAllPaginateMangaOrderByLatestUpdate(int limit, int offset);
 
-    public void deleteManga(Long id);
+    Manga addGenreToManga(Long mangaId, String genreName);
+
+    void deleteManga(Long id);
 
 
 }

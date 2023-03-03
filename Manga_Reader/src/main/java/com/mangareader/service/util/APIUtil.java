@@ -1,4 +1,4 @@
-package com.mangareader.Util;
+package com.mangareader.service.util;
 
 import com.mangareader.domain.RoleName;
 import com.mangareader.exception.BadRequestException;
@@ -12,6 +12,18 @@ public class APIUtil {
         try {
             log.info("Convert {} to Long.", input);
             result = Long.parseLong(input);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new BadRequestException(errorMessage);
+        }
+        return result;
+    }
+
+    public static Integer parseStringToInteger(String input, String errorMessage) {
+        Integer result;
+        try {
+            log.info("Convert {} to Integer.", input);
+            result = Integer.parseInt(input);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             throw new BadRequestException(errorMessage);

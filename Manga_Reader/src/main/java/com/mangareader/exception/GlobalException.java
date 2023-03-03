@@ -14,7 +14,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalException extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ResourceNotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleNotFoundException(
             RuntimeException ex) {
 
@@ -26,7 +25,6 @@ public class GlobalException extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({AccessDeniedException.class})
-    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<Object> handleAccessDeniedException(
             Exception ex, WebRequest request) {
         String error = "Access denied.";
@@ -37,7 +35,6 @@ public class GlobalException extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({DataAlreadyExistsException.class})
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Object> handleDataAlreadyExistsException(
             Exception ex, WebRequest request) {
         String error = "Data is already existed.";
@@ -48,7 +45,6 @@ public class GlobalException extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({BadRequestException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
             Exception ex, WebRequest request) {
         String error = "Bad request.";
@@ -59,7 +55,6 @@ public class GlobalException extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({StorageException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleStorageException(
             Exception ex, WebRequest request) {
         String error = "File is empty.";

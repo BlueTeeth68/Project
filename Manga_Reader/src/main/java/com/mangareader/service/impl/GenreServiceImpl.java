@@ -1,10 +1,11 @@
-package com.mangareader.service;
+package com.mangareader.service.impl;
 
 import com.mangareader.domain.Genre;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.GenreRepository;
+import com.mangareader.service.IGenreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,15 @@ public class GenreServiceImpl implements IGenreService {
     public Genre getGenreByName(String genreName) {
         log.info("Getting genre by name: " + genreName);
         return genreRepository.findByName(genreName).orElseThrow(
-                () -> new ResourceNotFoundException("Cannot find genre name " + genreName)
+                () -> new ResourceNotFoundException("There is no genre " + genreName + " in the database.")
         );
+    }
+
+    @Override
+    public List<Genre> getGenreByNameContaining(String genreName) {
+        log.info("Getting genre by name: " + genreName);
+        List<Genre> result = genreRepository.findByNameContaining(genreName);
+        return result;
     }
 
     @Override
@@ -45,9 +53,15 @@ public class GenreServiceImpl implements IGenreService {
     }
 
     @Override
+    public List<Genre> getAllPaginateGenreSortedByName(int limit, int offset) {
+        List<Genre> result = genreRepository.findLimitGenreAndSortByName(limit, offset);
+        return result;
+    }
+
+    @Override
     public List<Genre> getAllGenreSortedByName() {
         log.info("Getting all genre from the database.");
-        List<Genre> result = genreRepository.findAllOrderByNameAsc();
+        List<Genre> result = genreRepository.findAllByOrderByNameAsc();
         if (result.isEmpty()) {
             throw new ResourceNotFoundException("There are no genre in the database.");
         }
@@ -57,6 +71,9 @@ public class GenreServiceImpl implements IGenreService {
     @Override
     public Genre createNewGenre(Genre genre) {
 
+        if (genre.getId() != null) {
+            throw new BadRequestException("New genre can not have an id.");
+        }
         if (genreRepository.existsByName(genre.getName().toLowerCase())) {
             log.error("Input genreName {} is already exist.", genre.getName());
             throw new DataAlreadyExistsException("Genre is already exists.");

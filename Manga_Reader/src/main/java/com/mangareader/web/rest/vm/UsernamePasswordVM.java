@@ -19,6 +19,6 @@ public class UsernamePasswordVM {
 
     @NotNull
     @NotBlank
-    @Size(min = 4, max = 40)
+    @Size(min = 4, max = 20)
     private String password;
 }

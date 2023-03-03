@@ -1,25 +1,21 @@
 package com.mangareader.web.rest;
 
-import com.mangareader.Util.APIUtil;
+import com.mangareader.service.util.APIUtil;
 import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
-import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.service.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/user")
 @RequiredArgsConstructor
 @Slf4j
 public class UserResource {
@@ -28,13 +24,11 @@ public class UserResource {
 
     private final HttpServletRequest request;
 
-    @GetMapping("/user")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping
     public ResponseEntity<User> getUserByIdOrUsername(
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String username
-    ) throws URISyntaxException, ResourceNotFoundException {
+    ) {
         User result;
 
         //find by id
@@ -53,21 +47,26 @@ public class UserResource {
             result.setAvatarUrl(getServerName() + result.getAvatarUrl());
         }
 
-        return ResponseEntity
-                .created(new URI("/account/user/" + result.getId()))
-                .body(result);
+        return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
-    @GetMapping("/users")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.OK)
-    //if we want to use hasRole() instead, the role must have prefix "ROLE_"
-    // or the function will not work
-    public ResponseEntity<List<User>> getAllUser()
-            throws URISyntaxException, ResourceNotFoundException {
-        List<User> users = userService.getUsers();
+    @GetMapping("/list")
+    public ResponseEntity<List<User>> getAllAndPaginateUsers(
+            @RequestParam(required = false) String limit,
+            @RequestParam(required = false) String page
+    ) {
+        List<User> users;
 
-        //need to improve here
+        if (limit == null || page == null) {
+            users = userService.getAllAndPaginateUsers(1000, 0);
+//            users = userService.getUsers();
+        } else {
+            int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
+            int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception.");
+
+            int offset = limitNum * (pageNum - 1);
+            users = userService.getAllAndPaginateUsers(limitNum, offset);
+        }
 
         String serverName = getServerName();
 
@@ -79,40 +78,32 @@ public class UserResource {
                 }
         );
 
-        return ResponseEntity
-                .created(new URI("/admin/users"))
-                .body(users);
+        return new ResponseEntity<>(users, HttpStatus.FOUND);
     }
 
-    @PatchMapping("/user/role")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/role")
     public ResponseEntity<User> changeRoleOfUser(
             @RequestParam String id,
             @RequestParam String role
-    ) throws URISyntaxException {
+    ) {
         Long idNum = APIUtil.parseStringToLong(id, "id is not number exception");
         RoleName roleName = APIUtil.parseStringToRoleNameEnum(role.toUpperCase(),
                 "Role must be 'USER', 'TRANSLATOR' or 'ADMIN'");
         User user = userService.getUserById(idNum);
-        user.setRole(roleName.toString());
+        user.setRole(roleName);
         user = userService.saveUser(user);
 
         if (user.getAvatarUrl() != null) {
             user.setAvatarUrl(getServerName() + user.getAvatarUrl());
         }
-        return ResponseEntity
-                .created(new URI("/admin/user/role"))
-                .body(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PatchMapping("user/active-status")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/active-status")
     public ResponseEntity<User> changeActiveStatus(
             @RequestParam String id,
             @RequestParam String status
-    ) throws URISyntaxException {
+    ) {
         Long idNum = APIUtil.parseStringToLong(id, "id is not number exception");
         Boolean activate = APIUtil.parseStringToBoolean(status, "status is not a boolean variable.");
         User user = userService.getUserById(idNum);
@@ -121,9 +112,7 @@ public class UserResource {
         if (user.getAvatarUrl() != null) {
             user.setAvatarUrl(getServerName() + user.getAvatarUrl());
         }
-        return ResponseEntity
-                .created(new URI("/admin/user/active-status"))
-                .body(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     private String getServerName() {

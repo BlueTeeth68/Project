@@ -1,10 +1,16 @@
-package com.mangareader.service;
+package com.mangareader.service.impl;
 
 import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
+import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.UserRepository;
+import com.mangareader.service.IStorageService;
+import com.mangareader.service.IUserService;
+import com.mangareader.service.error.InvalidPasswordException;
+import com.mangareader.service.error.InvalidUsernameException;
+import com.mangareader.service.error.UsernameAlreadyUsedException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +37,21 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public User saveUser(User user) {
+        if (user.getId() != null) {
+            throw new BadRequestException("New user can not have an id.");
+        }
+        if (user.getUsername() == null || user.getUsername().isBlank()) {
+            log.error("Username is null or blank.");
+            throw new InvalidUsernameException("Username is null.");
+        }
+        if (user.getPassword() == null) {
+            log.error("Password is null.");
+            throw new InvalidPasswordException("Password is null.");
+        }
+        if (userRepository.existsByUsername(user.getUsername().toLowerCase())) {
+            log.error("Username {} has been used", user.getUsername());
+            throw new UsernameAlreadyUsedException();
+        }
 
         return userRepository.save(user);
     }
@@ -84,6 +105,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public List<User> getAllAndPaginateUsers(int limit, int offset) {
+        List<User> result = userRepository.findAllAndPaginateUser(limit, offset);
+        return result;
+    }
+
+    @Override
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
@@ -93,7 +120,7 @@ public class UserServiceImpl implements IUserService {
     public User changeUserRole(Long id, RoleName roleName) {
         User user = getUserById(id);
         log.info("Change role {} to user {}", roleName, user.getUsername());
-        user.setRole(roleName.toString());
+        user.setRole(roleName);
         return saveUser(user);
     }
 

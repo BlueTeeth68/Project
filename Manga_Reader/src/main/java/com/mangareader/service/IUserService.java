@@ -10,30 +10,32 @@ import java.util.List;
 
 public interface IUserService {
 
-    public User saveUser(User user);
+    User saveUser(User user);
 
-    public User updateUser(User user);
+    User updateUser(User user);
 
-    public void deleteUser(Long id);
+    void deleteUser(Long id);
 
-    public User getUserById(Long id) throws ResourceNotFoundException;
+    User getUserById(Long id) throws ResourceNotFoundException;
 
-    public User getUserByUsername(String username) throws ResourceNotFoundException;
+    User getUserByUsername(String username) throws ResourceNotFoundException;
 
-    public List<User> getUsersByActivateStatus(Boolean activate) throws ResourceNotFoundException;
+    List<User> getUsersByActivateStatus(Boolean activate) throws ResourceNotFoundException;
 
-    public List<User> getUsers() throws ResourceNotFoundException;
+    List<User> getUsers() throws ResourceNotFoundException;
 
-    public Boolean existsByUsername(String username);
+    List<User> getAllAndPaginateUsers(int limit, int offset);
 
-    public User changeUserRole(Long id, RoleName roleName);
+    Boolean existsByUsername(String username);
 
-    public User changeDisplayName(Long id, String displayName);
+    User changeUserRole(Long id, RoleName roleName);
 
-    public User updateAvatar(User user, MultipartFile file);
+    User changeDisplayName(Long id, String displayName);
 
-    public Resource getAvatar(String fileName);
+    User updateAvatar(User user, MultipartFile file);
 
-    public void deleteUserById(Long id);
+    Resource getAvatar(String fileName);
+
+    void deleteUserById(Long id);
 
 }
