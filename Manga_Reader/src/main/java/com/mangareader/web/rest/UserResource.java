@@ -5,6 +5,8 @@ import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.service.IUserService;
+import com.mangareader.web.rest.vm.ChangeUserRoleVM;
+import com.mangareader.web.rest.vm.ChangeUserStatusVM;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,14 +85,10 @@ public class UserResource {
 
     @PatchMapping("/role")
     public ResponseEntity<User> changeRoleOfUser(
-            @RequestParam String id,
-            @RequestParam String role
+            @RequestBody ChangeUserRoleVM vm
     ) {
-        Long idNum = APIUtil.parseStringToLong(id, "id is not number exception");
-        RoleName roleName = APIUtil.parseStringToRoleNameEnum(role.toUpperCase(),
-                "Role must be 'USER', 'TRANSLATOR' or 'ADMIN'");
-        User user = userService.getUserById(idNum);
-        user.setRole(roleName);
+        User user = userService.getUserById(vm.getId());
+        user.setRole(vm.getRoleName());
         user = userService.saveUser(user);
 
         if (user.getAvatarUrl() != null) {
@@ -101,13 +99,10 @@ public class UserResource {
 
     @PatchMapping("/active-status")
     public ResponseEntity<User> changeActiveStatus(
-            @RequestParam String id,
-            @RequestParam String status
+            @RequestBody ChangeUserStatusVM vm
     ) {
-        Long idNum = APIUtil.parseStringToLong(id, "id is not number exception");
-        Boolean activate = APIUtil.parseStringToBoolean(status, "status is not a boolean variable.");
-        User user = userService.getUserById(idNum);
-        user.setActivate(activate);
+        User user = userService.getUserById(vm.getId());
+        user.setActivate(vm.getStatus());
         user = userService.saveUser(user);
         if (user.getAvatarUrl() != null) {
             user.setAvatarUrl(getServerName() + user.getAvatarUrl());

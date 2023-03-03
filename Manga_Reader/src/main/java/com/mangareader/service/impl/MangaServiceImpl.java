@@ -88,4 +88,9 @@ public class MangaServiceImpl implements IMangaService {
     public void deleteManga(Long id) {
 
     }
+
+    @Override
+    public Boolean existsById(Long id) {
+        return mangaRepository.existsById(id);
+    }
 }

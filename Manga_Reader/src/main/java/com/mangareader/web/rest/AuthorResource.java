@@ -7,6 +7,7 @@ import com.mangareader.exception.BadRequestException;
 import com.mangareader.service.IAuthorService;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.util.APIUtil;
+import com.mangareader.web.rest.vm.ChangeAuthorVM;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,8 +93,13 @@ public class AuthorResource {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
     public ResponseEntity<Author> createNewAuthor(
-            @Valid @RequestBody Author author
+            @RequestBody String name
     ) {
+        if (name == null || name.isBlank()) {
+            throw new BadRequestException("name is null or blank");
+        }
+        Author author = new Author();
+        author.setName(name);
         User createdBy = getCurrentUser();
         author.setUser(createdBy);
         Author result = authorService.createAuthor(author);
@@ -101,23 +107,20 @@ public class AuthorResource {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    //changed here
     @PatchMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
     public ResponseEntity<Author> changeAuthorName(
-            @RequestParam String id,
-            @RequestParam String name
+            @Valid @RequestBody ChangeAuthorVM vm
     ) {
-        Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception");
-
         User currentUser = getCurrentUser();
         if (currentUser.getRole() == RoleName.TRANSLATOR) {
-            Author author = authorService.getAuthorById(idNum);
+            Author author = authorService.getAuthorById(vm.getId());
             if (author.getUser().getId() != currentUser.getId()) {
                 throw new AccessDeniedException("You are not allowed to delete this author.");
             }
         }
-
-        Author author = authorService.changeAuthorName(idNum, name);
+        Author author = authorService.changeAuthorName(vm.getId(), vm.getAuthorName());
 
         return new ResponseEntity<>(author, HttpStatus.OK);
     }
@@ -136,7 +139,7 @@ public class AuthorResource {
             }
         }
         authorService.deleteAuthor(idNum);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private User getCurrentUser() {

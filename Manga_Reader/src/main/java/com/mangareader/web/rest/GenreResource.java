@@ -84,8 +84,7 @@ public class GenreResource {
     ) {
         Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
         genreService.deleteGenre(idNum);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 }

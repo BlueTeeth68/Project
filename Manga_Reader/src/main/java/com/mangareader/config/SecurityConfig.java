@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .requestMatchers("/image/**").permitAll()
                 .requestMatchers("/manga/**").permitAll()
                 .requestMatchers("/genre/**").permitAll()
+                .requestMatchers("/keyword/**").permitAll()
                 .requestMatchers("/author/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 // any request must be authenticated

@@ -66,9 +66,8 @@ public class AccountResource {
 
     @PatchMapping()
     public ResponseEntity<User> changeDisplayName(
-            @RequestParam String displayName
+            @RequestBody String displayName
     ) {
-
         User user = getCurrentUser();
 
         if (displayName == null || displayName.isBlank()) {
@@ -104,7 +103,7 @@ public class AccountResource {
     ) {
         User user = getCurrentUser();
         userService.deleteUserById(user.getId());
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private User getCurrentUser() {

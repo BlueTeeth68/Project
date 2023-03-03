@@ -62,7 +62,7 @@ public class AuthenticationService {
         );
 
         User user = userService.getUserByUsername(request.getUsername());
-        var jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
         return new Token(jwtToken);
     }
 

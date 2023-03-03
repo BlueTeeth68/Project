@@ -86,8 +86,8 @@ _# Read manga online website
 - Require: ADMIN
 - URL: /admin/user/role
 - Method: PATCH
-- Request param: id, role (USER, ADMIN, TRANSLATOR)
-- Request body: none
+- Request param: none
+- Request body: ChangeUserRoleVM (id, role (USER, ADMIN, TRANSLATOR))
 - Response body: User or BadRequestException
 - Description: Admin can change role of a user
 
@@ -96,8 +96,8 @@ _# Read manga online website
 - Require: ADMIN
 - URL: /admin/user/active-status
 - Method: PATCH
-- Request param: id, status (true/false)
-- Request body: none
+- Request param: none
+- Request body: ChangeUserStatusVM (id, status (true/false))
 - Response body: User or BadRequestException
 - Description: Admin can activate or deactivate a user. User is deactivated can not log in to website
 
@@ -116,8 +116,8 @@ _# Read manga online website
 - Require: authenticated account
 - URL: /account/display-name
 - Method: PATCH
-- Request param: displayName
-- Request body: none
+- Request param: none
+- Request body: displayName
 - Response body: User or DataAlreadyExistsException
 - Description: user can change display name that has not been existed in the system
 
@@ -298,7 +298,7 @@ _# Read manga online website
 - Require: none
 - URL: /author
 - Method: GET
-- Request param: id/ name 
+- Request param: id/ name
 - Request body: none
 - Response body: List<<Author>>
 - Description: User can find author by id or author name (using LIKE (%name%))
@@ -319,9 +319,9 @@ _# Read manga online website
 - URL: /author
 - Method: POST
 - Request param: none
-- Request body: Author (name)
+- Request body: name
 - Response body: Author
-- Description: Admin user can create new Genre 
+- Description: Admin user can create new Genre
 
 #### Change author name  *
 
@@ -343,15 +343,57 @@ _# Read manga online website
 - Response body: none
 - Description: User can delete author's name that they have created (except admin)
 
-### 5.Key word
+### 5.Keyword
 
-#### Get all key word of manga - doing
+#### Get all keyword of manga sort by name *  TESTING
 
-#### Add keyword to a manga - doing
+- Require: none
+- URL: /keyword/manga
+- Method: GET
+- Request param: mangaId
+- Request body: none
+- Response body: List<Keyword>
+- Description: User can search all keyword of a manga
 
-#### Change keyword name - doing
+#### Get keyword by name and mangaId *
 
-#### Delete keyword - doing
+- Require: none
+- URL: /keyword
+- Method: GET
+- Request param: name, mangaId
+- Request body: none
+- Response body: Keyword
+- Description: User can search keyword by keyword's name and mangaId
+
+#### Add keyword to a manga - doing *
+
+- Require: none
+- URL: /keyword
+- Method: POST
+- Request param: none
+- Request body: KeywordDTO (name, mangaId)
+- Response body: Keyword
+- Description: Admin or translator can add a keyword to a manga
+
+#### Change keyword name - doing *
+
+- Require: none
+- URL: /keyword
+- Method: PATCH
+- Request param: none
+- Request body: ChangeKeywordVM (name, mangaId, newName)
+- Response body: Keyword
+- Description: Admin or translator can change name of a keyword in a manga
+
+#### Delete keyword - doing *
+
+- Require: none
+- URL: /keyword
+- Method: DELETE
+- Request param: name, mangaId
+- Request body: none
+- Response body: none
+- Description: Admin or translator can remove a keyword from a manga
 
 ### 6.Comment
 

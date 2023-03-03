@@ -1,5 +1,6 @@
 package com.mangareader.main.service.mapper;
 
+import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
@@ -37,7 +38,7 @@ public class UserMapperTest {
         log.info("Create default user entity for testing");
         user = new User();
         user.setId(10L);
-        user.setRole("ADMIN");
+        user.setRole(RoleName.ADMIN);
         user.setDisplayName("test admin");
         user.setActivate(true);
         user.setPassword(/*passwordEncoder.encode("0000")*/ "0000");

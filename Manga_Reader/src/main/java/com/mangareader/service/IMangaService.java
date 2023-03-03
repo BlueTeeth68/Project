@@ -22,5 +22,7 @@ public interface IMangaService {
 
     void deleteManga(Long id);
 
+    Boolean existsById(Long id);
+
 
 }
