@@ -1,5 +1,6 @@
 package com.mangareader.service.util;
 
+import com.mangareader.domain.MangaStatus;
 import com.mangareader.domain.RoleName;
 import com.mangareader.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,22 @@ public class APIUtil {
         try {
             log.info("Convert {} to Boolean.", input);
             result = Boolean.valueOf(input);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new BadRequestException(errorMessage);
+        }
+        return result;
+    }
+
+    public static MangaStatus parseStringToMangaStatus(String input, String errorMessage) {
+        if (input != null) {
+            input = input.charAt(0) + input.substring(1).toLowerCase();
+        }
+
+        MangaStatus result;
+        try {
+            log.info("Convert manga status {} to MangaStatus enum", input);
+            result = MangaStatus.valueOf(input);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             throw new BadRequestException(errorMessage);

@@ -26,6 +26,14 @@ public interface MangaRepository extends JpaRepository<Manga, Long> {
             " LIMIT ?2 OFFSET ?3) ", nativeQuery = true)
     List<Manga> findByNameOrKeywordOrderByName(String keyword, int limit, int offset);
 
+/*    @Query(value = " SELECT * FROM manga m " +
+            " WHERE m.name LIKE '%' + ?1 + '%' " +
+            " UNION " +
+            " SELECT * FROM manga m " +
+            " WHERE m.id IN ( " +
+            " SELECT DISTINCT k.manga_id FROM keyword k " +
+            " WHERE k.name LIKE '%' + ?1 + '%' )", nativeQuery = true)
+    List<Manga> findByNameOrKeywordOrderByName(String keyword);*/
 
     @Query(value = "SELECT m.* FROM manga m " +
             " INNER JOIN manga_genre mg ON " +
@@ -33,12 +41,25 @@ public interface MangaRepository extends JpaRepository<Manga, Long> {
             " LIMIT ?2 OFFSET ?3 ", nativeQuery = true)
     List<Manga> findLimitMangaByGenreID(Long id, int limit, int offset);
 
-//    @Query(value = " SELECT * FROM manga m " +
-//            " WHERE m.name LIKE '%' + ?1 + '%' " +
-//            " UNION " +
-//            " SELECT * FROM manga m " +
-//            " WHERE m.id IN ( " +
-//            " SELECT DISTINCT k.manga_id FROM keyword k " +
-//            " WHERE k.name LIKE '%' + ?1 + '%' )", nativeQuery = true)
-//    List<Manga> findByNameOrKeywordOrderByName(String keyword);
+    @Query(value = "SELECT m.* FROM manga m " +
+            " INNER JOIN manga_author ma ON " +
+            " m.id = ma.manga_id AND ma.author_id = ?1 " +
+            " LIMIT ?2 OFFSET ?3 ", nativeQuery = true)
+    List<Manga> findLimitMangaByAuthorId(Long id, int limit, int offset);
+
+    @Query(value = "SELECT * FROM manga " +
+            " WHERE user_id = ?1 " +
+            " LIMIT ?2 OFFSET ?3 ", nativeQuery = true)
+    List<Manga> findByUserIdOrderByName(Long id, int limit, int offset);
+
+    @Query(value = " SELECT * FROM manga m" +
+            " ORDER BY (m.view * m.rate) DESC " +
+            " LIMIT ?1 OFFSET ?2 ", nativeQuery = true)
+    List<Manga> findSuggestManga(int limit, int offset);
+
+    @Query(value = "SELECT * FROM manga m " +
+            " WHERE m.status = ?1 " +
+            " LIMIT ?2 OFFSET ?3 ", nativeQuery = true)
+    List<Manga> findMangaByStatusLimit(String status, int limit, int offset);
+
 }

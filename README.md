@@ -175,7 +175,7 @@
 
 ### 2. Manga
 
-#### Get all manga from database *
+#### Get limit (paginate) manga from database *
 
 - Require: none
 - URL: /manga/list
@@ -186,7 +186,7 @@
 - Description: user can load limit number of manga, sorted by latest update (paginate). If limit or page is null
   return the first 100 manga from database.
 
-#### Get mangas by name and keyword - doing
+#### Get mangas by name and keyword *
 
 - Require: none
 - URL: /manga/name
@@ -196,7 +196,7 @@
 - Response body: List<Manga>
 - Description: user can find limit (paginate) mangas by keyword/name. Default limit = 20, default page = 1
 
-#### Get mangas by genre - doing *
+#### Get mangas by genre *
 
 - Require: none
 - URL: /manga/genre
@@ -206,7 +206,7 @@
 - Response body: List<Manga>
 - Description: user can find limit (paginate) mangas by its genre. Default limit = 20, default page = 1
 
-#### Get manga by id - doing *
+#### Get manga by id *
 
 - Require: none
 - URL: /manga
@@ -216,19 +216,45 @@
 - Response body: Manga
 - Description: user can find manga by its id
 
-#### Get mangas by author name - doing
+#### Get mangas by author name *
 
-#### Get mangas by translator name -doing
+- Require: none
+- URL: /manga/author
+- Method: GET
+- Request param: id, optional: limit, page (limit > 0, page >= 1)
+- Request body: none
+- Response body: List<Manga>
+- Description: user can find limit (paginate) mangas by its authorId. Default limit = 20, default page = 1
 
-#### Sort manga by view
+#### Get mangas by translator id -doing
 
-#### Sort manga by lasted update
-
-#### Sort manga by rate
+- Require: none
+- URL: /manga/translator
+- Method: GET
+- Request param: id, optional: limit, page (limit > 0, page >= 1)
+- Request body: none
+- Response body: List<Manga>
+- Description: user can find limit (paginate) mangas by its translator (create user). Default limit = 20, default page = 1
 
 #### Suggest manga (sort by rate * view)
 
+- Require: none
+- URL: /manga/suggest
+- Method: GET
+- Request param: optional: limit, page (limit > 0, page >= 1)
+- Request body: none
+- Response body: List<Manga>
+- Description: user can find limit (paginate) mangas, order by (rate * view). Default limit = 20, default page = 1
+
 #### Get mangas by status
+
+- Require: none
+- URL: /manga/status
+- Method: GET
+- Request param: status (Ongoing/Completed), optional: limit, page (limit > 0, page >= 1)
+- Request body: none
+- Response body: List<Manga>
+- Description: user can find limit (paginate) mangas by status sorted. Default limit = 20, default page = 1
 
 #### Create manga
 
