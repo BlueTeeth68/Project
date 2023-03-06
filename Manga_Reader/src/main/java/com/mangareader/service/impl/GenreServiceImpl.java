@@ -54,6 +54,12 @@ public class GenreServiceImpl implements IGenreService {
 
     @Override
     public List<Genre> getAllPaginateGenreSortedByName(int limit, int offset) {
+        if (limit <= 0) {
+            throw new BadRequestException("limit must be greater than 0.");
+        }
+        if (offset < 0) {
+            throw new BadRequestException("offset must be greater than or equal to 0.");
+        }
         List<Genre> result = genreRepository.findLimitGenreAndSortByName(limit, offset);
         return result;
     }

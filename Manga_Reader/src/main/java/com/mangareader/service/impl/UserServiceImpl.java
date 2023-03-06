@@ -106,6 +106,12 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public List<User> getAllAndPaginateUsers(int limit, int offset) {
+        if (limit <= 0) {
+            throw new BadRequestException("limit must be greater than 0.");
+        }
+        if (offset < 0) {
+            throw new BadRequestException("offset must be greater than or equal to 0.");
+        }
         List<User> result = userRepository.findAllAndPaginateUser(limit, offset);
         return result;
     }

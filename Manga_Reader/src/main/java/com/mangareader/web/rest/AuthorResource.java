@@ -150,5 +150,4 @@ public class AuthorResource {
         return user;
     }
 
-
 }

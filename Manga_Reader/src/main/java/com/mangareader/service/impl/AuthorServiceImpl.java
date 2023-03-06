@@ -8,11 +8,13 @@ import com.mangareader.repository.AuthorRepository;
 import com.mangareader.service.IAuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class AuthorServiceImpl implements IAuthorService {
 
     private final AuthorRepository authorRepository;
@@ -54,6 +56,12 @@ public class AuthorServiceImpl implements IAuthorService {
 
     @Override
     public List<Author> getLimitAuthor(int limit, int offset) {
+        if (limit <= 0) {
+            throw new BadRequestException("limit must be greater than 0.");
+        }
+        if (offset < 0) {
+            throw new BadRequestException("offset must be greater than or equal to 0.");
+        }
         List<Author> result = authorRepository.findLimitAuthor(limit, offset);
         return result;
     }

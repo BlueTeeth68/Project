@@ -2,6 +2,7 @@ package com.mangareader.service.impl;
 
 import com.mangareader.domain.Genre;
 import com.mangareader.domain.Manga;
+import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.MangaRepository;
 import com.mangareader.service.IGenreService;
@@ -24,6 +25,7 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Manga getMangaById(Long id) {
+        log.info("Getting manga " + id + " in the database.......");
         return mangaRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Manga " + id + " does not exist.")
         );
@@ -34,13 +36,50 @@ public class MangaServiceImpl implements IMangaService {
         Genre genre = genreService.getGenreById(genreId);
         List<Manga> result = genre.getMangas().stream().toList();
         if (result.isEmpty()) {
-            throw new ResourceNotFoundException("There are no mange with genre " + genre.getName());
+            throw new ResourceNotFoundException("There are no manga with genre " + genre.getName());
         }
         return result;
     }
 
     @Override
-    public List<Manga> getMangaByNameOrKeyword(String keyword) {
+    public List<Manga> getMangaByGenre(Long genreID, int limit, int offset) {
+        if (limit <= 0) {
+            throw new BadRequestException("limit must be greater than 0.");
+        }
+        if (offset < 0) {
+            throw new BadRequestException("offset must be greater than or equal to 0.");
+        }
+        List<Manga> mangas = mangaRepository.findLimitMangaByGenreID(genreID, limit, offset);
+        if (mangas.isEmpty()) {
+            throw new ResourceNotFoundException("Resource not found.");
+        }
+        return mangas;
+    }
+
+    @Override
+    public List<Manga> getMangaByNameOrKeyword(String keyword, int limit, int offset) {
+
+        if (keyword == null || keyword.isBlank()) {
+            throw new BadRequestException("Keyword is null or blank.");
+        }
+        if (limit <= 0) {
+            throw new BadRequestException("limit must be greater than 0.");
+        }
+        if (offset < 0) {
+            throw new BadRequestException("offset must be greater than or equal to 0.");
+        }
+        List<Manga> mangas = mangaRepository.findByNameOrKeywordOrderByName(keyword, limit, offset);
+        if (mangas.isEmpty()) {
+            throw new ResourceNotFoundException("Resource not found.");
+        }
+        return mangas;
+    }
+
+    @Override
+    public List<Manga> getMangaByName(String name) {
+        log.info("Getting mangas from database by name LIKE.......");
+        List<Manga> mangas = mangaRepository.findByNameContainingOrderByName(name);
+
         return null;
     }
 
@@ -69,6 +108,12 @@ public class MangaServiceImpl implements IMangaService {
     @Override
     public List<Manga> getAllPaginateMangaOrderByLatestUpdate(int limit, int offset) {
 
+        if (limit <= 0) {
+            throw new BadRequestException("limit must be greater than 0.");
+        }
+        if (offset < 0) {
+            throw new BadRequestException("offset must be greater than or equal to 0.");
+        }
         List<Manga> result = mangaRepository.findAllAndPaginateOrderByLatestUpdate(limit, offset);
 
         return result;

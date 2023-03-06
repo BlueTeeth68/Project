@@ -12,11 +12,13 @@ import com.mangareader.service.IMangaService;
 import com.mangareader.web.rest.vm.ChangeKeywordVM;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class KeywordServiceImpl implements IKeywordService {
 
     private final KeywordRepository keywordRepository;
@@ -114,7 +116,7 @@ public class KeywordServiceImpl implements IKeywordService {
 
     @Override
     public void deleteKeyword(String name, Long mangaId) {
-        if(name == null || name.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new BadRequestException("Name is null or blank.");
         }
         Manga manga = mangaService.getMangaById(mangaId);

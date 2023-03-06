@@ -27,7 +27,7 @@ public class SecurityConfig {
                 //disable csrf
                 .csrf().disable()
                 //add our custom filter before UsernamePasswordAuthenticationFilter
-//                .authenticationProvider(authenticationProvider)
+                //.authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticateFilter, UsernamePasswordAuthenticationFilter.class)
                 //set session to stateless
                 .sessionManagement()

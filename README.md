@@ -1,4 +1,4 @@
-_# Read manga online website
+# Read manga online website
 
 # Function list:
 
@@ -68,7 +68,7 @@ _# Read manga online website
 - Method: GET
 - Request param: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<<User>>
+- Response body: List<User>
 - Description: Admin can get limit user from database (paginate). If limit or page is null, return all user.
 
 #### 1.2 Get user by id/username: *
@@ -182,19 +182,43 @@ _# Read manga online website
 - Method: GET
 - Request param: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<<Manga>>
+- Response body: List<Manga>
 - Description: user can load limit number of manga, sorted by latest update (paginate). If limit or page is null
-  return the first 1000 manga from database.
+  return the first 100 manga from database.
 
-#### Get mangas by name and keyword
+#### Get mangas by name and keyword - doing
 
-#### Get mangas by genre
+- Require: none
+- URL: /manga/name
+- Method: GET
+- Request param: keyword, optional: limit, page (limit > 0, page >= 1)
+- Request body:
+- Response body: List<Manga>
+- Description: user can find limit (paginate) mangas by keyword/name. Default limit = 20, default page = 1
 
-#### Get manga by id
+#### Get mangas by genre - doing *
 
-#### Get mangas by author name
+- Require: none
+- URL: /manga/genre
+- Method: GET
+- Request param: id, optional: limit, page (limit > 0, page >= 1)
+- Request body:
+- Response body: List<Manga>
+- Description: user can find limit (paginate) mangas by its genre. Default limit = 20, default page = 1
 
-#### Get mangas by translator name
+#### Get manga by id - doing *
+
+- Require: none
+- URL: /manga
+- Method: GET
+- Request param: id
+- Request body: none
+- Response body: Manga
+- Description: user can find manga by its id
+
+#### Get mangas by author name - doing
+
+#### Get mangas by translator name -doing
 
 #### Sort manga by view
 
@@ -237,7 +261,7 @@ _# Read manga online website
 - Method: GET
 - Request param: limit, page (optional) (limit > 0, page >=1)
 - Request body: none
-- Response body: List<<Genre>>
+- Response body: List<Genre>
 - Description: user can load a limit genre form database (paginate) or load the first 50 genre by set
   limit or page to null
 
@@ -248,7 +272,7 @@ _# Read manga online website
 - Method: GET
 - Request param: id/name (depend on the purpose but just send 1 in 2)
 - Request body: none
-- Response body: List<<Genre>>
+- Response body: List<Genre>
 - Description: User can find genre by id or genre name
 
 #### Create new genre *
@@ -290,7 +314,7 @@ _# Read manga online website
 - Method: GET
 - Request param: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<<Author>>
+- Response body: List<Author>
 - Description: User can find a limit author (paginate). Leave limit empty to retrieve the first 50 Author
 
 #### Get author by id or a part of name *
@@ -300,7 +324,7 @@ _# Read manga online website
 - Method: GET
 - Request param: id/ name
 - Request body: none
-- Response body: List<<Author>>
+- Response body: List<Author>
 - Description: User can find author by id or author name (using LIKE (%name%))
 
 #### Get authors by created user *
@@ -310,7 +334,7 @@ _# Read manga online website
 - Method: GET
 - Request param: userId
 - Request body: none
-- Response body: List<<Author>>
+- Response body: List<Author>
 - Description: User can find author by user's id who created this author
 
 #### Create new author *
@@ -323,7 +347,7 @@ _# Read manga online website
 - Response body: Author
 - Description: Admin user can create new Genre
 
-#### Change author name  *
+#### Change author name *
 
 - Require: ADMIN, TRANSLATOR
 - URL: /author
@@ -333,7 +357,7 @@ _# Read manga online website
 - Response body: Author
 - Description: User can change author's name that they have created (except admin)
 
-#### Delete author  *
+#### Delete author *
 
 - Require: ADMIN, TRANSLATOR
 - URL: /author
@@ -365,7 +389,7 @@ _# Read manga online website
 - Response body: Keyword
 - Description: User can search keyword by keyword's name and mangaId
 
-#### Add keyword to a manga - doing *
+#### Add keyword to a manga -  *
 
 - Require: none
 - URL: /keyword
@@ -375,7 +399,7 @@ _# Read manga online website
 - Response body: Keyword
 - Description: Admin or translator can add a keyword to a manga
 
-#### Change keyword name - doing *
+#### Change keyword name -  *
 
 - Require: none
 - URL: /keyword
@@ -385,7 +409,7 @@ _# Read manga online website
 - Response body: Keyword
 - Description: Admin or translator can change name of a keyword in a manga
 
-#### Delete keyword - doing *
+#### Delete keyword - * testing
 
 - Require: none
 - URL: /keyword
@@ -410,3 +434,7 @@ _# Read manga online website
 #### Change reply comment
 
 #### Report comment
+
+### 7.Notification
+
+### 8.Report

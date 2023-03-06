@@ -10,7 +10,11 @@ public interface IMangaService {
 
     List<Manga> getMangaByGenre(Long genreId);
 
-    List<Manga> getMangaByNameOrKeyword(String keyword);
+    List<Manga> getMangaByGenre(Long genreID, int limit, int offset);
+
+    List<Manga> getMangaByNameOrKeyword(String keyword, int limit, int offset);
+
+    List<Manga> getMangaByName(String name);
 
     List<Manga> getAllMange();
 

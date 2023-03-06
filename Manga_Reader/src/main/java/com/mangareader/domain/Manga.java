@@ -53,6 +53,7 @@ public class Manga {
     private Integer totalVote = 0;
 
     @Column(name = "status", columnDefinition = "NVARCHAR(20)")
+    @Enumerated(EnumType.STRING)
     private MangaStatus status = MangaStatus.Ongoing;
 
     @Column(name = "latest_update")
