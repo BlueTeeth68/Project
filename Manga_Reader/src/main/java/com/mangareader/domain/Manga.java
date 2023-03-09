@@ -1,5 +1,6 @@
 package com.mangareader.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -30,14 +31,16 @@ public class Manga {
     @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(256)")
     private String name;
 
-    @Lob
-    @NotNull
-    @Column(name = "cover_image_url", columnDefinition = "NVARCHAR(100)", nullable = false)
+    @Column(name = "cover_image_url", columnDefinition = "NVARCHAR(100)")
     private String coverImageUrl;
 
     @Min(0)
     @Column(name = "view")
     private Integer view = 0;
+
+    @Min(0)
+    @Column(name = "avg_view")
+    private Float avgView = 0F;
 
     @Size(max = 1000)
     @Column(name = "summary", columnDefinition = "NVARCHAR(1000)")
@@ -59,19 +62,20 @@ public class Manga {
     @Column(name = "latest_update")
     private LocalDateTime latestUpdate = LocalDateTime.now();
 
+    @NotNull
     @Min(1900)
     @Max(2100)
-    @Column(name = "year_of_publication")
+    @Column(name = "year_of_publication", nullable = false)
     private Integer yearOfPublication;
 
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id"/*, updatable = false*/)
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(name = "manga_genre",
             joinColumns = @JoinColumn(name = "manga_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
@@ -79,12 +83,36 @@ public class Manga {
     @JsonIgnoreProperties(value = "mangas", allowSetters = true)
     private Set<Genre> genres = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(name = "manga_author",
             joinColumns = @JoinColumn(name = "manga_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    @JsonIgnoreProperties(value = "mangas", allowSetters = true)
+    @JsonIgnoreProperties(value = {"mangas", "created_by"}, allowSetters = true)
     private Set<Author> authors = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Chapter> chapters = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Bookmark> bookmarks = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Rate> rates = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Keyword> keywords = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Comment> comments = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Report> reports = new HashSet<>();
 
 }

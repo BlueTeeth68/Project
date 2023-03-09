@@ -1,5 +1,6 @@
 package com.mangareader.web.rest;
 
+import com.mangareader.service.IMangaService;
 import com.mangareader.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -17,10 +18,23 @@ public class ImageResource {
 
     private final IUserService userService;
 
+    private final IMangaService mangaService;
+
     @GetMapping("/avatar/{filename:.+}")
     public ResponseEntity<Resource> loadFile(@PathVariable String filename) {
 
         Resource file = userService.getAvatar(filename);
+
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
+    }
+
+    @GetMapping("/manga/{folder}/{filename:.+}")
+    public ResponseEntity<Resource> loadCoverImageFile(
+            @PathVariable("filename") String filename,
+            @PathVariable("folder") String folder
+    ) {
+
+        Resource file = mangaService.getCoverImage(folder + "/" + filename);
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
     }

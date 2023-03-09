@@ -29,11 +29,14 @@ public class Author {
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties(value = "authors", allowSetters = true)
     private Set<Manga> mangas = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", updatable = false)
+    //    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "created_by"/*, updatable = false*/)
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "username", "googleId",
+            "facebookId", "createdDate"}) //concentrate here
     private User user;
 }

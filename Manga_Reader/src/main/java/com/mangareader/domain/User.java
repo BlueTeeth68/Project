@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -58,4 +60,59 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", columnDefinition = "VARCHAR(20)", nullable = false)
     private RoleName role;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST})
+    private Set<Manga> mangas = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST})
+    private Set<Author> authors = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<History> histories = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Notification> notifications = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Bookmark> bookmarks = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Rate> rates = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Comment> comments = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<ReplyComment> replyComments = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Report> reports = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reporter", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<Report> reported = new HashSet<>();
+
+    @PreRemove
+    void collapseForeignKey() {
+        mangas.forEach(
+                manga -> {
+                    manga.setUser(null);
+                }
+        );
+
+        authors.forEach(
+                author -> {
+                    author.setUser(null);
+                }
+        );
+    }
 }

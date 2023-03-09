@@ -1,5 +1,6 @@
 package com.mangareader.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,7 @@ public class History {
     @Id
     @ManyToOne
     @JoinColumn(name = "chapter_id")
+    @JsonIgnoreProperties(value = "manga", allowSetters = true)
     private Chapter chapter;
 
     @Column()

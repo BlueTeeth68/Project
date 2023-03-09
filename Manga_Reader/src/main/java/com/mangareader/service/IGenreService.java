@@ -3,12 +3,15 @@ package com.mangareader.service;
 import com.mangareader.domain.Genre;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IGenreService {
 
     Genre getGenreById(Long id);
 
     Genre getGenreByName(String genreName);
+
+    Set<Genre> getGenreByName (Set<String> genreNames);
 
     List<Genre> getGenreByNameContaining(String genreName);
 
@@ -25,5 +28,6 @@ public interface IGenreService {
     Genre changeGenreName(Genre genre);
 
     void deleteGenre(Long id);
+
 
 }

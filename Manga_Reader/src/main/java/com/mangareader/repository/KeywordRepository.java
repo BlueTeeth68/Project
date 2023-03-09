@@ -19,5 +19,7 @@ public interface KeywordRepository extends JpaRepository<Keyword, KeywordId> {
             " WHERE name LIKE '%' + ?1 + '%' )", nativeQuery = true)
     List<Manga> findMangasByKeyword(String keyword);
 
-
+    @Query(value = " DELETE FROM keyword " +
+            " WHERE manga_id = ?1 ", nativeQuery = true)
+    void deleteAllKeywordOfManga(Long id);
 }

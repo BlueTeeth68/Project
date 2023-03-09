@@ -10,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -33,6 +36,18 @@ public class GenreServiceImpl implements IGenreService {
         return genreRepository.findByName(genreName).orElseThrow(
                 () -> new ResourceNotFoundException("There is no genre " + genreName + " in the database.")
         );
+    }
+
+    @Override
+    public Set<Genre> getGenreByName(Set<String> genreNames) {
+        log.info("Getting genres by List genreName");
+        Set<Genre> genres = new HashSet<>();
+        for (String name : genreNames) {
+            log.info("Get genre " + name + " from database.");
+            Genre temp = getGenreByName(name);
+            genres.add(temp);
+        }
+        return genres;
     }
 
     @Override

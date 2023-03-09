@@ -17,10 +17,14 @@ public interface IKeywordService {
 
     List<Manga> getMangaByKeyword(String name);
 
+    Manga addKeywordToManga(Long mangaId, List<String> keywords);
+
     Keyword changeKeywordName(ChangeKeywordVM vm);
 
     void deleteKeyword(KeywordId id);
 
     void deleteKeyword(String name, Long mangaId);
+
+    void deleteKeywordOfManga(Long id);
 
 }

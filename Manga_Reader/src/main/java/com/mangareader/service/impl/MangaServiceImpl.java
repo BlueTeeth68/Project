@@ -1,17 +1,21 @@
 package com.mangareader.service.impl;
 
-import com.mangareader.domain.Genre;
-import com.mangareader.domain.Manga;
+import com.mangareader.domain.*;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.MangaRepository;
-import com.mangareader.service.IGenreService;
-import com.mangareader.service.IMangaService;
+import com.mangareader.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -23,6 +27,14 @@ public class MangaServiceImpl implements IMangaService {
     @Autowired
     private IGenreService genreService;
 
+    @Autowired
+    private IAuthorService authorService;
+
+    @Autowired
+    private IStorageService storageService;
+
+    private final String MANGA_FOLDER = "./image/manga/";
+
     @Override
     public Manga getMangaById(Long id) {
         log.info("Getting manga " + id + " in the database.......");
@@ -31,18 +43,18 @@ public class MangaServiceImpl implements IMangaService {
         );
     }
 
-    @Override
-    public List<Manga> getMangaByGenre(Long genreId) {
-        log.info("Getting genre by id.......");
-        Genre genre = genreService.getGenreById(genreId);
-        log.info("Getting list of manga from genre........");
-        List<Manga> result = genre.getMangas().stream().toList();
-        if (result.isEmpty()) {
-            log.error("Resource not found");
-            throw new ResourceNotFoundException("There are no manga with genre " + genre.getName());
-        }
-        return result;
-    }
+//    @Override
+//    public List<Manga> getMangaByGenre(Long genreId) {
+//        log.info("Getting genre by id.......");
+//        Genre genre = genreService.getGenreById(genreId);
+//        log.info("Getting list of manga from genre........");
+//        List<Manga> result = genre.getMangas().stream().toList();
+//        if (result.isEmpty()) {
+//            log.error("Resource not found");
+//            throw new ResourceNotFoundException("There are no manga with genre " + genre.getName());
+//        }
+//        return result;
+//    }
 
     @Override
     public List<Manga> getMangaByGenre(Long genreID, int limit, int offset) {
@@ -212,11 +224,41 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
-    public Manga addGenreToManga(Long mangaId, String genreName) {
+    public Manga createManga(Manga manga) {
+        return mangaRepository.save(manga);
+    }
+
+    @Override
+    public Manga addGenreToManga(Long mangaId, Set<String> genreName) {
         Manga manga = getMangaById(mangaId);
-        Genre genre = genreService.getGenreByName(genreName);
-        manga.getGenres().add(genre);
+        Set<Genre> genres = genreService.getGenreByName(genreName);
+        manga.setGenres(genres);
+//        manga.setLatestUpdate(LocalDateTime.now());
         mangaRepository.save(manga);
+        return manga;
+    }
+
+    @Override
+    public Manga addAuthorsToManga(Long mangaId, Set<Long> authorIds) {
+        Manga manga = getMangaById(mangaId);
+        Set<Author> authors = authorService.getAuthorByIds(authorIds);
+        manga.setAuthors(authors);
+        mangaRepository.save(manga);
+        return manga;
+    }
+
+
+    @Override
+    public Manga updateCoverImage(Long id, MultipartFile file) {
+        Manga manga = getMangaById(id);
+        String folderName = "manga" + id;
+
+        storageService.store(file, MANGA_FOLDER + folderName, "cover_image");
+
+        String coverImageUrl = /*SERVER_NAME + */ "/image/manga/" + folderName + "/" + "cover_image";
+
+        manga.setCoverImageUrl(coverImageUrl);
+        manga = mangaRepository.save(manga);
 
         return manga;
     }
@@ -224,6 +266,12 @@ public class MangaServiceImpl implements IMangaService {
     @Override
     public void deleteManga(Long id) {
 
+    }
+
+    @Override
+    public Resource getCoverImage(String fileName) {
+        Resource file = storageService.loadAsResource(fileName, MANGA_FOLDER);
+        return file;
     }
 
     @Override

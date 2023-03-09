@@ -182,7 +182,7 @@
 - Method: GET
 - Request param: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<Manga>
+- Response body: List<MangaDTO>
 - Description: user can load limit number of manga, sorted by latest update (paginate). If limit or page is null
   return the first 100 manga from database.
 
@@ -193,7 +193,7 @@
 - Method: GET
 - Request param: keyword, optional: limit, page (limit > 0, page >= 1)
 - Request body:
-- Response body: List<Manga>
+- Response body: List<MangaDTO>
 - Description: user can find limit (paginate) mangas by keyword/name. Default limit = 20, default page = 1
 
 #### Get mangas by genre *
@@ -203,7 +203,7 @@
 - Method: GET
 - Request param: id, optional: limit, page (limit > 0, page >= 1)
 - Request body:
-- Response body: List<Manga>
+- Response body: List<MangaDTO>
 - Description: user can find limit (paginate) mangas by its genre. Default limit = 20, default page = 1
 
 #### Get manga by id *
@@ -213,7 +213,7 @@
 - Method: GET
 - Request param: id
 - Request body: none
-- Response body: Manga
+- Response body: MangaDTO
 - Description: user can find manga by its id
 
 #### Get mangas by author name *
@@ -223,7 +223,7 @@
 - Method: GET
 - Request param: id, optional: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<Manga>
+- Response body: List<MangaDTO>
 - Description: user can find limit (paginate) mangas by its authorId. Default limit = 20, default page = 1
 
 #### Get mangas by translator id -doing
@@ -233,17 +233,18 @@
 - Method: GET
 - Request param: id, optional: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<Manga>
-- Description: user can find limit (paginate) mangas by its translator (create user). Default limit = 20, default page = 1
+- Response body: List<MangaDTO>
+- Description: user can find limit (paginate) mangas by its translator (create user). Default limit = 20, default page =
+  1
 
-#### Suggest manga (sort by rate * view)
+#### Get suggest manga (sort by rate * avg_view)
 
 - Require: none
 - URL: /manga/suggest
 - Method: GET
 - Request param: optional: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<Manga>
+- Response body: List<MangaDTO>
 - Description: user can find limit (paginate) mangas, order by (rate * view). Default limit = 20, default page = 1
 
 #### Get mangas by status
@@ -253,14 +254,57 @@
 - Method: GET
 - Request param: status (Ongoing/Completed), optional: limit, page (limit > 0, page >= 1)
 - Request body: none
-- Response body: List<Manga>
+- Response body: List<MangaDTO>
 - Description: user can find limit (paginate) mangas by status sorted. Default limit = 20, default page = 1
 
-#### Create manga
+#### Create manga *
+
+- Require: ADMIN or TRANSLATOR
+- URL: /manga
+- Method: POST
+- Request param: none
+- Request body: CreateMangaVM (name (not blank, min = 1, max = 256),
+  summary (optional), yearOfPublication (not null, between 1900 and 2100))
+- Response body: Manga
+- Description: translator or admin can create new manga
+
+#### Update cover image *         3
+
+- Require: ADMIN or TRANSLATOR
+- URL: /manga/cover-image
+- Method: PATCH
+- Request param: none
+- Request body: id, MultipartFile file
+- Response body: Manga
+- Description: translator or admin can update their own manga cover_image
+
+#### Set genres to manga *        1
+
+- Require: ADMIN or TRANSLATOR
+- URL: /manga/genre
+- Method: PATCH
+- Request param: none
+- Request body: SetGenreToMangaVM (id: not null, Set/list genreName: not null)
+- Response body: Manga
+- Description: translator or admin can set genres for their own manga
+
+#### Set authors to manga *       2
+
+- Require: none
+- URL: /manga/author
+- Method: PATCH
+- Request param: none
+- Request body: SetAuthorsToMangaVM (id: not null, Set/List authorId: not null)
+- Response body: Manga
+- Description: translator or admin can set authors for their own manga
+
+#### Add keyword to manga - doing
+
+#### Remove keyword to manga - doing
 
 #### Change manga information
 
-#### Change manga cover image
+#### Change manga cover image - doing
 
 #### Vote manga
 
@@ -333,9 +377,9 @@
 
 ### 4. Author
 
-#### Get all author from database *
+#### Get all author from database - ok
 
-- Require: none
+- Require: ADMIN or TRANSLATOR
 - URL: /author/list
 - Method: GET
 - Request param: limit, page (limit > 0, page >= 1)
@@ -345,7 +389,7 @@
 
 #### Get author by id or a part of name *
 
-- Require: none
+- Require: ADMIN or TRANSLATOR
 - URL: /author
 - Method: GET
 - Request param: id/ name
@@ -355,7 +399,7 @@
 
 #### Get authors by created user *
 
-- Require: none
+- Require: ADMIN or TRANSLATOR
 - URL: /author/created-by
 - Method: GET
 - Request param: userId
@@ -395,7 +439,7 @@
 
 ### 5.Keyword
 
-#### Get all keyword of manga sort by name *  TESTING
+#### Get all keyword of manga sort by name *
 
 - Require: none
 - URL: /keyword/manga

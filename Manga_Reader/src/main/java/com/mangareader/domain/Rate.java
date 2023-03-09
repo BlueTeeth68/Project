@@ -1,5 +1,6 @@
 package com.mangareader.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -31,6 +32,7 @@ public class Rate {
     @Id
     @ManyToOne
     @JoinColumn(name = "manga_id", nullable = false)
+    @JsonIgnoreProperties(value = {"user", "genres", "authors"}, allowSetters = true)
     private Manga manga;
 
     @Id

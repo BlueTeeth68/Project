@@ -5,12 +5,15 @@ import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.AuthorRepository;
+import com.mangareader.repository.UserRepository;
 import com.mangareader.service.IAuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -18,6 +21,8 @@ import java.util.List;
 public class AuthorServiceImpl implements IAuthorService {
 
     private final AuthorRepository authorRepository;
+
+    private final UserRepository userRepository;
 
     @Override
     public Author createAuthor(Author author) {
@@ -45,6 +50,16 @@ public class AuthorServiceImpl implements IAuthorService {
         Author result = authorRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("There are no author " + id + " in the database")
         );
+        return result;
+    }
+
+    @Override
+    public Set<Author> getAuthorByIds(Set<Long> ids) {
+        Set<Author> result = new HashSet<>();
+        ids.forEach(id -> {
+            Author tmp = getAuthorById(id);
+            result.add(tmp);
+        });
         return result;
     }
 

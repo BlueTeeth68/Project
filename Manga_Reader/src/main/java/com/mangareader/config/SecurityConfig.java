@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .requestMatchers("/manga/**").permitAll()
                 .requestMatchers("/genre/**").permitAll()
                 .requestMatchers("/keyword/**").permitAll()
-                .requestMatchers("/author/**").permitAll()
+                .requestMatchers("/author/**").hasAnyAuthority("ADMIN", "TRANSLATOR")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 // any request must be authenticated
                 .anyRequest()

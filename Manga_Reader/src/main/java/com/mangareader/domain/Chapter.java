@@ -1,5 +1,7 @@
 package com.mangareader.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -7,6 +9,8 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "chapter")
@@ -34,5 +38,10 @@ public class Chapter {
 
     @ManyToOne
     @JoinColumn(name = "manga_id", nullable = false)
+    @JsonIgnoreProperties(value = {"user", "genres", "authors"}, allowSetters = true)
     private Manga manga;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chapter", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private Set<ChapterImage> chapterImages = new HashSet<>();
 }

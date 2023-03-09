@@ -26,9 +26,12 @@ public class Genre {
     @Column(length = 50, nullable = false, unique = true)
     private String name;
 
+    //need to remove because genres save a lot of mangas, when load genre, manga also be loaded
+    // => low performance
+    //* Can use Fetch LAZY
     @JsonIgnore
-    @ManyToMany(mappedBy = "genres")
-    @JsonIgnoreProperties(value = "genres", allowSetters = true)
+    @ManyToMany(mappedBy = "genres", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties(value = {"user", "genres", "authors"}, allowSetters = true)
     private Set<Manga> mangas = new HashSet<>();
 
 }

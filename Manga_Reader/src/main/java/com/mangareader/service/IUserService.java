@@ -32,7 +32,7 @@ public interface IUserService {
 
     User changeDisplayName(Long id, String displayName);
 
-    User updateAvatar(User user, MultipartFile file);
+    User updateAvatar(Long id, MultipartFile file);
 
     Resource getAvatar(String fileName);
 

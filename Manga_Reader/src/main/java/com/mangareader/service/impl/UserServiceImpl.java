@@ -5,6 +5,7 @@ import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
+import com.mangareader.repository.ReportRepository;
 import com.mangareader.repository.UserRepository;
 import com.mangareader.service.IStorageService;
 import com.mangareader.service.IUserService;
@@ -24,6 +25,7 @@ import java.util.List;
 @Slf4j
 @Service
 public class UserServiceImpl implements IUserService {
+    private final ReportRepository reportRepository;
 
     private final UserRepository userRepository;
 
@@ -127,7 +129,7 @@ public class UserServiceImpl implements IUserService {
         User user = getUserById(id);
         log.info("Change role {} to user {}", roleName, user.getUsername());
         user.setRole(roleName);
-        return saveUser(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -145,8 +147,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User updateAvatar(User user, MultipartFile file) {
+    public User updateAvatar(Long id, MultipartFile file) {
 
+        User user = getUserById(id);
         String fileName = user.getId().toString();
 
         fileName = storageService.store(file, AVATAR_FOLDER, fileName);
@@ -154,7 +157,7 @@ public class UserServiceImpl implements IUserService {
         String avatarUrl = /*SERVER_NAME + */ "/image/avatar/" + fileName;
 
         user.setAvatarUrl(avatarUrl);
-        user = saveUser(user);
+        user = userRepository.save(user);
 
         return user;
     }

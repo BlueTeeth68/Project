@@ -1,5 +1,6 @@
 package com.mangareader.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -39,6 +40,7 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "manga_id")
+    @JsonIgnoreProperties(value = {"user", "genres", "authors"}, allowSetters = true)
     private Manga manga;
 
     @ManyToOne

@@ -4,6 +4,7 @@ import com.mangareader.domain.Author;
 import com.mangareader.domain.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IAuthorService {
 
@@ -12,6 +13,8 @@ public interface IAuthorService {
     List<Author> getAllAuthor();
 
     Author getAuthorById(Long id);
+
+    Set<Author> getAuthorByIds(Set<Long> ids);
 
     List<Author> getAuthorsByName(String name);
 

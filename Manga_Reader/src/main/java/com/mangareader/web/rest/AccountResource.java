@@ -89,7 +89,7 @@ public class AccountResource {
     ) {
         User user = getCurrentUser();
 
-        User result = userService.updateAvatar(user, file);
+        User result = userService.updateAvatar(user.getId(), file);
 
         if (result.getAvatarUrl() != null) {
             result.setAvatarUrl(getServerName() + result.getAvatarUrl());

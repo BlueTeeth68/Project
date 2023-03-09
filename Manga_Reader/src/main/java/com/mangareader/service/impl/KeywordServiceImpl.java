@@ -85,6 +85,23 @@ public class KeywordServiceImpl implements IKeywordService {
     }
 
     @Override
+    public Manga addKeywordToManga(Long mangaId, List<String> keywords) {
+        Manga manga = mangaService.getMangaById(mangaId);
+        if (keywords != null && !keywords.isEmpty()) {
+            keywords.forEach(keyword -> {
+                Keyword temp = new Keyword();
+                temp.setName(keyword);
+                temp.setManga(manga);
+                KeywordId keywordId = new KeywordId(keyword, manga);
+                if (!keywordRepository.existsById(keywordId)) {
+                    keywordRepository.save(temp);
+                }
+            });
+        }
+        return manga;
+    }
+
+    @Override
     public Keyword changeKeywordName(ChangeKeywordVM vm) {
 
         Manga manga = mangaService.getMangaById(vm.getMangaId());
@@ -121,5 +138,10 @@ public class KeywordServiceImpl implements IKeywordService {
         }
         Manga manga = mangaService.getMangaById(mangaId);
         deleteKeyword(new KeywordId(name, manga));
+    }
+
+    @Override
+    public void deleteKeywordOfManga(Long id) {
+        keywordRepository.deleteAllKeywordOfManga(id);
     }
 }

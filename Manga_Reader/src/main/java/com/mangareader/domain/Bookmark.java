@@ -1,5 +1,6 @@
 package com.mangareader.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class Bookmark {
 
     @ManyToOne()
     @JoinColumn(name = "manga_id", nullable = false)
+    @JsonIgnoreProperties(value = {"user", "genres", "authors"}, allowSetters = true)
     private Manga manga;
 }

@@ -1,7 +1,6 @@
 package com.mangareader.web.rest;
 
 import com.mangareader.service.util.APIUtil;
-import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.service.IUserService;

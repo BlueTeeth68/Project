@@ -1,5 +1,6 @@
 package com.mangareader.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -24,5 +25,6 @@ public class ChapterImage {
 
     @ManyToOne
     @JoinColumn(name = "chapter_id", nullable = false)
+    @JsonIgnoreProperties(value = "manga", allowSetters = true)
     private Chapter chapter;
 }
