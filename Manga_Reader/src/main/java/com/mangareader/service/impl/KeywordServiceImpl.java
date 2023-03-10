@@ -10,6 +10,7 @@ import com.mangareader.repository.KeywordRepository;
 import com.mangareader.service.IKeywordService;
 import com.mangareader.service.IMangaService;
 import com.mangareader.web.rest.vm.ChangeKeywordVM;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@Transactional
 public class KeywordServiceImpl implements IKeywordService {
 
     private final KeywordRepository keywordRepository;
@@ -74,7 +76,7 @@ public class KeywordServiceImpl implements IKeywordService {
         return result;
     }
 
-    @Override
+/*    @Override
     public List<Manga> getMangaByKeyword(String name) {
 
         if (name == null || name.isEmpty()) {
@@ -82,9 +84,10 @@ public class KeywordServiceImpl implements IKeywordService {
         }
         List<Manga> mangaList = keywordRepository.findMangasByKeyword(name);
         return null;
-    }
+    }*/
 
     @Override
+    @Transactional
     public Manga addKeywordToManga(Long mangaId, List<String> keywords) {
         Manga manga = mangaService.getMangaById(mangaId);
         if (keywords != null && !keywords.isEmpty()) {
@@ -102,6 +105,7 @@ public class KeywordServiceImpl implements IKeywordService {
     }
 
     @Override
+    @Transactional
     public Keyword changeKeywordName(ChangeKeywordVM vm) {
 
         Manga manga = mangaService.getMangaById(vm.getMangaId());
@@ -127,11 +131,13 @@ public class KeywordServiceImpl implements IKeywordService {
     }
 
     @Override
+    @Transactional
     public void deleteKeyword(KeywordId id) {
         keywordRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public void deleteKeyword(String name, Long mangaId) {
         if (name == null || name.isBlank()) {
             throw new BadRequestException("Name is null or blank.");
@@ -141,7 +147,9 @@ public class KeywordServiceImpl implements IKeywordService {
     }
 
     @Override
+    @Transactional
     public void deleteKeywordOfManga(Long id) {
-        keywordRepository.deleteAllKeywordOfManga(id);
+//        keywordRepository.deleteAllKeywordOfManga(id);
+        keywordRepository.deleteByMangaId(id);
     }
 }

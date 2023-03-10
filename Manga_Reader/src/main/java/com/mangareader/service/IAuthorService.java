@@ -10,6 +10,8 @@ public interface IAuthorService {
 
     Author createAuthor(Author author);
 
+    Author createAuthor(String name, Long userId);
+
     List<Author> getAllAuthor();
 
     Author getAuthorById(Long id);
@@ -20,12 +22,26 @@ public interface IAuthorService {
 
     List<Author> getLimitAuthor(int limit, int offset);
 
+    List<Author> getLimitAuthor(String limit, String page);
+
+    List<Author> getAuthorByIdOrName(String id, String name);
+
     List<Author> getAuthorByCreatedUser(Long userId);
 
+    List<Author> getAuthorByCreatedUser(String userId);
+
     User getUserByAuthor(Long authorId);
+
+    Long getNumberOfAuthor();
 
     Author changeAuthorName(Long id, String name);
 
     void deleteAuthor(Long id);
+
+    void deleteAuthor(String id);
+
+    List<Author> setAvatarUrlToUser(List<Author> authors, String serverName);
+
+    Author setAvatarUrlToUser(Author author, String serverName);
 
 }

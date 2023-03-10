@@ -15,7 +15,7 @@ public interface IKeywordService {
 
     List<Keyword> getKeywordsOfMangaSortedByName(Long mangaId);
 
-    List<Manga> getMangaByKeyword(String name);
+/*    List<Manga> getMangaByKeyword(String name);*/
 
     Manga addKeywordToManga(Long mangaId, List<String> keywords);
 

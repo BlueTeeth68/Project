@@ -92,27 +92,39 @@ public class Manga {
     private Set<Author> authors = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "manga",
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
     private Set<Chapter> chapters = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "manga",
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
     private Set<Bookmark> bookmarks = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "manga",
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
     private Set<Rate> rates = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "manga",
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
     private Set<Keyword> keywords = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "manga",
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "manga", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "manga",
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
     private Set<Report> reports = new HashSet<>();
 
 }

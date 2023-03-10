@@ -3,6 +3,7 @@ package com.mangareader.service.impl;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.exception.StorageException;
 import com.mangareader.service.IStorageService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

@@ -5,12 +5,15 @@ import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.AuthorRepository;
-import com.mangareader.repository.UserRepository;
 import com.mangareader.service.IAuthorService;
+import com.mangareader.service.IUserService;
+import com.mangareader.service.util.APIUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,8 +24,7 @@ import java.util.Set;
 public class AuthorServiceImpl implements IAuthorService {
 
     private final AuthorRepository authorRepository;
-
-    private final UserRepository userRepository;
+    private final IUserService userService;
 
     @Override
     public Author createAuthor(Author author) {
@@ -34,6 +36,18 @@ public class AuthorServiceImpl implements IAuthorService {
 
         Author result = authorRepository.save(author);
         return result;
+    }
+
+    @Override
+    public Author createAuthor(String name, Long userId) {
+        if (name == null || name.isBlank()) {
+            throw new BadRequestException("name is null or blank");
+        }
+        Author author = new Author();
+        author.setName(name);
+        User createdBy = userService.getUserById(userId);
+        author.setUser(createdBy);
+        return createAuthor(author);
     }
 
     @Override
@@ -82,10 +96,42 @@ public class AuthorServiceImpl implements IAuthorService {
     }
 
     @Override
+    public List<Author> getLimitAuthor(String limit, String page) {
+        int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception");
+        int offset = limitNum * (pageNum - 1);
+        return getLimitAuthor(limitNum, offset);
+    }
+
+    @Override
+    public List<Author> getAuthorByIdOrName(String id, String name) {
+        List<Author> result = new ArrayList<>();
+
+        //find by id
+        if (id != null && name == null) {
+            Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
+            result.add(getAuthorById(idNum));
+        }
+        //find by name
+        else if (id == null && name != null) {
+            result = getAuthorsByName(name);
+        } else {
+            throw new BadRequestException("Bad request for id and name value.");
+        }
+
+        return result;
+    }
+
+    @Override
     public List<Author> getAuthorByCreatedUser(Long userId) {
-
         List<Author> result = authorRepository.findByUser(userId);
+        return result;
+    }
 
+    @Override
+    public List<Author> getAuthorByCreatedUser(String userId) {
+        Long userIdNum = APIUtil.parseStringToLong(userId, "userId is not a number exception");
+        List<Author> result = getAuthorByCreatedUser(userIdNum);
         return result;
     }
 
@@ -101,6 +147,13 @@ public class AuthorServiceImpl implements IAuthorService {
     }
 
     @Override
+    public Long getNumberOfAuthor() {
+        Long result = authorRepository.count();
+        return result;
+    }
+
+    @Override
+    @Transactional
     public Author changeAuthorName(Long id, String name) {
         if (id == null) {
             throw new BadRequestException("Author id is invalid");
@@ -115,7 +168,44 @@ public class AuthorServiceImpl implements IAuthorService {
     }
 
     @Override
+    @Transactional
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAuthor(String id) {
+        Long idNum = APIUtil.parseStringToLong(id, "id is not a number");
+        deleteAuthor(idNum);
+    }
+
+    @Override
+    public List<Author> setAvatarUrlToUser(List<Author> authors, String serverName) {
+        authors.forEach(
+                author -> {
+                    if (author.getUser() != null && author.getUser().getAvatarUrl() != null) {
+                        String avatarUrl = author.getUser().getAvatarUrl();
+                        if (!avatarUrl.contains(serverName)) {
+                            log.debug("AvatarURL now is: " + avatarUrl);
+                            author.getUser().setAvatarUrl(serverName + avatarUrl);
+                        }
+                    }
+                }
+        );
+        return authors;
+    }
+
+    @Override
+
+    public Author setAvatarUrlToUser(Author author, String serverName) {
+        if (author.getUser() != null && author.getUser().getAvatarUrl() != null) {
+            String avatarUrl = author.getUser().getAvatarUrl();
+            if (!avatarUrl.contains(serverName)) {
+                log.debug("AvatarURL now is: " + avatarUrl);
+                author.getUser().setAvatarUrl(serverName + avatarUrl);
+            }
+        }
+        return author;
     }
 }

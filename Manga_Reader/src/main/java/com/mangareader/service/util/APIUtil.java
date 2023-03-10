@@ -2,8 +2,14 @@ package com.mangareader.service.util;
 
 import com.mangareader.domain.MangaStatus;
 import com.mangareader.domain.RoleName;
+import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.net.http.HttpRequest;
 
 @Slf4j
 public class APIUtil {
@@ -71,4 +77,11 @@ public class APIUtil {
         }
         return result;
     }
+
+    public static String getServerName(HttpServletRequest request) {
+        String serverName = request.getRequestURL().toString()
+                .replace(request.getRequestURI(), "");
+        return serverName;
+    }
+
 }

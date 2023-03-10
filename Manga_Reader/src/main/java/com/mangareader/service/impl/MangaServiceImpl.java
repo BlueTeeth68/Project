@@ -5,6 +5,7 @@ import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.MangaRepository;
 import com.mangareader.service.*;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -229,6 +230,7 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
+    @Transactional
     public Manga addGenreToManga(Long mangaId, Set<String> genreName) {
         Manga manga = getMangaById(mangaId);
         Set<Genre> genres = genreService.getGenreByName(genreName);
@@ -239,6 +241,7 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
+    @Transactional
     public Manga addAuthorsToManga(Long mangaId, Set<Long> authorIds) {
         Manga manga = getMangaById(mangaId);
         Set<Author> authors = authorService.getAuthorByIds(authorIds);
@@ -249,6 +252,7 @@ public class MangaServiceImpl implements IMangaService {
 
 
     @Override
+    @Transactional
     public Manga updateCoverImage(Long id, MultipartFile file) {
         Manga manga = getMangaById(id);
         String folderName = "manga" + id;
@@ -264,6 +268,7 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
+    @Transactional
     public void deleteManga(Long id) {
 
     }

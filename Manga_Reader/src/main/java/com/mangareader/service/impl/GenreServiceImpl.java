@@ -6,6 +6,7 @@ import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.GenreRepository;
 import com.mangareader.service.IGenreService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,6 +113,7 @@ public class GenreServiceImpl implements IGenreService {
     }
 
     @Override
+    @Transactional
     public Genre changeGenreName(Long id, String genreName) {
         if (!genreRepository.existsById(id)) {
             log.error("Genre {} is not exist.", id);
@@ -131,6 +133,7 @@ public class GenreServiceImpl implements IGenreService {
     }
 
     @Override
+    @Transactional
     public Genre changeGenreName(Genre genre) {
 
         if (genreRepository.existsByName(genre.getName())) {
@@ -142,6 +145,7 @@ public class GenreServiceImpl implements IGenreService {
     }
 
     @Override
+    @Transactional
     public void deleteGenre(Long id) {
         genreRepository.deleteById(id);
     }
