@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @SpringBootTest
+//@DataJpaTest
 public class KeywordRepositoryTest {
 
     @Autowired

@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
+//@DataJpaTest
 public class MangaRepositoryTest {
 
     @Autowired
