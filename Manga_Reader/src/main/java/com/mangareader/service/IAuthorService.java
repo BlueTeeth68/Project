@@ -10,7 +10,7 @@ public interface IAuthorService {
 
     Author createAuthor(Author author);
 
-    Author createAuthor(String name, Long userId);
+    Author createAuthor(String name);
 
     List<Author> getAllAuthor();
 
@@ -34,14 +34,16 @@ public interface IAuthorService {
 
     Long getNumberOfAuthor();
 
-    Author changeAuthorName(Long id, String name);
+    Author changeAuthorName(Long authorId, String name);
 
-    void deleteAuthor(Long id);
+    void deleteAuthor(Long authorId);
 
     void deleteAuthor(String id);
 
     List<Author> setAvatarUrlToUser(List<Author> authors, String serverName);
 
     Author setAvatarUrlToUser(Author author, String serverName);
+
+    void checkAuthorize(Long authorId, Long userId);
 
 }

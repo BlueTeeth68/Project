@@ -22,7 +22,6 @@ import java.util.List;
 public class UserResource {
 
     private final IUserService userService;
-
     private final HttpServletRequest request;
 
     @GetMapping
@@ -34,8 +33,7 @@ public class UserResource {
 
         //find by id
         if (id != null && username == null) {
-            Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
-            result = userService.getUserById(idNum);
+            result = userService.getUserById(id);
         }
         //find by username
         else if (id == null && username != null) {
@@ -44,41 +42,20 @@ public class UserResource {
             throw new BadRequestException("Bad request for id and username value.");
         }
 
-        if (result.getAvatarUrl() != null) {
-            result.setAvatarUrl(getServerName() + result.getAvatarUrl());
-        }
+        String serverName = APIUtil.getServerName(request);
+        result = userService.addServerNameToAvatarURL(result, serverName);
 
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<User>> getAllAndPaginateUsers(
-            @RequestParam(required = false) String limit,
-            @RequestParam(required = false) String page
+            @RequestParam(required = false, defaultValue = "100") String limit,
+            @RequestParam(required = false, defaultValue = "1") String page
     ) {
-        List<User> users;
-
-        if (limit == null || page == null) {
-            users = userService.getAllAndPaginateUsers(1000, 0);
-//            users = userService.getUsers();
-        } else {
-            int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
-            int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception.");
-
-            int offset = limitNum * (pageNum - 1);
-            users = userService.getAllAndPaginateUsers(limitNum, offset);
-        }
-
-        String serverName = getServerName();
-
-        users.forEach(
-                user -> {
-                    if (user.getAvatarUrl() != null) {
-                        user.setAvatarUrl(serverName + user.getAvatarUrl());
-                    }
-                }
-        );
-
+        List<User> users = userService.getAllAndPaginateUsers(limit, page);
+        String serverName = APIUtil.getServerName(request);
+        users = userService.addServerNameToAvatarURL(users, serverName);
         return new ResponseEntity<>(users, HttpStatus.FOUND);
     }
 
@@ -86,13 +63,8 @@ public class UserResource {
     public ResponseEntity<User> changeRoleOfUser(
             @RequestBody ChangeUserRoleVM vm
     ) {
-        User user = userService.getUserById(vm.getId());
-        user.setRole(vm.getRoleName());
-        user = userService.saveUser(user);
-
-        if (user.getAvatarUrl() != null) {
-            user.setAvatarUrl(getServerName() + user.getAvatarUrl());
-        }
+        String serverName = APIUtil.getServerName(request);
+        User user = userService.setRoleToUser(vm.getId(), vm.getRoleName(), serverName);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -100,18 +72,8 @@ public class UserResource {
     public ResponseEntity<User> changeActiveStatus(
             @RequestBody ChangeUserStatusVM vm
     ) {
-        User user = userService.getUserById(vm.getId());
-        user.setActivate(vm.getStatus());
-        user = userService.saveUser(user);
-        if (user.getAvatarUrl() != null) {
-            user.setAvatarUrl(getServerName() + user.getAvatarUrl());
-        }
+        String serverName = APIUtil.getServerName(request);
+        User user = userService.changeUserStatus(vm.getId(), vm.getStatus(), serverName);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
-    private String getServerName() {
-        String serverName = request.getRequestURL().toString().replace(request.getRequestURI(), "");
-        return serverName;
-    }
-
 }

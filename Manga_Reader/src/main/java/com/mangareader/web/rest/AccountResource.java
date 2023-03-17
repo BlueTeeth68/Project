@@ -23,17 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountResource {
 
     private final IUserService userService;
-
     private final UserMapper userMapper;
-
     private final HttpServletRequest request;
 
     @GetMapping
     public ResponseEntity<User> getCurrentLoginUser() {
-        User user = getCurrentUser();
-        if (user.getAvatarUrl() != null) {
-            user.setAvatarUrl(getServerName() + user.getAvatarUrl());
-        }
+        User user = userService.getCurrentUser();
+        user = userService.addServerNameToAvatarURL(user, APIUtil.getServerName(request));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -46,8 +42,7 @@ public class AccountResource {
 
         //find by id
         if (id != null && username == null) {
-            Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
-            user = userService.getUserById(idNum);
+            user = userService.getUserById(id);
         }
         //find by username
         else if (id == null && username != null) {
@@ -55,12 +50,9 @@ public class AccountResource {
         } else {
             throw new BadRequestException("Bad request for id and username value.");
         }
-
+        user = userService.addServerNameToAvatarURL(user, APIUtil.getServerName(request));
         CommonUserDTO result = userMapper.entityToCommonUserDTO(user);
 
-        if (result.getAvatarUrl() != null) {
-            result.setAvatarUrl(getServerName() + result.getAvatarUrl());
-        }
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
@@ -68,18 +60,8 @@ public class AccountResource {
     public ResponseEntity<User> changeDisplayName(
             @RequestBody String displayName
     ) {
-        User user = getCurrentUser();
-
-        if (displayName == null || displayName.isBlank()) {
-            log.error("Error when retrieve displayName: {}.", displayName);
-            throw new BadRequestException("displayName is empty.");
-        }
-
-        User result = userService.changeDisplayName(user.getId(), displayName);
-
-        if (result.getAvatarUrl() != null) {
-            result.setAvatarUrl(getServerName() + result.getAvatarUrl());
-        }
+        String serverName = APIUtil.getServerName(request);
+        User result = userService.changeDisplayName(displayName, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -87,36 +69,17 @@ public class AccountResource {
     public ResponseEntity<User> changeUserAvatar(
             @RequestParam("file") MultipartFile file
     ) {
-        User user = getCurrentUser();
-
-        User result = userService.updateAvatar(user.getId(), file);
-
-        if (result.getAvatarUrl() != null) {
-            result.setAvatarUrl(getServerName() + result.getAvatarUrl());
-        }
-
+        String serverName = APIUtil.getServerName(request);
+        User result = userService.updateAvatar(file, serverName);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteUserById(
     ) {
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         userService.deleteUserById(user.getId());
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private User getCurrentUser() {
-        log.debug("Get current user from Security Context Holder....");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        User user = userService.getUserByUsername(username);
-        return user;
-    }
-
-    private String getServerName() {
-        String serverName = request.getRequestURL().toString().replace(request.getRequestURI(), "");
-        return serverName;
     }
 
 }

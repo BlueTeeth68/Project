@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImageResource {
 
     private final IUserService userService;
-
     private final IMangaService mangaService;
 
     @GetMapping("/avatar/{filename:.+}")

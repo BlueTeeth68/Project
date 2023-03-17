@@ -41,28 +41,28 @@ public class ProjectApplication {
             user.setDisplayName("System Admin");
             user.setPassword(password);
             user.setRole(RoleName.ADMIN);
-            userService.saveUser(user);
+            userService.createUser(user);
 
             user = new User();
             user.setUsername("TestTranslator");
             user.setDisplayName("Test Translator");
             user.setPassword(password);
             user.setRole(RoleName.TRANSLATOR);
-            userService.saveUser(user);
+            userService.createUser(user);
 
             user = new User();
             user.setUsername("TestTranslator2");
             user.setDisplayName("Test Translator 2");
             user.setPassword(password);
             user.setRole(RoleName.TRANSLATOR);
-            userService.saveUser(user);
+            userService.createUser(user);
 
             User commonUser = new User();
             commonUser.setUsername("User");
             commonUser.setDisplayName("Common User");
             commonUser.setPassword(password);
             commonUser.setRole(RoleName.USER);
-            userService.saveUser(commonUser);
+            userService.createUser(commonUser);
 
             for (int i = 0; i < 10; i++) {
                 commonUser = new User();
@@ -70,7 +70,7 @@ public class ProjectApplication {
                 commonUser.setDisplayName("Common User " + (i + 1));
                 commonUser.setPassword(password);
                 commonUser.setRole(RoleName.USER);
-                userService.saveUser(commonUser);
+                userService.createUser(commonUser);
             }
 
             //add genres to database

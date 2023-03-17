@@ -9,15 +9,19 @@ public interface IGenreService {
 
     Genre getGenreById(Long id);
 
+    Genre getGenreById(String id);
+
     Genre getGenreByName(String genreName);
 
-    Set<Genre> getGenreByName (Set<String> genreNames);
+    Set<Genre> getGenreByName(Set<String> genreNames);
 
     List<Genre> getGenreByNameContaining(String genreName);
 
     List<Genre> getAllGenre();
 
     List<Genre> getAllPaginateGenreSortedByName(int limit, int offset);
+
+    List<Genre> getAllPaginateGenreSortedByName(String limit, String offset);
 
     List<Genre> getAllGenreSortedByName();
 
@@ -29,5 +33,6 @@ public interface IGenreService {
 
     void deleteGenre(Long id);
 
+    void deleteGenre(String id);
 
 }

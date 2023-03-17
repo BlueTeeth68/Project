@@ -1,6 +1,7 @@
 package com.mangareader.service.impl;
 
 import com.mangareader.domain.Author;
+import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import com.mangareader.service.util.APIUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,13 +41,13 @@ public class AuthorServiceImpl implements IAuthorService {
     }
 
     @Override
-    public Author createAuthor(String name, Long userId) {
+    public Author createAuthor(String name) {
         if (name == null || name.isBlank()) {
             throw new BadRequestException("name is null or blank");
         }
         Author author = new Author();
         author.setName(name);
-        User createdBy = userService.getUserById(userId);
+        User createdBy = userService.getCurrentUser();
         author.setUser(createdBy);
         return createAuthor(author);
     }
@@ -154,14 +156,16 @@ public class AuthorServiceImpl implements IAuthorService {
 
     @Override
     @Transactional
-    public Author changeAuthorName(Long id, String name) {
-        if (id == null) {
+    public Author changeAuthorName(Long authorId, String name) {
+        if (authorId == null) {
             throw new BadRequestException("Author id is invalid");
         }
         if (name == null || name.isBlank()) {
             throw new BadRequestException("Name is null or blank.");
         }
-        Author tmp = getAuthorById(id);
+        User user = userService.getCurrentUser();
+        checkAuthorize(authorId, user.getId());
+        Author tmp = getAuthorById(authorId);
         tmp.setName(name);
         Author result = authorRepository.save(tmp);
         return result;
@@ -169,14 +173,16 @@ public class AuthorServiceImpl implements IAuthorService {
 
     @Override
     @Transactional
-    public void deleteAuthor(Long id) {
-        authorRepository.deleteById(id);
+    public void deleteAuthor(Long authorId) {
+        authorRepository.deleteById(authorId);
     }
 
     @Override
     @Transactional
-    public void deleteAuthor(String id) {
-        Long idNum = APIUtil.parseStringToLong(id, "id is not a number");
+    public void deleteAuthor(String authorId) {
+        User user = userService.getCurrentUser();
+        Long idNum = APIUtil.parseStringToLong(authorId, "id is not a number");
+        checkAuthorize(idNum, user.getId());
         deleteAuthor(idNum);
     }
 
@@ -207,5 +213,16 @@ public class AuthorServiceImpl implements IAuthorService {
             }
         }
         return author;
+    }
+
+    @Override
+    public void checkAuthorize(Long authorId, Long userId) {
+        User user = userService.getUserById(userId);
+        if (user.getRole() == RoleName.TRANSLATOR) {
+            Author author = getAuthorById(authorId);
+            if (author.getUser() == null || (author.getUser() != null && author.getUser().getId() != user.getId())) {
+                throw new AccessDeniedException("Just admin or owner can delete this author.");
+            }
+        }
     }
 }

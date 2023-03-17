@@ -6,6 +6,7 @@ import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.GenreRepository;
 import com.mangareader.service.IGenreService;
+import com.mangareader.service.util.APIUtil;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,12 @@ public class GenreServiceImpl implements IGenreService {
         return genreRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Genre " + id + " does not exist.")
         );
+    }
+
+    @Override
+    public Genre getGenreById(String id) {
+        Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
+        return getGenreById(idNum);
     }
 
     @Override
@@ -78,6 +85,14 @@ public class GenreServiceImpl implements IGenreService {
         }
         List<Genre> result = genreRepository.findLimitGenreAndSortByName(limit, offset);
         return result;
+    }
+
+    @Override
+    public List<Genre> getAllPaginateGenreSortedByName(String limit, String page) {
+        int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception");
+        int offset = limitNum * (pageNum - 1);
+        return getAllPaginateGenreSortedByName(limitNum, offset);
     }
 
     @Override
@@ -148,5 +163,11 @@ public class GenreServiceImpl implements IGenreService {
     @Transactional
     public void deleteGenre(Long id) {
         genreRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteGenre(String id) {
+        Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
+        deleteGenre(idNum);
     }
 }

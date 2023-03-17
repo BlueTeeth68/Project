@@ -121,10 +121,10 @@ public class AuthorServiceImplTest {
         author.setName(name);
         author.setUser(user);
 
-        given(userService.getUserById(anyLong())).willReturn(user);
+        given(userService.getCurrentUser()).willReturn(user);
         given(authorRepository.save(any(Author.class))).willReturn(author);
         //when
-        Author createdAuthor = authorService.createAuthor(name, userId);
+        Author createdAuthor = authorService.createAuthor(name);
         //then
 
         assertNotNull(createdAuthor);
@@ -142,9 +142,10 @@ public class AuthorServiceImplTest {
         String name = null;
 
         //when
+        given(userService.getCurrentUser()).willReturn(user);
         //then
         assertThatThrownBy(() -> {
-            authorService.createAuthor(name, 1L);
+            authorService.createAuthor(name);
         })
                 .hasMessage("name is null or blank")
                 .isInstanceOf(BadRequestException.class);
@@ -160,9 +161,10 @@ public class AuthorServiceImplTest {
         String name = "     ";
 
         //when
+        given(userService.getCurrentUser()).willReturn(user);
         //then
         assertThatThrownBy(() -> {
-            authorService.createAuthor(name, 1L);
+            authorService.createAuthor(name);
         })
                 .hasMessage("name is null or blank")
                 .isInstanceOf(BadRequestException.class);

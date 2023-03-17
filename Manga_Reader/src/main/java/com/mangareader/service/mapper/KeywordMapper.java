@@ -33,7 +33,6 @@ public class KeywordMapper {
         Keyword result = null;
 
         if (input != null) {
-//            result = keywordService.getKeywordByKeywordId(input.getName(), input.getMangaId());
             Manga manga = mangaService.getMangaById(input.getMangaId());
             result.setName(input.getName());
             result.setManga(manga);

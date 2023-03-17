@@ -4,7 +4,6 @@ import com.mangareader.domain.Keyword;
 import com.mangareader.service.IKeywordService;
 import com.mangareader.service.dto.KeywordDTO;
 import com.mangareader.service.mapper.KeywordMapper;
-import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeKeywordVM;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import java.util.List;
 public class KeywordResource {
 
     private final IKeywordService keywordService;
-
     private final KeywordMapper keywordMapper;
 
     @GetMapping()
@@ -33,9 +31,7 @@ public class KeywordResource {
             @RequestParam String name,
             @RequestParam String mangaId
     ) {
-        Long mangaIdNum = APIUtil.parseStringToLong(mangaId, "mangaId is not a number exception.");
-        Keyword result = keywordService.getKeywordByKeywordId(name, mangaIdNum);
-
+        Keyword result = keywordService.getKeywordByKeywordId(name, mangaId);
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
@@ -43,9 +39,7 @@ public class KeywordResource {
     public ResponseEntity<List<Keyword>> getKeywordOfManga(
             @RequestParam String mangaId
     ) {
-        Long mangaIdNum = APIUtil.parseStringToLong(mangaId, "MangaId is not a number.");
-        List<Keyword> result = keywordService.getKeywordsOfMangaSortedByName(mangaIdNum);
-
+        List<Keyword> result = keywordService.getKeywordsOfMangaSortedByName(mangaId);
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
@@ -74,8 +68,7 @@ public class KeywordResource {
             @RequestParam String name,
             @RequestParam String mangaId
     ) {
-        Long mangaIdNum = APIUtil.parseStringToLong(mangaId, "mangaId is not a number.");
-        keywordService.deleteKeyword(name, mangaIdNum);
+        keywordService.deleteKeyword(name, mangaId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

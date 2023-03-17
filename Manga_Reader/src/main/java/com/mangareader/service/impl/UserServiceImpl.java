@@ -12,10 +12,13 @@ import com.mangareader.service.IUserService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
 import com.mangareader.service.error.UsernameAlreadyUsedException;
+import com.mangareader.service.util.APIUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +41,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public User saveUser(User user) {
+    public User createUser(User user) {
         if (user.getId() != null) {
             throw new BadRequestException("New user can not have an id.");
         }
@@ -75,6 +78,12 @@ public class UserServiceImpl implements IUserService {
         log.info("Find user by id: {}", id);
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User " + id + " does not exist."));
+    }
+
+    @Override
+    public User getUserById(String id) throws ResourceNotFoundException {
+        Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
+        return getUserById(idNum);
     }
 
     @Override
@@ -119,6 +128,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public List<User> getAllAndPaginateUsers(String limit, String page) {
+        int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception.");
+        int offset = limitNum * (pageNum - 1);
+        return getAllAndPaginateUsers(limitNum, offset);
+    }
+
+    @Override
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
@@ -134,30 +151,34 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public User changeDisplayName(Long id, String displayName) {
-        User user = getUserById(id);
+    public User changeDisplayName(String displayName, String serverName) {
+        if (displayName == null || displayName.isBlank()) {
+            log.error("Error when retrieve displayName: {}.", displayName);
+            throw new BadRequestException("displayName is empty.");
+        }
+        User user = getCurrentUser();
         if (userRepository.existsByDisplayName(displayName)) {
             log.error("Error when save display name {}", displayName);
             throw new DataAlreadyExistsException("Display name " + displayName + " already exists.");
         }
-        log.info("Set display name {} for user {}", displayName, id);
+        log.info("Set display name {} for user {}", displayName, user.getId());
         user.setDisplayName(displayName);
         user = userRepository.save(user);
+        user = addServerNameToAvatarURL(user, serverName);
         return user;
     }
 
     @Override
-    public User updateAvatar(Long id, MultipartFile file) {
+    public User updateAvatar(MultipartFile file, String serverName) {
 
-        User user = getUserById(id);
+        User user = getCurrentUser();
         String fileName = user.getId().toString();
-
         fileName = storageService.store(file, AVATAR_FOLDER, fileName);
-
         String avatarUrl = /*SERVER_NAME + */ "/image/avatar/" + fileName;
 
         user.setAvatarUrl(avatarUrl);
         user = userRepository.save(user);
+        user = addServerNameToAvatarURL(user, serverName);
 
         return user;
     }
@@ -172,5 +193,50 @@ public class UserServiceImpl implements IUserService {
     public void deleteUserById(Long id) {
         log.debug("Delete user by id: {}", id);
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        log.debug("Get current user from Security Context Holder....");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        User user = getUserByUsername(username);
+        return user;
+    }
+
+    @Override
+    public User addServerNameToAvatarURL(User user, String serverName) {
+        if (user != null && user.getAvatarUrl() != null) {
+            user.setAvatarUrl(serverName + user.getAvatarUrl());
+        }
+        return user;
+    }
+
+    @Override
+    public List<User> addServerNameToAvatarURL(List<User> users, String serverName) {
+        if (users != null) {
+            users.forEach(user -> {
+                user = addServerNameToAvatarURL(user, serverName);
+            });
+        }
+        return users;
+    }
+
+    @Override
+    public User setRoleToUser(Long userId, RoleName roleName, String serverName) {
+        User user = getUserById(userId);
+        user.setRole(roleName);
+        user = userRepository.save(user);
+        user = addServerNameToAvatarURL(user, serverName);
+        return user;
+    }
+
+    @Override
+    public User changeUserStatus(Long userId, Boolean status, String serverName) {
+        User user = getUserById(userId);
+        user.setActivate(status);
+        user = userRepository.save(user);
+        user = addServerNameToAvatarURL(user, serverName);
+        return user;
     }
 }

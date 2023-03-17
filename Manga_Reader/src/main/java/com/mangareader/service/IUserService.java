@@ -10,13 +10,15 @@ import java.util.List;
 
 public interface IUserService {
 
-    User saveUser(User user);
+    User createUser(User user);
 
     User updateUser(User user);
 
     void deleteUser(Long id);
 
     User getUserById(Long id) throws ResourceNotFoundException;
+
+    User getUserById(String id) throws ResourceNotFoundException;
 
     User getUserByUsername(String username) throws ResourceNotFoundException;
 
@@ -25,17 +27,28 @@ public interface IUserService {
     List<User> getUsers() throws ResourceNotFoundException;
 
     List<User> getAllAndPaginateUsers(int limit, int offset);
+    List<User> getAllAndPaginateUsers(String limit, String page);
 
     Boolean existsByUsername(String username);
 
     User changeUserRole(Long id, RoleName roleName);
 
-    User changeDisplayName(Long id, String displayName);
+    User changeDisplayName(String displayName, String serverName);
 
-    User updateAvatar(Long id, MultipartFile file);
+    User updateAvatar(MultipartFile file, String serverName);
 
     Resource getAvatar(String fileName);
 
     void deleteUserById(Long id);
+
+    User getCurrentUser();
+
+    User addServerNameToAvatarURL(User user, String serverName);
+
+    List<User> addServerNameToAvatarURL(List<User> users, String serverName);
+
+    User setRoleToUser(Long userId, RoleName roleName, String serverName);
+
+    User changeUserStatus(Long userId, Boolean status, String serverName);
 
 }

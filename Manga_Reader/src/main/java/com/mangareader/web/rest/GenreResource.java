@@ -1,6 +1,5 @@
 package com.mangareader.web.rest;
 
-import com.mangareader.service.util.APIUtil;
 import com.mangareader.domain.Genre;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.service.IGenreService;
@@ -25,18 +24,10 @@ public class GenreResource {
 
     @GetMapping("/list")
     public ResponseEntity<List<Genre>> getAllGenre(
-            @RequestParam(required = false) String limit,
-            @RequestParam(required = false) String page
+            @RequestParam(required = false, defaultValue = "50") String limit,
+            @RequestParam(required = false, defaultValue = "1") String page
     ) {
-        List<Genre> result;
-        if (limit == null || page == null) {
-            result = genreService.getAllPaginateGenreSortedByName(50, 0);
-        } else {
-            int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
-            int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception");
-            int offset = limitNum * (pageNum - 1);
-            result = genreService.getAllPaginateGenreSortedByName(limitNum, offset);
-        }
+        List<Genre> result = genreService.getAllPaginateGenreSortedByName(limit, page);
         return ResponseEntity.ok(result);
     }
 
@@ -46,17 +37,14 @@ public class GenreResource {
             @RequestParam String name
     ) {
         List<Genre> result = new ArrayList<>();
-
-        //find by id
         if (id != null && name == null) {
-            Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
-            result.add(genreService.getGenreById(idNum));
-        } else if (id == null && name != null) {  //find by name
+            result.add(genreService.getGenreById(id));
+        } else if (id == null && name != null) {
             result = genreService.getGenreByNameContaining(name);
         } else {
             throw new BadRequestException("Bad request when execute findById or findByName.");
         }
-        return ResponseEntity.ok(result);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping()
@@ -82,8 +70,7 @@ public class GenreResource {
     public ResponseEntity<?> deleteGenre(
             @RequestParam String id
     ) {
-        Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
-        genreService.deleteGenre(idNum);
+        genreService.deleteGenre(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

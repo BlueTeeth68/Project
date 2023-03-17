@@ -9,6 +9,7 @@ import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.KeywordRepository;
 import com.mangareader.service.IKeywordService;
 import com.mangareader.service.IMangaService;
+import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeKeywordVM;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -49,12 +50,12 @@ public class KeywordServiceImpl implements IKeywordService {
     }
 
     @Override
-    public Keyword getKeywordByKeywordId(String name, Long manga_id) {
+    public Keyword getKeywordByKeywordId(String name, Long mangaId) {
 
         if (name == null || name.isBlank()) {
             throw new BadRequestException("Invalid keyword name: null or blank.");
         }
-        Manga manga = mangaService.getMangaById(manga_id);
+        Manga manga = mangaService.getMangaById(mangaId);
 
         KeywordId id = new KeywordId(name, manga);
         log.info("Finding keyword by KeywordId");
@@ -62,8 +63,13 @@ public class KeywordServiceImpl implements IKeywordService {
                 () -> new ResourceNotFoundException("Keyword name " + id.getName() + " in manga "
                         + id.getManga().getId() + " does not exist.")
         );
-
         return result;
+    }
+
+    @Override
+    public Keyword getKeywordByKeywordId(String name, String mangaId) {
+        Long mangaIdNum = APIUtil.parseStringToLong(mangaId, "mangaId is not a number exception.");
+        return getKeywordByKeywordId(name, mangaIdNum);
     }
 
     //need to testing here
@@ -76,19 +82,18 @@ public class KeywordServiceImpl implements IKeywordService {
         return result;
     }
 
-/*    @Override
-    public List<Manga> getMangaByKeyword(String name) {
-
-        if (name == null || name.isEmpty()) {
-            throw new BadRequestException("keyword is null or blank.");
-        }
-        List<Manga> mangaList = keywordRepository.findMangasByKeyword(name);
-        return null;
-    }*/
+    @Override
+    public List<Keyword> getKeywordsOfMangaSortedByName(String mangaId) {
+        Long mangaIdNum = APIUtil.parseStringToLong(mangaId, "MangaId is not a number.");
+        return getKeywordsOfMangaSortedByName(mangaIdNum);
+    }
 
     @Override
     @Transactional
-    public Manga addKeywordToManga(Long mangaId, List<String> keywords) {
+    public Manga addKeywordToManga(Long mangaId, List<String> keywords, String serverName) {
+        mangaService.checkMangaAuthorize(mangaId);
+        deleteKeywordOfManga(mangaId);
+
         Manga manga = mangaService.getMangaById(mangaId);
         if (keywords != null && !keywords.isEmpty()) {
             keywords.forEach(keyword -> {
@@ -100,6 +105,9 @@ public class KeywordServiceImpl implements IKeywordService {
                     keywordRepository.save(temp);
                 }
             });
+        }
+        if (manga.getCoverImageUrl() != null) {
+            manga.setCoverImageUrl(serverName + manga.getCoverImageUrl());
         }
         return manga;
     }
@@ -144,6 +152,12 @@ public class KeywordServiceImpl implements IKeywordService {
         }
         Manga manga = mangaService.getMangaById(mangaId);
         deleteKeyword(new KeywordId(name, manga));
+    }
+
+    @Override
+    public void deleteKeyword(String name, String mangaId) {
+        Long mangaIdNum = APIUtil.parseStringToLong(mangaId, "mangaId is not a number.");
+        deleteKeyword(name, mangaIdNum);
     }
 
     @Override

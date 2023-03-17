@@ -46,7 +46,7 @@ public class AuthenticationService {
         user.setDisplayName(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(RoleName.USER);
-        userService.saveUser(user);
+        userService.createUser(user);
 
         String jwtToken = jwtService.generateToken(user);
         return new Token(jwtToken);

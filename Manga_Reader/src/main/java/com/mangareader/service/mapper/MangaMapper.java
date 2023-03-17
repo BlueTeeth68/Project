@@ -7,7 +7,9 @@ import com.mangareader.service.dto.MangaDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -45,6 +47,17 @@ public class MangaMapper {
             authors.add(tmp);
         });
         result.setAuthors(authors);
+        return result;
+    }
+
+    public List<MangaDTO> toListDTO(List<Manga> input, String serverName) {
+        List<MangaDTO> result = new ArrayList<>();
+        if (input == null) {
+            return null;
+        }
+        input.forEach(manga -> {
+            result.add(toDTO(manga, serverName));
+        });
         return result;
     }
 
