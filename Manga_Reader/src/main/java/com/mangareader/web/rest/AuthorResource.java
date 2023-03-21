@@ -2,13 +2,14 @@ package com.mangareader.web.rest;
 
 import com.mangareader.domain.Author;
 import com.mangareader.service.IAuthorService;
-import com.mangareader.service.IUserService;
+import com.mangareader.service.dto.PagingReturnDTO;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeAuthorVM;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +20,22 @@ import java.util.List;
 @RequestMapping("/author")
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("unused")
 public class AuthorResource {
     private final IAuthorService authorService;
     private final HttpServletRequest request;
 
     @GetMapping("/list")
-    public ResponseEntity<List<Author>> getLimitAuthor(
+    public ResponseEntity<PagingReturnDTO<Author>> getLimitAuthor(
             @RequestParam(defaultValue = "50") String limit,
             @RequestParam(defaultValue = "1") String page
     ) {
-        List<Author> authors = authorService.getLimitAuthor(limit, page);
-        authors = authorService.setAvatarUrlToUser(authors, APIUtil.getServerName(request));
-        return new ResponseEntity<>(authors, HttpStatus.FOUND);
+        Page<Author> authors = authorService.getLimitAuthor(limit, page);
+        PagingReturnDTO<Author> result = new PagingReturnDTO<>();
+        result.setContent(authorService.setAvatarUrlToUser(authors.getContent(), APIUtil.getServerName(request)));
+        result.setTotalElements(authors.getTotalElements());
+        result.setTotalPages(authors.getTotalPages());
+        return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
     @GetMapping

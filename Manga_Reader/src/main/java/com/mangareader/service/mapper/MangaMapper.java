@@ -4,7 +4,9 @@ import com.mangareader.domain.Manga;
 import com.mangareader.service.IMangaService;
 import com.mangareader.service.dto.AuthorDTO;
 import com.mangareader.service.dto.MangaDTO;
+import com.mangareader.service.dto.PagingReturnDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class MangaMapper {
     private final IMangaService mangaService;
 
@@ -35,9 +38,9 @@ public class MangaMapper {
             result.setUser_id(input.getUser().getId());
         }
         Set<String> genres = new HashSet<>();
-        input.getGenres().forEach(genre -> {
-            genres.add(genre.getName());
-        });
+        input.getGenres().forEach(
+                genre -> genres.add(genre.getName())
+        );
         result.setGenres(genres);
         Set<AuthorDTO> authors = new HashSet<>();
         input.getAuthors().forEach(author -> {
@@ -55,9 +58,9 @@ public class MangaMapper {
         if (input == null) {
             return null;
         }
-        input.forEach(manga -> {
-            result.add(toDTO(manga, serverName));
-        });
+        input.forEach(
+                manga -> result.add(toDTO(manga, serverName))
+        );
         return result;
     }
 
@@ -65,7 +68,15 @@ public class MangaMapper {
         if (input.getId() == null) {
             return null;
         }
-        Manga result = mangaService.getMangaById(input.getId());
+        return mangaService.getMangaById(input.getId());
+    }
+
+    public PagingReturnDTO<MangaDTO> toPagingReturnDTOMangaDTO(Page<Manga> mangas, String serverName) {
+        List<MangaDTO> mangaDTOs = toListDTO(mangas.getContent(), serverName);
+        PagingReturnDTO<MangaDTO> result = new PagingReturnDTO<>();
+        result.setTotalPages(mangas.getTotalPages());
+        result.setTotalElements(mangas.getTotalElements());
+        result.setContent(mangaDTOs);
         return result;
     }
 

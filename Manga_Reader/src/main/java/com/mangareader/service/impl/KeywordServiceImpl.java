@@ -45,8 +45,7 @@ public class KeywordServiceImpl implements IKeywordService {
         }
 
         log.info("Saving keyword to database....");
-        Keyword result = keywordRepository.save(keyword);
-        return result;
+        return keywordRepository.save(keyword);
     }
 
     @Override
@@ -59,11 +58,10 @@ public class KeywordServiceImpl implements IKeywordService {
 
         KeywordId id = new KeywordId(name, manga);
         log.info("Finding keyword by KeywordId");
-        Keyword result = keywordRepository.findById(id).orElseThrow(
+        return keywordRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Keyword name " + id.getName() + " in manga "
                         + id.getManga().getId() + " does not exist.")
         );
-        return result;
     }
 
     @Override
@@ -77,9 +75,7 @@ public class KeywordServiceImpl implements IKeywordService {
     public List<Keyword> getKeywordsOfMangaSortedByName(Long mangaId) {
 
         log.info("Finding keyword by mangaId........");
-        List<Keyword> result = keywordRepository.findByMangaIdOrderByName(mangaId);
-
-        return result;
+        return keywordRepository.findByMangaIdOrderByName(mangaId);
     }
 
     @Override
@@ -133,9 +129,7 @@ public class KeywordServiceImpl implements IKeywordService {
         Keyword keyword = getKeywordByKeywordId(vm.getName(), vm.getMangaId());
         keyword.setName(vm.getNewName());
         log.info("Saving new keyword to database");
-        Keyword result = keywordRepository.save(keyword);
-
-        return result;
+        return keywordRepository.save(keyword);
     }
 
     @Override

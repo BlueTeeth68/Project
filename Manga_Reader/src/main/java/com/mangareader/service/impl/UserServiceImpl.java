@@ -5,7 +5,6 @@ import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
-import com.mangareader.repository.ReportRepository;
 import com.mangareader.repository.UserRepository;
 import com.mangareader.service.IStorageService;
 import com.mangareader.service.IUserService;
@@ -17,6 +16,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class UserServiceImpl implements IUserService {
-    private final ReportRepository reportRepository;
 
     private final UserRepository userRepository;
 
@@ -123,8 +124,7 @@ public class UserServiceImpl implements IUserService {
         if (offset < 0) {
             throw new BadRequestException("offset must be greater than or equal to 0.");
         }
-        List<User> result = userRepository.findAllAndPaginateUser(limit, offset);
-        return result;
+        return userRepository.findAllAndPaginateUser(limit, offset);
     }
 
     @Override
@@ -133,6 +133,26 @@ public class UserServiceImpl implements IUserService {
         int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception.");
         int offset = limitNum * (pageNum - 1);
         return getAllAndPaginateUsers(limitNum, offset);
+    }
+
+    @Override
+    public Page<User> getAllUsersWithPageable(int page, int size) {
+        if (size <= 0) {
+            throw new BadRequestException("size must be greater than 0.");
+        }
+        if (page <= 0) {
+            throw new BadRequestException("page must be greater than 0.");
+        }
+        Pageable pageOption = PageRequest.of(page, size);
+        return userRepository.findAllUserWithPageable(pageOption);
+    }
+
+    @Override
+    public Page<User> getAllUsersWithPageable(String page, String size) {
+
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number exception.");
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception.");
+        return getAllUsersWithPageable(pageNum, sizeNum);
     }
 
     @Override
@@ -185,8 +205,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Resource getAvatar(String fileName) {
-        Resource file = storageService.loadAsResource(fileName, AVATAR_FOLDER);
-        return file;
+        return storageService.loadAsResource(fileName, AVATAR_FOLDER);
     }
 
     @Override
@@ -200,8 +219,7 @@ public class UserServiceImpl implements IUserService {
         log.debug("Get current user from Security Context Holder....");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        User user = getUserByUsername(username);
-        return user;
+        return getUserByUsername(username);
     }
 
     @Override
@@ -215,9 +233,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<User> addServerNameToAvatarURL(List<User> users, String serverName) {
         if (users != null) {
-            users.forEach(user -> {
-                user = addServerNameToAvatarURL(user, serverName);
-            });
+            users.forEach(
+                    user -> user.setAvatarUrl(serverName + user.getAvatarUrl())
+            );
         }
         return users;
     }

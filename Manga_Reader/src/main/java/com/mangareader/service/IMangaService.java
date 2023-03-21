@@ -2,52 +2,50 @@ package com.mangareader.service;
 
 import com.mangareader.domain.Manga;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public interface IMangaService {
 
     Manga getMangaById(Long id);
 
     Manga getMangaById(String id);
 
-//    List<Manga> getMangaByGenre(Long genreId);
+    Page<Manga> getPageableMangaByGenre(Long genreId, int page, int size);
 
-    List<Manga> getMangaByGenre(Long genreId, int limit, int offset);
+    Page<Manga> getPageableMangaByGenre(String genreId, String page, String size);
 
-    List<Manga> getMangaByGenre(String genreId, String limit, String page);
+    Page<Manga> getPageableMangaByAuthor(Long authorId, int page, int size);
 
-    List<Manga> getMangaByAuthor(Long authorId, int limit, int offset);
+    Page<Manga> getPageableMangaByAuthor(String authorId, String page, String size);
 
-    List<Manga> getMangaByAuthor(String authorId, String limit, String page);
+    Page<Manga> getPageableMangaByTranslator(Long translatorId, int page, int size);
 
-    List<Manga> getMangaByTranslator(Long translatorId, int limit, int offset);
+    Page<Manga> getPageableMangaByTranslator(String translatorId, String page, String size);
 
-    List<Manga> getMangaByTranslator(String translatorId, String limit, String page);
+    Page<Manga> getPageableMangaByNameOrKeyword(String keyword, int page, int size);
 
-    List<Manga> getMangaByNameOrKeyword(String keyword, int limit, int offset);
+    Page<Manga> getPageableMangaByNameOrKeyword(String keyword, String page, String size);
 
-    List<Manga> getMangaByNameOrKeyword(String keyword, String limit, String page);
+    Page<Manga> getPageableSuggestManga(int page, int size);
 
-    List<Manga> getSuggestMangas(int limit, int offset);
+    Page<Manga> getPageableSuggestManga(String page, String size);
 
-    List<Manga> getSuggestMangas(String limit, String page);
+    Page<Manga> getPageableMangaByStatus(String status, int page, int size);
 
-    List<Manga> getMangasByStatusLimit(String status, int limit, int offset);
-
-    List<Manga> getMangasByStatusLimit(String status, String limit, String page);
+    Page<Manga> getPageableMangaByStatus(String status, String page, String size);
 
     List<Manga> getMangaByName(String name);
 
     List<Manga> getAllManga();
 
-    List<Manga> getAllMangaSortByLatestUpdate();
+    Page<Manga> getAllPageableMangaOrderByLatestUpdate(int page, int size);
 
-    List<Manga> getAllPaginateMangaOrderByLatestUpdate(int limit, int offset);
-
-    List<Manga> getAllPaginateMangaOrderByLatestUpdate(String limit, String page);
+    Page<Manga> getAllPageableMangaOrderByLatestUpdate(String page, String size);
 
     Manga createManga(Manga manga);
 

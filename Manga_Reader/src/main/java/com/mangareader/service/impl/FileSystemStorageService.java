@@ -3,7 +3,6 @@ package com.mangareader.service.impl;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.exception.StorageException;
 import com.mangareader.service.IStorageService;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -14,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +21,7 @@ import java.util.stream.Stream;
 
 @Service
 @Slf4j
+@SuppressWarnings("unused")
 public class FileSystemStorageService implements IStorageService {
 
     private Path rootLocation;
@@ -60,7 +59,7 @@ public class FileSystemStorageService implements IStorageService {
             }
             Path pathLocation = Paths.get(location);
             File temp = pathLocation.toFile();
-            if(!temp.exists()) {
+            if (!temp.exists()) {
                 temp.mkdirs();
             }
             log.info("Creating file {}", file.getOriginalFilename());
@@ -104,7 +103,6 @@ public class FileSystemStorageService implements IStorageService {
                 return resource;
             } else {
                 throw new ResourceNotFoundException("Could not read file: " + location + "/" + filename);
-
             }
         } catch (MalformedURLException e) {
             throw new ResourceNotFoundException("Could not read file: " + location + "/" + filename);

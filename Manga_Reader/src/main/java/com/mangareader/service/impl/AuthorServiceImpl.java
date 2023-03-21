@@ -12,6 +12,10 @@ import com.mangareader.service.util.APIUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +39,7 @@ public class AuthorServiceImpl implements IAuthorService {
             log.error("Author already has id exception.");
             throw new BadRequestException("Author can not already have an id");
         }
-
-        Author result = authorRepository.save(author);
-        return result;
+        return authorRepository.save(author);
     }
 
     @Override
@@ -63,10 +65,9 @@ public class AuthorServiceImpl implements IAuthorService {
 
     @Override
     public Author getAuthorById(Long id) {
-        Author result = authorRepository.findById(id).orElseThrow(
+        return authorRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("There are no author " + id + " in the database")
         );
-        return result;
     }
 
     @Override
@@ -81,28 +82,26 @@ public class AuthorServiceImpl implements IAuthorService {
 
     @Override
     public List<Author> getAuthorsByName(String name) {
-        List<Author> authors = authorRepository.findByNameContaining(name);
-        return authors;
+        return authorRepository.findByNameContaining(name);
     }
 
     @Override
-    public List<Author> getLimitAuthor(int limit, int offset) {
-        if (limit <= 0) {
+    public Page<Author> getLimitAuthor(int size, int page) {
+        if (size <= 0) {
             throw new BadRequestException("limit must be greater than 0.");
         }
-        if (offset < 0) {
+        if (page <= 0) {
             throw new BadRequestException("offset must be greater than or equal to 0.");
         }
-        List<Author> result = authorRepository.findLimitAuthor(limit, offset);
-        return result;
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
+        return authorRepository.findAll(pageOption);
     }
 
     @Override
-    public List<Author> getLimitAuthor(String limit, String page) {
-        int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
+    public Page<Author> getLimitAuthor(String size, String page) {
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number exception.");
         int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception");
-        int offset = limitNum * (pageNum - 1);
-        return getLimitAuthor(limitNum, offset);
+        return getLimitAuthor(sizeNum, pageNum);
     }
 
     @Override
@@ -126,32 +125,24 @@ public class AuthorServiceImpl implements IAuthorService {
 
     @Override
     public List<Author> getAuthorByCreatedUser(Long userId) {
-        List<Author> result = authorRepository.findByUser(userId);
-        return result;
+        return authorRepository.findByUser(userId);
     }
 
     @Override
     public List<Author> getAuthorByCreatedUser(String userId) {
         Long userIdNum = APIUtil.parseStringToLong(userId, "userId is not a number exception");
-        List<Author> result = getAuthorByCreatedUser(userIdNum);
-        return result;
+        return getAuthorByCreatedUser(userIdNum);
     }
 
     @Override
     public User getUserByAuthor(Long authorId) {
-        Author author = authorRepository.findById(authorId).orElseThrow(
-                () -> {
-                    throw new ResourceNotFoundException("There are no author " + authorId + "in the database");
-                }
-        );
-        User result = author.getUser();
-        return result;
+        Author author = getAuthorById(authorId);
+        return author.getUser();
     }
 
     @Override
     public Long getNumberOfAuthor() {
-        Long result = authorRepository.count();
-        return result;
+        return authorRepository.count();
     }
 
     @Override
@@ -167,8 +158,7 @@ public class AuthorServiceImpl implements IAuthorService {
         checkAuthorize(authorId, user.getId());
         Author tmp = getAuthorById(authorId);
         tmp.setName(name);
-        Author result = authorRepository.save(tmp);
-        return result;
+        return authorRepository.save(tmp);
     }
 
     @Override
@@ -220,7 +210,7 @@ public class AuthorServiceImpl implements IAuthorService {
         User user = userService.getUserById(userId);
         if (user.getRole() == RoleName.TRANSLATOR) {
             Author author = getAuthorById(authorId);
-            if (author.getUser() == null || (author.getUser() != null && author.getUser().getId() != user.getId())) {
+            if (author.getUser() == null || !author.getUser().getId().equals(user.getId())) {
                 throw new AccessDeniedException("Just admin or owner can delete this author.");
             }
         }

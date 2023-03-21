@@ -2,23 +2,22 @@ package com.mangareader.service;
 
 import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
-import com.mangareader.web.rest.vm.Token;
 import com.mangareader.security.jwt.JWTService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
-import com.mangareader.service.error.UsernameAlreadyUsedException;
+import com.mangareader.web.rest.vm.Token;
 import com.mangareader.web.rest.vm.UsernamePasswordVM;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class AuthenticationService {
 
     private final IUserService userService;
@@ -54,7 +53,8 @@ public class AuthenticationService {
 
     public Token authenticate(UsernamePasswordVM request) {
 
-        Authentication authentication = authenticationManager.authenticate(
+        /*Authentication authentication =*/
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()

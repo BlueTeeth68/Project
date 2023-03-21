@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("unused")
 public class AuthorMapper {
 
     private final IAuthorService authorService;
@@ -24,8 +25,7 @@ public class AuthorMapper {
     public Author toEntity(AuthorDTO input) {
         if (input.getId() == null)
             return null;
-        Author result = authorService.getAuthorById(input.getId());
-        return result;
+        return authorService.getAuthorById(input.getId());
     }
 
 }

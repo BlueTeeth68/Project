@@ -2,7 +2,6 @@ package com.mangareader.service.mapper;
 
 import com.mangareader.domain.Keyword;
 import com.mangareader.domain.Manga;
-import com.mangareader.service.IKeywordService;
 import com.mangareader.service.IMangaService;
 import com.mangareader.service.dto.KeywordDTO;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("unused")
 public class KeywordMapper {
-
-    private final IKeywordService keywordService;
     private final IMangaService mangaService;
 
     public KeywordDTO toDTO(Keyword input) {
@@ -22,6 +20,7 @@ public class KeywordMapper {
 
         if (input != null) {
             log.info("Converting keyword to keywordDTO");
+            result = new KeywordDTO();
             result.setName(input.getName());
             result.setMangaId(input.getManga().getId());
         }
@@ -34,6 +33,7 @@ public class KeywordMapper {
 
         if (input != null) {
             Manga manga = mangaService.getMangaById(input.getMangaId());
+            result = new Keyword();
             result.setName(input.getName());
             result.setManga(manga);
         }

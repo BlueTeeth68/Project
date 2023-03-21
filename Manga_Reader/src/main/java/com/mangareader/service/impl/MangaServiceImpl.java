@@ -7,39 +7,31 @@ import com.mangareader.repository.MangaRepository;
 import com.mangareader.service.*;
 import com.mangareader.service.util.APIUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MangaServiceImpl implements IMangaService {
 
-    @Autowired
-    private MangaRepository mangaRepository;
-
-    @Autowired
-    private IGenreService genreService;
-
-    @Autowired
-    private IAuthorService authorService;
-
-    @Autowired
-    private IStorageService storageService;
-
-    @Autowired
-    private IUserService userService;
-
     private final String MANGA_FOLDER = "./image/manga/";
+    private final MangaRepository mangaRepository;
+    private final IGenreService genreService;
+    private final IAuthorService authorService;
+    private final IStorageService storageService;
+    private final IUserService userService;
 
     @Override
     public Manga getMangaById(Long id) {
@@ -55,195 +47,148 @@ public class MangaServiceImpl implements IMangaService {
         return getMangaById(idNum);
     }
 
-    //    @Override
-//    public List<Manga> getMangaByGenre(Long genreId) {
-//        log.info("Getting genre by id.......");
-//        Genre genre = genreService.getGenreById(genreId);
-//        log.info("Getting list of manga from genre........");
-//        List<Manga> result = genre.getMangas().stream().toList();
-//        if (result.isEmpty()) {
-//            log.error("Resource not found");
-//            throw new ResourceNotFoundException("There are no manga with genre " + genre.getName());
-//        }
-//        return result;
-//    }
-
     @Override
-    public List<Manga> getMangaByGenre(Long genreID, int limit, int offset) {
-        if (limit <= 0) {
-            log.error("Invalid limit");
-            throw new BadRequestException("limit must be greater than 0.");
+    public Page<Manga> getPageableMangaByGenre(Long genreId, int page, int size) {
+        if (page <= 0) {
+            log.error("Invalid page");
+            throw new BadRequestException("page must be greater than 0.");
         }
-        if (offset < 0) {
-            log.error("Invalid offset");
-            throw new BadRequestException("offset must be greater than or equal to 0.");
+        if (size <= 0) {
+            log.error("Invalid size");
+            throw new BadRequestException("size must be greater than 0.");
         }
-        log.info("Getting list of manga by genreId {} with limit {} and offset {}", genreID, limit, offset);
-        List<Manga> mangas = mangaRepository.findLimitMangaByGenreID(genreID, limit, offset);
-        if (mangas.isEmpty()) {
-            log.error("Resource not found");
-            throw new ResourceNotFoundException("Resource not found.");
-        }
-        return mangas;
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
+        return mangaRepository.findPageableMangaByGenreId(genreId, pageOption);
     }
 
     @Override
-    public List<Manga> getMangaByGenre(String genreId, String limit, String page) {
+    public Page<Manga> getPageableMangaByGenre(String genreId, String page, String size) {
         Long genreIdNum = APIUtil.parseStringToLong(genreId, "genreId is not a number.");
-        int limitNum = APIUtil.parseStringToInteger(limit, "limit is not a number.");
-        int pageNum = APIUtil.parseStringToInteger(page, "page is not a number.");
-        int offset = limitNum * (pageNum - 1);
-        return getMangaByGenre(genreIdNum, limitNum, offset);
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number.");
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number.");
+        return getPageableMangaByGenre(genreIdNum, pageNum, sizeNum);
     }
 
     @Override
-    public List<Manga> getMangaByAuthor(Long authorId, int limit, int offset) {
-        if (limit <= 0) {
-            log.error("Invalid limit");
-            throw new BadRequestException("limit must be greater than 0.");
+    public Page<Manga> getPageableMangaByAuthor(Long authorId, int page, int size) {
+        if (page <= 0) {
+            log.error("Invalid page");
+            throw new BadRequestException("Page must be greater than 0.");
         }
-        if (offset < 0) {
-            log.error("Invalid offset");
-            throw new BadRequestException("offset must be greater than or equal to 0.");
+        if (size <= 0) {
+            log.error("Invalid size");
+            throw new BadRequestException("Size must be greater than 0.");
         }
-        log.info("Getting list of manga by authorId {} with limit {} and offset {}", authorId, limit, offset);
-        List<Manga> mangas = mangaRepository.findLimitMangaByAuthorId(authorId, limit, offset);
-        if (mangas.isEmpty()) {
-            log.error("Resource not found.");
-            throw new ResourceNotFoundException("Resource not found.");
-        }
-        return mangas;
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
+        return mangaRepository.findPageableMangaByAuthorId(authorId, pageOption);
     }
 
     @Override
-    public List<Manga> getMangaByAuthor(String authorId, String limit, String page) {
+    public Page<Manga> getPageableMangaByAuthor(String authorId, String page, String size) {
         Long authorIdNum = APIUtil.parseStringToLong(authorId, "authorId is not a number.");
-        int limitNum = APIUtil.parseStringToInteger(limit, "limit is not a number.");
-        int pageNum = APIUtil.parseStringToInteger(page, "page is not a number.");
-        int offset = limitNum * (pageNum - 1);
-        return getMangaByAuthor(authorIdNum, limitNum, offset);
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number.");
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number.");
+        return getPageableMangaByAuthor(authorIdNum, pageNum, sizeNum);
     }
 
     @Override
-    public List<Manga> getMangaByTranslator(Long translatorId, int limit, int offset) {
-        if (limit <= 0) {
-            log.error("Invalid limit");
-            throw new BadRequestException("limit must be greater than 0.");
+    public Page<Manga> getPageableMangaByTranslator(Long translatorId, int page, int size) {
+        if (page <= 0) {
+            log.error("Invalid page");
+            throw new BadRequestException("Page must be greater than 0.");
         }
-        if (offset < 0) {
-            log.error("Invalid offset");
-            throw new BadRequestException("offset must be greater than or equal to 0.");
+        if (size <= 0) {
+            log.error("Invalid size");
+            throw new BadRequestException("Size must be greater than 0.");
         }
-        log.info("Getting list of manga by translatorId {} with limit {} and offset {}", translatorId, limit, offset);
-        List<Manga> mangas = mangaRepository.findByUserIdOrderByName(translatorId, limit, offset);
-        if (mangas.isEmpty()) {
-            log.error("Resource not found.");
-            throw new ResourceNotFoundException("Resource not found.");
-        }
-        return mangas;
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
+        log.info("Getting list of manga by translatorId {} with page {} and size {}", translatorId, page, size);
+        return mangaRepository.findByUserId(translatorId, pageOption);
     }
 
     @Override
-    public List<Manga> getMangaByTranslator(String translatorId, String limit, String page) {
+    public Page<Manga> getPageableMangaByTranslator(String translatorId, String page, String size) {
         Long translatorIdNum = APIUtil.parseStringToLong(translatorId, "translatorId is not a number.");
-        int limitNum = APIUtil.parseStringToInteger(limit, "limit is not a number.");
-        int pageNum = APIUtil.parseStringToInteger(page, "page is not a number.");
-        int offset = limitNum * (pageNum - 1);
-        return getMangaByTranslator(translatorIdNum, limitNum, offset);
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number.");
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number.");
+        return getPageableMangaByTranslator(translatorIdNum, pageNum, sizeNum);
     }
 
     @Override
-    public List<Manga> getMangaByNameOrKeyword(String keyword, int limit, int offset) {
-
+    public Page<Manga> getPageableMangaByNameOrKeyword(String keyword, int page, int size) {
         if (keyword == null || keyword.isBlank()) {
             log.error("Invalid keyword.");
             throw new BadRequestException("Keyword is null or blank.");
         }
-        if (limit <= 0) {
-            log.error("Invalid limit.");
-            throw new BadRequestException("limit must be greater than 0.");
+        if (page <= 0) {
+            log.error("Invalid page.");
+            throw new BadRequestException("Page must be greater than 0.");
         }
-        if (offset < 0) {
-            log.error("Invalid offset.");
-            throw new BadRequestException("offset must be greater than or equal to 0.");
+        if (size <= 0) {
+            log.error("Invalid size.");
+            throw new BadRequestException("Size must be greater than or equal to 0.");
         }
-        log.info("Getting list of manga by keyword {} with limit {} and offset {}", keyword, limit, offset);
-        List<Manga> mangas = mangaRepository.findByNameOrKeywordOrderByName(keyword, limit, offset);
-        if (mangas.isEmpty()) {
-            log.error("Resource not found.");
-            throw new ResourceNotFoundException("Resource not found.");
-        }
-        return mangas;
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
+        log.info("Getting list of manga by keyword {} with page {} and size {}", keyword, page, size);
+        return mangaRepository.findPageableMangaByNameOrKeyword(keyword, pageOption);
     }
 
     @Override
-    public List<Manga> getMangaByNameOrKeyword(String keyword, String limit, String page) {
-        int limitNum = APIUtil.parseStringToInteger(limit, "limit is not a number.");
-        int pageNum = APIUtil.parseStringToInteger(page, "page is not a number.");
-        int offset = limitNum * (pageNum - 1);
-        return getMangaByNameOrKeyword(keyword, limitNum, offset);
+    public Page<Manga> getPageableMangaByNameOrKeyword(String keyword, String page, String size) {
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number.");
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number.");
+        return getPageableMangaByNameOrKeyword(keyword, pageNum, sizeNum);
     }
 
     @Override
-    public List<Manga> getSuggestMangas(int limit, int offset) {
-        if (limit <= 0) {
-            log.error("Invalid limit");
-            throw new BadRequestException("limit must be greater than 0.");
+    public Page<Manga> getPageableSuggestManga(int page, int size) {
+        if (page <= 0) {
+            log.error("Invalid page");
+            throw new BadRequestException("Page must be greater than 0.");
         }
-        if (offset < 0) {
-            log.error("Invalid offset");
-            throw new BadRequestException("offset must be greater than or equal to 0.");
+        if (size <= 0) {
+            log.error("Invalid size");
+            throw new BadRequestException("Size must be greater than 0.");
         }
-        log.info("Getting list of suggest manga with limit {} and offset {}", limit, offset);
-        List<Manga> mangas = mangaRepository.findSuggestManga(limit, offset);
-        if (mangas.isEmpty()) {
-            log.error("Resource not found.");
-            throw new ResourceNotFoundException("Resource not found.");
-        }
-        return mangas;
+        Pageable pageOption = PageRequest.of(page, size);
+        log.info("Getting list of suggest manga with page {} and size {}", page, size);
+        return mangaRepository.findPageableSuggestManga(pageOption);
     }
 
     @Override
-    public List<Manga> getSuggestMangas(String limit, String page) {
-        int limitNum = APIUtil.parseStringToInteger(limit, "limit is not a number.");
-        int pageNum = APIUtil.parseStringToInteger(page, "page is not a number.");
-        int offset = limitNum * (pageNum - 1);
-        return getSuggestMangas(limitNum, offset);
+    public Page<Manga> getPageableSuggestManga(String page, String size) {
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number.");
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number.");
+        return getPageableSuggestManga(pageNum, sizeNum);
     }
 
     @Override
-    public List<Manga> getMangasByStatusLimit(String status, int limit, int offset) {
-        if (limit <= 0) {
-            log.error("Invalid limit");
-            throw new BadRequestException("limit must be greater than 0.");
+    public Page<Manga> getPageableMangaByStatus(String status, int page, int size) {
+        if (page <= 0) {
+            log.error("Invalid page");
+            throw new BadRequestException("Page must be greater than 0.");
         }
-        if (offset < 0) {
-            log.error("Invalid offset");
-            throw new BadRequestException("offset must be greater than or equal to 0.");
+        if (size <= 0) {
+            log.error("Invalid size");
+            throw new BadRequestException("Size must be greater than 0.");
         }
-        log.info("Getting list of manga by status {} with limit {} and offset {}", status, limit, offset);
-        List<Manga> mangas = mangaRepository.findMangaByStatusLimit(status, limit, offset);
-        if (mangas.isEmpty()) {
-            log.error("Resource not found.");
-            throw new ResourceNotFoundException("Resource not found.");
-        }
-        return mangas;
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
+        log.info("Getting list of manga by status {} with page {} and size {}", status, page, size);
+        return mangaRepository.findByStatus(status, pageOption);
     }
 
     @Override
-    public List<Manga> getMangasByStatusLimit(String status, String limit, String page) {
+    public Page<Manga> getPageableMangaByStatus(String status, String page, String size) {
         MangaStatus mangaStatus = APIUtil.parseStringToMangaStatus(status, "Status must be Ongoing or Completed");
-        int limitNum = APIUtil.parseStringToInteger(limit, "limit is not a number.");
-        int pageNum = APIUtil.parseStringToInteger(page, "page is not a number.");
-        int offset = limitNum * (pageNum - 1);
-        return getMangasByStatusLimit(mangaStatus.toString(), limitNum, offset);
+        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number.");
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number.");
+        return getPageableMangaByStatus(mangaStatus.toString(), pageNum, sizeNum);
     }
 
     @Override
     public List<Manga> getMangaByName(String name) {
         log.info("Getting mangas from database by name LIKE.......");
-        List<Manga> mangas = mangaRepository.findByNameContainingOrderByName(name);
-        return mangas;
+        return mangaRepository.findByNameContainingOrderByName(name);
     }
 
     @Override
@@ -258,41 +203,24 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
-    public List<Manga> getAllMangaSortByLatestUpdate() {
-        log.info("Get all manga from database sorted by latest update desc.");
-        List<Manga> result = mangaRepository.findAllByOrderByLatestUpdateDesc();
-
-        if (result.isEmpty()) {
-            log.error("Resource not found.");
-            throw new ResourceNotFoundException("There are no manga in the database.");
+    public Page<Manga> getAllPageableMangaOrderByLatestUpdate(int page, int size) {
+        if (page <= 0) {
+            log.error("Invalid page");
+            throw new BadRequestException("page must be greater than 0.");
         }
-
-        return result;
+        if (size <= 0) {
+            log.error("Invalid size");
+            throw new BadRequestException("size must be greater than 0.");
+        }
+        Pageable pageOption = PageRequest.of(page, size);
+        return mangaRepository.findAllByOrderByLatestUpdateDesc(pageOption);
     }
 
     @Override
-    public List<Manga> getAllPaginateMangaOrderByLatestUpdate(int limit, int offset) {
-
-        if (limit <= 0) {
-            log.error("Invalid limit");
-            throw new BadRequestException("limit must be greater than 0.");
-        }
-        if (offset < 0) {
-            log.error("Invalid offset");
-            throw new BadRequestException("offset must be greater than or equal to 0.");
-        }
-        log.info("Getting manga sort by latest update with limit {} and offset {}", limit, offset);
-        List<Manga> result = mangaRepository.findAllAndPaginateOrderByLatestUpdate(limit, offset);
-
-        return result;
-    }
-
-    @Override
-    public List<Manga> getAllPaginateMangaOrderByLatestUpdate(String limit, String page) {
-        int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
+    public Page<Manga> getAllPageableMangaOrderByLatestUpdate(String page, String size) {
         int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception");
-        int offset = limitNum * (pageNum - 1);
-        return getAllPaginateMangaOrderByLatestUpdate(limitNum, offset);
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number exception.");
+        return getAllPageableMangaOrderByLatestUpdate(pageNum, sizeNum);
     }
 
     @Override
@@ -361,8 +289,7 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Resource getCoverImage(String fileName) {
-        Resource file = storageService.loadAsResource(fileName, MANGA_FOLDER);
-        return file;
+        return storageService.loadAsResource(fileName, MANGA_FOLDER);
     }
 
     @Override
@@ -375,7 +302,7 @@ public class MangaServiceImpl implements IMangaService {
         User user = userService.getCurrentUser();
         if (user.getRole() == RoleName.TRANSLATOR) {
             Manga manga = getMangaById(mangaId);
-            if (manga.getUser() == null || (manga.getUser() != null && manga.getUser().getId() != user.getId())) {
+            if (manga.getUser() == null || !manga.getUser().getId().equals(user.getId())) {
                 log.error("Access denied.");
                 throw new AccessDeniedException("Only owner can update this manga.");
             }

@@ -28,17 +28,13 @@ public class UserMapper {
     }
 
     public User commonUserDTOToUser(CommonUserDTO commonUserDTO) {
-        User result = new User();
-
         if (commonUserDTO.getId() == null) {
             log.error("Id of commonUserDTO is null");
-
             return null;
         }
-        result = userRepository.findById(commonUserDTO.getId()).orElseThrow(
+        return userRepository.findById(commonUserDTO.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("User " + commonUserDTO.getId() + " is not found.")
         );
-        return result;
     }
 
 }

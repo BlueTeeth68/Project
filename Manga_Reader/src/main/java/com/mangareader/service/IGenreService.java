@@ -1,10 +1,12 @@
 package com.mangareader.service;
 
 import com.mangareader.domain.Genre;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public interface IGenreService {
 
     Genre getGenreById(Long id);
@@ -19,9 +21,8 @@ public interface IGenreService {
 
     List<Genre> getAllGenre();
 
-    List<Genre> getAllPaginateGenreSortedByName(int limit, int offset);
-
-    List<Genre> getAllPaginateGenreSortedByName(String limit, String offset);
+    Page<Genre> getAllGenreByPagingAndSortByName(int page, int size);
+    Page<Genre> getAllGenreByPagingAndSortByName(String page, String size);
 
     List<Genre> getAllGenreSortedByName();
 

@@ -8,13 +8,6 @@ import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.AuthorRepository;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.impl.AuthorServiceImpl;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class AuthorServiceImplTest {
 
@@ -40,6 +40,7 @@ public class AuthorServiceImplTest {
 
     @InjectMocks
     private AuthorServiceImpl authorService;
+
 
     private User user;
 
@@ -101,9 +102,8 @@ public class AuthorServiceImplTest {
         author.setUser(user);
 
         //when, then
-        assertThatThrownBy(() -> {
-                    authorService.createAuthor(author);
-                }
+        assertThatThrownBy(() ->
+                authorService.createAuthor(author)
         )
                 .hasMessage("Author can not already have an id")
                 .isInstanceOf(BadRequestException.class);
@@ -144,9 +144,9 @@ public class AuthorServiceImplTest {
         //when
         given(userService.getCurrentUser()).willReturn(user);
         //then
-        assertThatThrownBy(() -> {
-            authorService.createAuthor(name);
-        })
+        assertThatThrownBy(() ->
+                authorService.createAuthor(name)
+        )
                 .hasMessage("name is null or blank")
                 .isInstanceOf(BadRequestException.class);
 
@@ -163,9 +163,9 @@ public class AuthorServiceImplTest {
         //when
         given(userService.getCurrentUser()).willReturn(user);
         //then
-        assertThatThrownBy(() -> {
-            authorService.createAuthor(name);
-        })
+        assertThatThrownBy(() ->
+                authorService.createAuthor(name)
+        )
                 .hasMessage("name is null or blank")
                 .isInstanceOf(BadRequestException.class);
 
@@ -200,9 +200,9 @@ public class AuthorServiceImplTest {
         //when
         //then
 
-        assertThatThrownBy(() -> {
-            authorService.getAllAuthor();
-        })
+        assertThatThrownBy(() ->
+                authorService.getAllAuthor()
+        )
                 .hasMessage("There are no author in the database.")
                 .isInstanceOf(ResourceNotFoundException.class);
 
@@ -233,12 +233,89 @@ public class AuthorServiceImplTest {
         given(authorRepository.findById(anyLong())).willReturn(Optional.empty());
         //when
         //then
-        assertThatThrownBy(() -> {
-            authorService.getAuthorById(1L);
-        })
+        assertThatThrownBy(() ->
+                authorService.getAuthorById(1L)
+        )
                 .hasMessage("There are no author " + 1L + " in the database")
                 .isInstanceOf(ResourceNotFoundException.class);
         verify(authorRepository).findById(anyLong());
+    }
+
+
+    @Test
+    void createAuthor() {
+    }
+
+    @Test
+    void testCreateAuthor() {
+    }
+
+    @Test
+    void getAllAuthor() {
+    }
+
+    @Test
+    void getAuthorById() {
+    }
+
+    @Test
+    void getAuthorByIds() {
+    }
+
+    @Test
+    void getAuthorsByName() {
+    }
+
+    @Test
+    void getLimitAuthor() {
+    }
+
+    @Test
+    void testGetLimitAuthor() {
+    }
+
+    @Test
+    void getAuthorByIdOrName() {
+    }
+
+    @Test
+    void getAuthorByCreatedUser() {
+    }
+
+    @Test
+    void testGetAuthorByCreatedUser() {
+    }
+
+    @Test
+    void getUserByAuthor() {
+    }
+
+    @Test
+    void getNumberOfAuthor() {
+    }
+
+    @Test
+    void changeAuthorName() {
+    }
+
+    @Test
+    void deleteAuthor() {
+    }
+
+    @Test
+    void testDeleteAuthor() {
+    }
+
+    @Test
+    void setAvatarUrlToUser() {
+    }
+
+    @Test
+    void testSetAvatarUrlToUser() {
+    }
+
+    @Test
+    void checkAuthorize() {
     }
 
 

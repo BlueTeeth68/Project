@@ -8,21 +8,24 @@ import com.mangareader.repository.GenreRepository;
 import com.mangareader.service.IGenreService;
 import com.mangareader.service.util.APIUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class GenreServiceImpl implements IGenreService {
 
-    @Autowired
-    private GenreRepository genreRepository;
+    private final GenreRepository genreRepository;
 
     @Override
     public Genre getGenreById(Long id) {
@@ -61,38 +64,33 @@ public class GenreServiceImpl implements IGenreService {
     @Override
     public List<Genre> getGenreByNameContaining(String genreName) {
         log.info("Getting genre by name: " + genreName);
-        List<Genre> result = genreRepository.findByNameContaining(genreName);
-        return result;
+        return genreRepository.findByNameContainingOrderByNameAsc(genreName);
     }
 
     @Override
     public List<Genre> getAllGenre() {
         log.info("Getting all genre from the database.");
-        List<Genre> result = genreRepository.findAll();
-        if (result.isEmpty()) {
-            throw new ResourceNotFoundException("There are no Genre in the database.");
-        }
-        return result;
+        return genreRepository.findAll();
     }
 
+    /*Rewrite paging using Pageable in Spring JPA*/
     @Override
-    public List<Genre> getAllPaginateGenreSortedByName(int limit, int offset) {
-        if (limit <= 0) {
+    public Page<Genre> getAllGenreByPagingAndSortByName(int page, int size) {
+        if (size <= 0) {
             throw new BadRequestException("limit must be greater than 0.");
         }
-        if (offset < 0) {
-            throw new BadRequestException("offset must be greater than or equal to 0.");
+        if (page <= 0) {
+            throw new BadRequestException("offset must be greater than 0.");
         }
-        List<Genre> result = genreRepository.findLimitGenreAndSortByName(limit, offset);
-        return result;
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("name"));
+        return genreRepository.findAllGenreWithPageableSortByName(pageOption);
     }
 
     @Override
-    public List<Genre> getAllPaginateGenreSortedByName(String limit, String page) {
-        int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
+    public Page<Genre> getAllGenreByPagingAndSortByName(String page, String size) {
+        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number exception.");
         int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception");
-        int offset = limitNum * (pageNum - 1);
-        return getAllPaginateGenreSortedByName(limitNum, offset);
+        return getAllGenreByPagingAndSortByName(pageNum, sizeNum);
     }
 
     @Override
@@ -142,9 +140,7 @@ public class GenreServiceImpl implements IGenreService {
 
         Genre genre = getGenreById(id);
         genre.setName(genreName);
-
-        Genre result = genreRepository.save(genre);
-        return result;
+        return genreRepository.save(genre);
     }
 
     @Override
@@ -155,8 +151,7 @@ public class GenreServiceImpl implements IGenreService {
             throw new DataAlreadyExistsException("Genre " + genre.getName() + " is already exist.");
         }
         log.debug("Change genre name.");
-        Genre result = genreRepository.save(genre);
-        return null;
+        return genreRepository.save(genre);
     }
 
     @Override

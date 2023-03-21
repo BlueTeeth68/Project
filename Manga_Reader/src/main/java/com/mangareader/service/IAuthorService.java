@@ -2,10 +2,12 @@ package com.mangareader.service;
 
 import com.mangareader.domain.Author;
 import com.mangareader.domain.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public interface IAuthorService {
 
     Author createAuthor(Author author);
@@ -20,9 +22,9 @@ public interface IAuthorService {
 
     List<Author> getAuthorsByName(String name);
 
-    List<Author> getLimitAuthor(int limit, int offset);
+    Page<Author> getLimitAuthor(int size, int page);
 
-    List<Author> getLimitAuthor(String limit, String page);
+    Page<Author> getLimitAuthor(String size, String page);
 
     List<Author> getAuthorByIdOrName(String id, String name);
 

@@ -1,18 +1,16 @@
 package com.mangareader.web.rest;
 
-import com.mangareader.service.util.APIUtil;
 import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
+import com.mangareader.service.util.APIUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/account")
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("unused")
 public class AccountResource {
 
     private final IUserService userService;

@@ -4,10 +4,12 @@ import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.exception.ResourceNotFoundException;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface IUserService {
 
     User createUser(User user);
@@ -27,7 +29,12 @@ public interface IUserService {
     List<User> getUsers() throws ResourceNotFoundException;
 
     List<User> getAllAndPaginateUsers(int limit, int offset);
+
     List<User> getAllAndPaginateUsers(String limit, String page);
+
+    Page<User> getAllUsersWithPageable(int page, int size);
+
+    Page<User> getAllUsersWithPageable(String page, String size);
 
     Boolean existsByUsername(String username);
 
