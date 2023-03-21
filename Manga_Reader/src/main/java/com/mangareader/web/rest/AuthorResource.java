@@ -27,10 +27,10 @@ public class AuthorResource {
 
     @GetMapping("/list")
     public ResponseEntity<PagingReturnDTO<Author>> getLimitAuthor(
-            @RequestParam(defaultValue = "50") String limit,
+            @RequestParam(defaultValue = "50") String size,
             @RequestParam(defaultValue = "1") String page
     ) {
-        Page<Author> authors = authorService.getLimitAuthor(limit, page);
+        Page<Author> authors = authorService.getLimitAuthor(size, page);
         PagingReturnDTO<Author> result = new PagingReturnDTO<>();
         result.setContent(authorService.setAvatarUrlToUser(authors.getContent(), APIUtil.getServerName(request)));
         result.setTotalElements(authors.getTotalElements());

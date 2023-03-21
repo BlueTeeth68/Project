@@ -21,7 +21,7 @@
 
 - Spring boot, Spring security, Spring dataJPA
 - Hibernate
-- JUnit 5
+- JUnit 5, Mockito
 
 # Environment
 
@@ -66,10 +66,11 @@
 - Require: ADMIN
 - URL: /admin/user/list
 - Method: GET
-- Request param: limit, page (limit > 0, page >= 1)
+- Request param: size, page (size > 0, page > 0)
 - Request body: none
-- Response body: List<User>
-- Description: Admin can get limit user from database (paginate). If limit or page is null, return all user.
+- Response body: PagingReturnDTO<User>
+- Description: Admin can get all the user from the database. The result return relieve on the size and page in request (
+  paging). Default size is 100, default page is 1.
 
 #### 1.2 Get user by id/username: *
 
@@ -79,7 +80,7 @@
 - Request param: id/username
 - Request body: none
 - Response body: User or ResourceNotFoundException
-- Description: Admin can get user by id or username. The response is User with almost properties.
+- Description: Admin can get user by id or username.
 
 #### Change user role: *
 
@@ -114,7 +115,7 @@
 #### Update displayName: *
 
 - Require: authenticated account
-- URL: /account/display-name
+- URL: /account
 - Method: PATCH
 - Request param: none
 - Request body: displayName
@@ -127,7 +128,7 @@
 - URL: /account/avatar
 - Method: POST
 - Request param: none
-- Request body: file image
+- Request body: file
 - Response body: User
 - Description: user can update avatar by providing an image
 
@@ -175,36 +176,40 @@
 
 ### 2. Manga
 
-#### Get limit (paginate) manga from database *
+#### Get all manga from database *
 
 - Require: none
 - URL: /manga/list
 - Method: GET
-- Request param: limit, page (limit > 0, page >= 1)
+- Request param: size, page (size > 0, page > 0)
 - Request body: none
-- Response body: List<MangaDTO>
-- Description: user can load limit number of manga, sorted by latest update (paginate). If limit or page is null
-  return the first 100 manga from database.
+- Response body: PagingReturnDTO<MangaDTO>
+- Description: user can load all manga from the database, sorted by latest update (desc). The result return is based on
+  the size and page on the request. The default value of size is 100, page is 1
 
 #### Get mangas by name and keyword *
 
 - Require: none
 - URL: /manga/name
 - Method: GET
-- Request param: keyword, optional: limit, page (limit > 0, page >= 1)
-- Request body:
-- Response body: List<MangaDTO>
-- Description: user can find limit (paginate) mangas by keyword/name. Default limit = 20, default page = 1
+- Request param: keyword, size, page (size > 0, page > 0)
+- Request body: none
+- Response body: PagingReturnDTO<MangaDTO>
+- Description: user can find manga by its name or keyword, sorted by name. The result return is based on the size and
+  page on the
+  request. The default value of size is 20, page is 1
 
 #### Get mangas by genre *
 
 - Require: none
 - URL: /manga/genre
 - Method: GET
-- Request param: id, optional: limit, page (limit > 0, page >= 1)
-- Request body:
-- Response body: List<MangaDTO>
-- Description: user can find limit (paginate) mangas by its genre. Default limit = 20, default page = 1
+- Request param: id, size, page (size > 0, page > 0)
+- Request body: none
+- Response body: PagingReturnDTO<MangaDTO>
+- Description: User can find manga by its genre, sorted by name. The result return is based on size and page on the
+  request. Default id
+  is 1, default size is 20, default page is 1
 
 #### Get manga by id *
 
@@ -213,49 +218,52 @@
 - Method: GET
 - Request param: id
 - Request body: none
-- Response body: MangaDTO
-- Description: user can find manga by its id
+- Response body: MangaDTO or ResourceNoFound exception
+- Description: user can find manga by its id. Default value of id is 1.
 
 #### Get mangas by author name *
 
 - Require: none
 - URL: /manga/author
 - Method: GET
-- Request param: id, optional: limit, page (limit > 0, page >= 1)
+- Request param: id, size, page (size > 0, page > 0)
 - Request body: none
-- Response body: List<MangaDTO>
-- Description: user can find limit (paginate) mangas by its authorId. Default limit = 20, default page = 1
+- Response body: PagingReturnDTO<MangaDTO>
+- Description: user can find manga by its author id, sorted by name. The result return is based on size and page on the
+  request. Default id = 1, default size = 20, default page = 1
 
 #### Get mangas by translator id -doing
 
 - Require: none
 - URL: /manga/translator
 - Method: GET
-- Request param: id, optional: limit, page (limit > 0, page >= 1)
+- Request param: id, size, page (size > 0, page > 0)
 - Request body: none
-- Response body: List<MangaDTO>
-- Description: user can find limit (paginate) mangas by its translator (create user). Default limit = 20, default page =
-  1
+- Response body: PagingReturnDTO<MangaDTO>
+- Description: user can find manga by its translator id, sorted by name. The result return is based on size and page on
+  the request.
+  Default id = 1, default size = 20, default page = 1
 
 #### Get suggest manga (sort by rate * avg_view)
 
 - Require: none
 - URL: /manga/suggest
 - Method: GET
-- Request param: optional: limit, page (limit > 0, page >= 1)
+- Request param: size, page (size > 0, page > 0)
 - Request body: none
-- Response body: List<MangaDTO>
-- Description: user can find limit (paginate) mangas, order by (rate * view). Default limit = 20, default page = 1
+- Response body: PagingReturnDTO<MangaDTO>
+- Description: Return all manga, order by (rate * view). The result return is based on size and page on the request.
+  Default size = 20, default page = 1
 
 #### Get mangas by status
 
 - Require: none
 - URL: /manga/status
 - Method: GET
-- Request param: status (Ongoing/Completed), optional: limit, page (limit > 0, page >= 1)
+- Request param: status (Ongoing/Completed), size, page (size > 0, page > 0)
 - Request body: none
-- Response body: List<MangaDTO>
-- Description: user can find limit (paginate) mangas by status sorted. Default limit = 20, default page = 1
+- Response body: PagingReturnDTO<MangaDTO>
+- Description: user can find manga by status, sorted by name. Default size = 20, default page = 1
 
 #### Create manga *
 
@@ -268,7 +276,7 @@
 - Response body: Manga
 - Description: translator or admin can create new manga
 
-#### Update cover image *         3
+#### Update cover image *         
 
 - Require: ADMIN or TRANSLATOR
 - URL: /manga/cover-image
@@ -278,7 +286,7 @@
 - Response body: Manga
 - Description: translator or admin can update their own manga cover_image
 
-#### Set genres to manga *        1
+#### Set genres to manga *        
 
 - Require: ADMIN or TRANSLATOR
 - URL: /manga/genre
@@ -329,21 +337,31 @@
 - Require: none
 - URL: /genre/list
 - Method: GET
-- Request param: limit, page (optional) (limit > 0, page >=1)
+- Request param: size, page (size > 0, page > 0)
 - Request body: none
-- Response body: List<Genre>
-- Description: user can load a limit genre form database (paginate) or load the first 50 genre by set
-  limit or page to null
+- Response body: PagingReturnDTO<Genre>
+- Description: user can get all genre from the database. The result return is based on size and page on the request.
+  Default size is 50, default page is 1
 
-#### Get genre by name or id *
+#### Get genre by name *
 
 - Require: none
-- URL: /genre
+- URL: /genre/name
 - Method: GET
-- Request param: id/name (depend on the purpose but just send 1 in 2)
+- Request param: name
 - Request body: none
 - Response body: List<Genre>
-- Description: User can find genre by id or genre name
+- Description: User can find genre by its name.
+
+#### Get genre by id *
+
+- Require: none
+- URL: /genre/id
+- Method: GET
+- Request param: id
+- Request body: none
+- Response body: Genre or ResourceNotFound exception
+- Description: User can find genre by its id.
 
 #### Create new genre *
 
@@ -361,7 +379,7 @@
 - URL: /genre
 - Method: PATCH
 - Request param: none
-- Request body: Genre genre (id, name,...)
+- Request body: Genre genre (id, name)
 - Response body: Genre
 - Description: Admin user can change the name of genre
 
@@ -382,10 +400,11 @@
 - Require: ADMIN or TRANSLATOR
 - URL: /author/list
 - Method: GET
-- Request param: limit, page (limit > 0, page >= 1)
+- Request param: size, page (size > 0, page > 0)
 - Request body: none
-- Response body: List<Author>
-- Description: User can find a limit author (paginate). Leave limit empty to retrieve the first 50 Author
+- Response body: PagingReturnDTO<Author>
+- Description: ADMIN or TRANSLATOR can get all author list from database. The result return is based on size and page on
+  the request. Default size is 50, default page is 1
 
 #### Get author by id or a part of name *
 
@@ -395,7 +414,7 @@
 - Request param: id/ name
 - Request body: none
 - Response body: List<Author>
-- Description: User can find author by id or author name (using LIKE (%name%))
+- Description: User can find author by id or author name
 
 #### Get authors by created user *
 

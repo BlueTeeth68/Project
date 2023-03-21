@@ -49,27 +49,13 @@ public class UserResource {
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
-//    @GetMapping("/list")
-//    public ResponseEntity<List<User>> getAllAndPaginateUsers(
-//            @RequestParam(required = false, defaultValue = "100") String limit,
-//            @RequestParam(required = false, defaultValue = "1") String page
-//    ) {
-//        List<User> users = userService.getAllAndPaginateUsers(limit, page);
-//        String serverName = APIUtil.getServerName(request);
-//        users = userService.addServerNameToAvatarURL(users, serverName);
-//        return new ResponseEntity<>(users, HttpStatus.FOUND);
-//    }
-
     @GetMapping("/list")
     public ResponseEntity<PagingReturnDTO<User>> getAllAndPaginateUsers(
-            @RequestParam(required = false, defaultValue = "100") String limit,
+            @RequestParam(required = false, defaultValue = "100") String size,
             @RequestParam(required = false, defaultValue = "1") String page
     ) {
-        Page<User> users = userService.getAllUsersWithPageable(page, limit);
+        Page<User> users = userService.getAllUsersWithPageable(page, size);
         String serverName = APIUtil.getServerName(request);
-
-        /*Page<User> usersModify = users.map(
-                user -> userService.addServerNameToAvatarURL(user, serverName));*/
 
         PagingReturnDTO<User> result = new PagingReturnDTO<>();
         result.setContent(userService.addServerNameToAvatarURL(users.getContent(), serverName));

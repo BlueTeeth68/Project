@@ -23,22 +23,13 @@ public class GenreResource {
 
     private final IGenreService genreService;
 
-    /*@GetMapping("/list")
-    public ResponseEntity<List<Genre>> getAllGenre(
-            @RequestParam(required = false, defaultValue = "50") String limit,
-            @RequestParam(required = false, defaultValue = "1") String page
-    ) {
-        List<Genre> result = genreService.getAllPaginateGenreSortedByName(limit, page);
-        return ResponseEntity.ok(result);
-    }*/
-
     @GetMapping("/list")
     public ResponseEntity<PagingReturnDTO<Genre>> getAllGenre(
-            @RequestParam(required = false, defaultValue = "50") String limit,
+            @RequestParam(required = false, defaultValue = "50") String size,
             @RequestParam(required = false, defaultValue = "1") String page
     ) {
 
-        Page<Genre> genres = genreService.getAllGenreByPagingAndSortByName(page, limit);
+        Page<Genre> genres = genreService.getAllGenreByPagingAndSortByName(page, size);
         PagingReturnDTO<Genre> results = new PagingReturnDTO<>();
         results.setContent(genres.getContent());
         results.setTotalElements(genres.getTotalElements());
@@ -46,22 +37,6 @@ public class GenreResource {
 
         return ResponseEntity.ok(results);
     }
-
-/*    @GetMapping()
-    public ResponseEntity<List<Genre>> getGenreByNameOrId(
-            @RequestParam String id,
-            @RequestParam String name
-    ) {
-        List<Genre> result = new ArrayList<>();
-        if (id != null && name == null) {
-            result.add(genreService.getGenreById(id));
-        } else if (id == null && name != null) {
-            result = genreService.getGenreByNameContaining(name);
-        } else {
-            throw new BadRequestException("Bad request when execute findById or findByName.");
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }*/
 
     @GetMapping("/id")
     public ResponseEntity<Genre> getGenreById(
