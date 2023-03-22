@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,8 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
 
     private final IStorageService storageService;
+
+    private final PasswordEncoder passwordEncoder;
 
     private final String AVATAR_FOLDER = "./image/avatar";
 
@@ -255,6 +258,22 @@ public class UserServiceImpl implements IUserService {
         user.setActivate(status);
         user = userRepository.save(user);
         user = addServerNameToAvatarURL(user, serverName);
+        return user;
+    }
+
+    @Override
+    public User changePassword(String oldPassword, String newPassword) {
+        if (oldPassword == null || oldPassword.isBlank() || newPassword == null || newPassword.isBlank()) {
+            throw new BadRequestException("Password is null or blank");
+        }
+        User user = getCurrentUser();
+        String checkPassword = passwordEncoder.encode(oldPassword);
+        if(!checkPassword.equalsIgnoreCase(user.getPassword())) {
+            throw new BadRequestException("Old password does not match.");
+        }
+        String updatePassword = passwordEncoder.encode(newPassword);
+        user.setPassword(updatePassword);
+        userRepository.save(user);
         return user;
     }
 }

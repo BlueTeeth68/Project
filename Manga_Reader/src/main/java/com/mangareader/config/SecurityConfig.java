@@ -4,22 +4,19 @@ import com.mangareader.security.jwt.JWTAuthenticateFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class SecurityConfig {
 
     private final JWTAuthenticateFilter jwtAuthenticateFilter;
-
-    private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,7 +31,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                //permit all request from /api/auth/
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/image/**").permitAll()
                 .requestMatchers("/manga/**").permitAll()
@@ -42,7 +38,6 @@ public class SecurityConfig {
                 .requestMatchers("/keyword/**").permitAll()
                 .requestMatchers("/author/**").hasAnyAuthority("ADMIN", "TRANSLATOR")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                // any request must be authenticated
                 .anyRequest()
                 .authenticated()
         ;

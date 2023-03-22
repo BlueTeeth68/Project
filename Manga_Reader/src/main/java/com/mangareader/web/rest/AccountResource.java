@@ -6,7 +6,9 @@ import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
 import com.mangareader.service.util.APIUtil;
+import com.mangareader.web.rest.vm.ChangePasswordVM;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -71,6 +73,13 @@ public class AccountResource {
         String serverName = APIUtil.getServerName(request);
         User result = userService.updateAvatar(file, serverName);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<User> changePassword(
+            @Valid @RequestBody ChangePasswordVM vm
+    ) {
+        return null;
     }
 
     @DeleteMapping

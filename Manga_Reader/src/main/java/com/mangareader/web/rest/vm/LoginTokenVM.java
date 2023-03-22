@@ -1,5 +1,6 @@
 package com.mangareader.web.rest.vm;
 
+import com.mangareader.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Token {
+public class LoginTokenVM {
 
-    private String token;
+    private User user;
+    private String accessToken;
+    private String refreshToken;
 }

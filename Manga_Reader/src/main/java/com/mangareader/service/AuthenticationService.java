@@ -2,14 +2,16 @@ package com.mangareader.service;
 
 import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
+import com.mangareader.repository.UserRepository;
 import com.mangareader.security.jwt.JWTService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
-import com.mangareader.web.rest.vm.Token;
+import com.mangareader.web.rest.vm.LoginTokenVM;
 import com.mangareader.web.rest.vm.UsernamePasswordVM;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @SuppressWarnings("unused")
 public class AuthenticationService {
+    private final UserRepository userRepository;
 
     private final IUserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public Token register(UsernamePasswordVM request) /*throws Exception */ {
+    public LoginTokenVM register(UsernamePasswordVM request) /*throws Exception */ {
 
         if (request.getUsername() == null || request.getUsername().isBlank()) {
             log.error("Username is null.");
@@ -45,15 +48,19 @@ public class AuthenticationService {
         user.setDisplayName(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(RoleName.USER);
-        userService.createUser(user);
+        user = userService.createUser(user);
 
-        String jwtToken = jwtService.generateToken(user);
-        return new Token(jwtToken);
+        String accessToken = jwtService.generateAccessToken(user.getUsername());
+        String refreshToken = jwtService.generateRefreshToken(user.getUsername());
+        LoginTokenVM result = new LoginTokenVM();
+        result.setUser(user);
+        result.setAccessToken(accessToken);
+        result.setRefreshToken(accessToken);
+        return result;
     }
 
-    public Token authenticate(UsernamePasswordVM request) {
+    public LoginTokenVM authenticate(UsernamePasswordVM request) {
 
-        /*Authentication authentication =*/
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -62,8 +69,28 @@ public class AuthenticationService {
         );
 
         User user = userService.getUserByUsername(request.getUsername());
-        String jwtToken = jwtService.generateToken(user);
-        return new Token(jwtToken);
+        String accessToken = jwtService.generateAccessToken(user.getUsername());
+        String refreshToken = jwtService.generateRefreshToken(user.getUsername());
+        LoginTokenVM result = new LoginTokenVM();
+        result.setUser(user);
+        result.setAccessToken(accessToken);
+        result.setRefreshToken(accessToken);
+        return result;
     }
 
+    public LoginTokenVM getAccessTokenByRefreshToken(String refreshToken) {
+        if (jwtService.isRefreshTokenValid(refreshToken)) {
+            String userName = jwtService.extractRefreshUserName(refreshToken);
+            User user = userService.getUserByUsername(userName);
+            String newAccessToken = jwtService.generateAccessToken(userName);
+            String newRefreshToken = jwtService.generateRefreshToken(userName);
+            LoginTokenVM result = new LoginTokenVM();
+            result.setUser(user);
+            result.setAccessToken(newAccessToken);
+            result.setRefreshToken(newRefreshToken);
+            return result;
+        } else {
+            throw new BadCredentialsException("refresh token is invalid or expired.");
+        }
+    }
 }

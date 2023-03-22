@@ -1,7 +1,6 @@
 package com.mangareader;
 
 import com.mangareader.domain.*;
-import com.mangareader.repository.GenreRepository;
 import com.mangareader.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,13 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
+@SuppressWarnings("unused")
 public class ProjectApplication {
-    private final GenreRepository genreRepository;
-
-    public ProjectApplication(GenreRepository genreRepository) {
-        this.genreRepository = genreRepository;
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(ProjectApplication.class, args);
     }

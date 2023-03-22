@@ -33,7 +33,7 @@ public class JWTAuthenticateFilter extends OncePerRequestFilter {
         //get JWT token String
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String username;
+        final String userName;
 
         //if the request does not have JWT, skip this filter
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -43,33 +43,20 @@ public class JWTAuthenticateFilter extends OncePerRequestFilter {
 
         //if request have Jwt, get the jwt String
         jwt = authHeader.substring(7);
-        username = jwtService.extractUsername(jwt);
-
-        //check if user has not been already authenticated
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, //principal
-                        null,  //credential
-                        userDetails.getAuthorities()  //authorities
-                );
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-                /*
-                 * We start by creating an empty SecurityContext.
-                 * You should create a new SecurityContext instance instead of
-                 * using SecurityContextHolder.getContext().setAuthentication(authentication)
-                 * to avoid race conditions across multiple threads.
-                 */
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
-                context.setAuthentication(authToken);
-                SecurityContextHolder.setContext(context);
-
-//                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
+        if (SecurityContextHolder.getContext().getAuthentication() == null && jwtService.isAccessTokenValid(jwt)) {
+            userName = jwtService.extractAccessUserName(jwt);
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+            );
+            authToken.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authToken);
+            SecurityContextHolder.setContext(context);
         }
         filterChain.doFilter(request, response);
     }

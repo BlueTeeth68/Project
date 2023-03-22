@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/image")
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class ImageResource {
 
     private final IUserService userService;

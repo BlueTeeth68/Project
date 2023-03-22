@@ -58,4 +58,6 @@ public interface IUserService {
 
     User changeUserStatus(Long userId, Boolean status, String serverName);
 
+    User changePassword(String oldPassword, String newPassword);
+
 }
