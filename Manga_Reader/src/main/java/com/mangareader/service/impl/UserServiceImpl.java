@@ -120,25 +120,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<User> getAllAndPaginateUsers(int limit, int offset) {
-        if (limit <= 0) {
-            throw new BadRequestException("limit must be greater than 0.");
-        }
-        if (offset < 0) {
-            throw new BadRequestException("offset must be greater than or equal to 0.");
-        }
-        return userRepository.findAllAndPaginateUser(limit, offset);
-    }
-
-    @Override
-    public List<User> getAllAndPaginateUsers(String limit, String page) {
-        int limitNum = APIUtil.parseStringToInteger(limit, "Limit is not a number exception.");
-        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception.");
-        int offset = limitNum * (pageNum - 1);
-        return getAllAndPaginateUsers(limitNum, offset);
-    }
-
-    @Override
     public Page<User> getAllUsersWithPageable(int page, int size) {
         if (size <= 0) {
             throw new BadRequestException("size must be greater than 0.");
@@ -268,7 +249,7 @@ public class UserServiceImpl implements IUserService {
         }
         User user = getCurrentUser();
         String checkPassword = passwordEncoder.encode(oldPassword);
-        if(!checkPassword.equalsIgnoreCase(user.getPassword())) {
+        if (!checkPassword.equalsIgnoreCase(user.getPassword())) {
             throw new BadRequestException("Old password does not match.");
         }
         String updatePassword = passwordEncoder.encode(newPassword);

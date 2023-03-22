@@ -20,12 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByDisplayName(String displayName);
 
-    //old version
-    @Query(value = "SELECT * FROM user " +
-            " LIMIT ?1 OFFSET ?2 ", nativeQuery = true)
-    List<User> findAllAndPaginateUser(int limit, int offset);
-
-    //new version
     @Query(value = "SELECT u FROM User u ")
     Page<User> findAllUserWithPageable(Pageable pageOption);
 }

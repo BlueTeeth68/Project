@@ -28,10 +28,6 @@ public interface IUserService {
 
     List<User> getUsers() throws ResourceNotFoundException;
 
-    List<User> getAllAndPaginateUsers(int limit, int offset);
-
-    List<User> getAllAndPaginateUsers(String limit, String page);
-
     Page<User> getAllUsersWithPageable(int page, int size);
 
     Page<User> getAllUsersWithPageable(String page, String size);
