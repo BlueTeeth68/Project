@@ -7,6 +7,7 @@ import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangePasswordVM;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
+@SecurityRequirement(name = "authorize")
 public class AccountResource {
 
     private final IUserService userService;

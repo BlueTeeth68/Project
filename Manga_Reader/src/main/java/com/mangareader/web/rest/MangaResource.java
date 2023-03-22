@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
+//@SecurityRequirement(name = "authorize")
 public class MangaResource {
 
     private final IMangaService mangaService;

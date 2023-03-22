@@ -21,14 +21,8 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
 
     List<Genre> findByNameContainingOrderByNameAsc(String name);
 
-    //old version
-    @Query(value = "SELECT * FROM genre " +
-            " ORDER BY name " +
-            " LIMIT ?1 OFFSET ?2 ", nativeQuery = true)
-    List<Genre> findLimitGenreAndSortByName(int limit, int offset);
-
     //new version
-    @Query(value = "SELECT * FROM genre ", nativeQuery = true)
+    @Query(value = "SELECT g FROM Genre g")
     Page<Genre> findAllGenreWithPageableSortByName(Pageable pageOption);
 
 }

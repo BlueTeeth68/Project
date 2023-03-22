@@ -5,6 +5,7 @@ import com.mangareader.service.IKeywordService;
 import com.mangareader.service.dto.KeywordDTO;
 import com.mangareader.service.mapper.KeywordMapper;
 import com.mangareader.web.rest.vm.ChangeKeywordVM;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
+@SecurityRequirement(name = "authorize")
 public class KeywordResource {
 
     private final IKeywordService keywordService;

@@ -5,6 +5,7 @@ import com.mangareader.service.IAuthorService;
 import com.mangareader.service.dto.PagingReturnDTO;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeAuthorVM;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
+@SecurityRequirement(name = "authorize")
 public class AuthorResource {
     private final IAuthorService authorService;
     private final HttpServletRequest request;

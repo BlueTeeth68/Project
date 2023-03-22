@@ -32,20 +32,4 @@ public class AuthorRepositoryTest {
         assertEquals(1, authors.size());
     }
 
-    @Test
-    @DisplayName("Test findLimitAuthor case 1")
-    void findLimitAuthor_should_return_limit_record_1() {
-        List<Author> authors = authorRepository.findLimitAuthor(2, 0);
-        assertEquals(2, authors.size());
-        assertEquals(1L, authors.get(0).getId());
-    }
-
-    @Test
-    @DisplayName("Test findLimitAuthor case 2")
-    void findLimitAuthor_should_return_limit_record_2() {
-        List<Author> authors = authorRepository.findLimitAuthor(2, 2);
-        assertEquals(1, authors.size());
-        assertEquals(3L, authors.get(0).getId());
-    }
-
 }

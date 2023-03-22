@@ -26,6 +26,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllAndPaginateUser(int limit, int offset);
 
     //new version
-    @Query(value = "SELECT * FROM user ", nativeQuery = true)
+    @Query(value = "SELECT u FROM User u ")
     Page<User> findAllUserWithPageable(Pageable pageOption);
 }

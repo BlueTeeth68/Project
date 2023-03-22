@@ -7,6 +7,7 @@ import com.mangareader.service.dto.PagingReturnDTO;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeUserRoleVM;
 import com.mangareader.web.rest.vm.ChangeUserStatusVM;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
+@SecurityRequirement(name = "authorize")
 public class UserResource {
 
     private final IUserService userService;

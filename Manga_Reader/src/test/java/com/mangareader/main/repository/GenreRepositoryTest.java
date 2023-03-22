@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-//@DataJpaTest
 public class GenreRepositoryTest {
 
     @Autowired
@@ -28,12 +27,4 @@ public class GenreRepositoryTest {
         assertEquals("Fantastic", genres.get(1).getName());
     }
 
-    @Test
-    @DisplayName("Test findLimitGenreAndSortByName case 1")
-    void findLimitGenreAndSortByName_should_return_limit_record_and_sort_by_name() {
-        List<Genre> genres = genreRepository.findLimitGenreAndSortByName(3, 0);
-        assertEquals(3, genres.size());
-        assertEquals("Fantastic", genres.get(1).getName());
-        assertEquals("Fiction", genres.get(2).getName());
-    }
 }

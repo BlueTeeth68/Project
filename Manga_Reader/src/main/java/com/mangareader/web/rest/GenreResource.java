@@ -3,6 +3,7 @@ package com.mangareader.web.rest;
 import com.mangareader.domain.Genre;
 import com.mangareader.service.IGenreService;
 import com.mangareader.service.dto.PagingReturnDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.util.List;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 @SuppressWarnings("unused")
+@SecurityRequirement(name = "authorize")
 public class GenreResource {
 
     private final IGenreService genreService;
