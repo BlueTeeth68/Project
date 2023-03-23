@@ -1,8 +1,7 @@
 package com.mangareader.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -14,20 +13,15 @@ import lombok.*;
 @AllArgsConstructor
 @IdClass(KeywordId.class)
 public class Keyword {
-
-    /*
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    */
-
     @Id
     @Column(nullable = false)
     private String name;
 
+    @JsonIgnore
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manga_id", nullable = false)
-    @JsonIgnoreProperties(value = {"user", "genres", "authors"}, allowSetters = true)
+//    @JsonIgnoreProperties(value = {"user", "genres", "authors", "comments", "reports",
+//            "keywords", "bookmarks", "chapters"}, allowSetters = true)
     private Manga manga;
 }

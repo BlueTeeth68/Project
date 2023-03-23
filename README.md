@@ -142,7 +142,15 @@
 - Response body: CommonUserDTO or ResourceNotFoundException
 - Description: user can view others profile with public information
 
-#### Change password
+#### Change password - ok
+
+- Require: authenticated user
+- URL: /account/password
+- Method: PATCH
+- Request param: none
+- Request body: ChangPasswordVM(oldPassword, newPassword)
+- Response body: User
+- Description: user can change their current password
 
 #### Reset password
 
@@ -273,7 +281,7 @@
 - Request param: none
 - Request body: CreateMangaVM (name (not blank, min = 1, max = 256),
   summary (optional), yearOfPublication (not null, between 1900 and 2100))
-- Response body: Manga
+- Response body: MangaDTO
 - Description: translator or admin can create new manga
 
 #### Update cover image *         
@@ -283,7 +291,7 @@
 - Method: PATCH
 - Request param: none
 - Request body: id, MultipartFile file
-- Response body: Manga
+- Response body: MangaDTO
 - Description: translator or admin can update their own manga cover_image
 
 #### Set genres to manga *        
@@ -293,26 +301,30 @@
 - Method: PATCH
 - Request param: none
 - Request body: SetGenreToMangaVM (id: not null, Set/list genreName: not null)
-- Response body: Manga
+- Response body: MangaDTO
 - Description: translator or admin can set genres for their own manga
 
-#### Set authors to manga *       2
+#### Set authors to manga *  
 
 - Require: none
 - URL: /manga/author
 - Method: PATCH
 - Request param: none
 - Request body: SetAuthorsToMangaVM (id: not null, Set/List authorId: not null)
-- Response body: Manga
+- Response body: MangaDTO
 - Description: translator or admin can set authors for their own manga
 
-#### Add keyword to manga - doing
+#### Set keyword to manga - ok
 
-#### Remove keyword to manga - doing
+- Require: none
+- URL: /manga/keyword
+- Method: PATCH
+- Request param: none
+- Request body: KeywordMangaVM (mangaId, List<String> keyword)
+- Response body: MangaDTO
+- Description: translator or admin can set authors for their own manga
 
 #### Change manga information
-
-#### Change manga cover image - doing
 
 #### Vote manga
 
@@ -467,16 +479,6 @@
 - Request body: none
 - Response body: List<Keyword>
 - Description: User can search all keyword of a manga
-
-#### Get keyword by name and mangaId *
-
-- Require: none
-- URL: /keyword
-- Method: GET
-- Request param: name, mangaId
-- Request body: none
-- Response body: Keyword
-- Description: User can search keyword by keyword's name and mangaId
 
 #### Add keyword to a manga -  *
 

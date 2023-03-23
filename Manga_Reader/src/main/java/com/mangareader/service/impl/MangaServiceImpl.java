@@ -6,6 +6,7 @@ import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.MangaRepository;
 import com.mangareader.service.*;
 import com.mangareader.service.util.APIUtil;
+import com.mangareader.web.rest.vm.ChangeMangaVM;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -51,11 +51,11 @@ public class MangaServiceImpl implements IMangaService {
     public Page<Manga> getPageableMangaByGenre(Long genreId, int page, int size) {
         if (page < 0) {
             log.error("Invalid page");
-            throw new BadRequestException("page must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         if (size <= 0) {
             log.error("Invalid size");
-            throw new BadRequestException("size must be greater than 0.");
+            throw new BadRequestException("Size must be greater than 0.");
         }
         Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
         return mangaRepository.findPageableMangaByGenreId(genreId, pageOption);
@@ -73,7 +73,7 @@ public class MangaServiceImpl implements IMangaService {
     public Page<Manga> getPageableMangaByAuthor(Long authorId, int page, int size) {
         if (page < 0) {
             log.error("Invalid page");
-            throw new BadRequestException("Page must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         if (size <= 0) {
             log.error("Invalid size");
@@ -95,7 +95,7 @@ public class MangaServiceImpl implements IMangaService {
     public Page<Manga> getPageableMangaByTranslator(Long translatorId, int page, int size) {
         if (page < 0) {
             log.error("Invalid page");
-            throw new BadRequestException("Page must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         if (size <= 0) {
             log.error("Invalid size");
@@ -122,7 +122,7 @@ public class MangaServiceImpl implements IMangaService {
         }
         if (page < 0) {
             log.error("Invalid page.");
-            throw new BadRequestException("Page must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         if (size <= 0) {
             log.error("Invalid size.");
@@ -144,7 +144,7 @@ public class MangaServiceImpl implements IMangaService {
     public Page<Manga> getPageableSuggestManga(int page, int size) {
         if (page < 0) {
             log.error("Invalid page");
-            throw new BadRequestException("Page must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         if (size <= 0) {
             log.error("Invalid size");
@@ -163,10 +163,10 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
-    public Page<Manga> getPageableMangaByStatus(String status, int page, int size) {
+    public Page<Manga> getPageableMangaByStatus(MangaStatus status, int page, int size) {
         if (page < 0) {
             log.error("Invalid page");
-            throw new BadRequestException("Page must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         if (size <= 0) {
             log.error("Invalid size");
@@ -182,25 +182,14 @@ public class MangaServiceImpl implements IMangaService {
         MangaStatus mangaStatus = APIUtil.parseStringToMangaStatus(status, "Status must be Ongoing or Completed");
         int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number.");
         int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number.");
-        return getPageableMangaByStatus(mangaStatus.toString(), pageNum, sizeNum);
-    }
-
-    @Override
-    public List<Manga> getAllManga() {
-        log.info("Get all manga from database sorted by id.");
-        List<Manga> result = mangaRepository.findAll();
-        if (result.isEmpty()) {
-            log.error("Resource not found.");
-            throw new ResourceNotFoundException("There are no manga in the database.");
-        }
-        return result;
+        return getPageableMangaByStatus(mangaStatus, pageNum, sizeNum);
     }
 
     @Override
     public Page<Manga> getAllPageableMangaOrderByLatestUpdate(int page, int size) {
         if (page < 0) {
             log.error("Invalid page");
-            throw new BadRequestException("page must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         if (size <= 0) {
             log.error("Invalid size");
@@ -218,6 +207,7 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
+    @Transactional
     public Manga createManga(Manga manga) {
         if (manga.getId() != null) {
             log.error("manga id is not null");
@@ -239,7 +229,6 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
-    @Transactional
     public Manga addGenreToManga(Long mangaId, Set<String> genreName, String serverName) {
         checkMangaAuthorize(mangaId);
         Manga manga = getMangaById(mangaId);
@@ -253,7 +242,7 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
-    @Transactional
+
     public Manga addAuthorsToManga(Long mangaId, Set<Long> authorIds, String serverName) {
         checkMangaAuthorize(mangaId);
         Manga manga = getMangaById(mangaId);
@@ -268,27 +257,27 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     @Transactional
-    public Manga updateCoverImage(Long id, MultipartFile file, String serverName) {
+    public Manga updateCoverImage(Long id, MultipartFile file) {
 
         checkMangaAuthorize(id);
         Manga manga = getMangaById(id);
         String folderName = "manga" + id;
         storageService.store(file, MANGA_FOLDER + folderName, "cover_image");
-        String coverImageUrl = /*SERVER_NAME + */ "/image/manga/" + folderName + "/" + "cover_image";
+        String coverImageUrl = "/image/manga/" + folderName + "/" + "cover_image";
         manga.setCoverImageUrl(coverImageUrl);
+        log.info("Saving manga to the database");
         manga = mangaRepository.save(manga);
-        if (manga.getCoverImageUrl() != null) {
-            manga.setCoverImageUrl(serverName + manga.getCoverImageUrl());
-        }
-
         return manga;
     }
 
     @Override
-    @Transactional
     public Manga updateCoverImage(String id, MultipartFile file, String serverName) {
         Long idNum = APIUtil.parseStringToLong(id, "id is not a number");
-        return updateCoverImage(idNum, file, serverName);
+        Manga manga = updateCoverImage(idNum, file);
+        if (manga.getCoverImageUrl() != null) {
+            manga.setCoverImageUrl(serverName + manga.getCoverImageUrl());
+        }
+        return manga;
     }
 
     @Override
@@ -317,6 +306,26 @@ public class MangaServiceImpl implements IMangaService {
                 throw new AccessDeniedException("Only owner can update this manga.");
             }
         }
+    }
 
+    @Override
+    public Manga changeMangaInformation(ChangeMangaVM vm) {
+
+        checkMangaAuthorize(vm.getId());
+        Manga manga = getMangaById(vm.getId());
+        if (vm.getSummary() != null && !vm.getSummary().isBlank()) {
+            manga.setSummary(vm.getSummary());
+        }
+        if (vm.getName() != null && !vm.getName().isBlank()) {
+            manga.setName(vm.getName());
+        }
+        if (vm.getStatus() != null) {
+            manga.setStatus(vm.getStatus());
+        }
+        if (vm.getYearOfPublication() != null) {
+            manga.setYearOfPublication(vm.getYearOfPublication());
+        }
+        manga = mangaRepository.save(manga);
+        return manga;
     }
 }

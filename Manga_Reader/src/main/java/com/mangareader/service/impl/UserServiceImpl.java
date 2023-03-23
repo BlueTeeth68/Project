@@ -12,6 +12,7 @@ import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
 import com.mangareader.service.error.UsernameAlreadyUsedException;
 import com.mangareader.service.util.APIUtil;
+import com.mangareader.web.rest.vm.ChangePasswordVM;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -126,9 +127,9 @@ public class UserServiceImpl implements IUserService {
             throw new BadRequestException("size must be greater than 0.");
         }
         if (page < 0) {
-            throw new BadRequestException("page must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
-        Pageable pageOption = PageRequest.of(page, size, Sort.by("display_name"));
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("displayName"));
         return userRepository.findAll(pageOption);
     }
 
@@ -174,6 +175,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public User updateAvatar(MultipartFile file, String serverName) {
 
         User user = getCurrentUser();
@@ -219,13 +221,17 @@ public class UserServiceImpl implements IUserService {
     public List<User> addServerNameToAvatarURL(List<User> users, String serverName) {
         if (users != null) {
             users.forEach(
-                    user -> user.setAvatarUrl(serverName + user.getAvatarUrl())
+                    user -> {
+                        if (user.getAvatarUrl() != null)
+                            user.setAvatarUrl(serverName + user.getAvatarUrl());
+                    }
             );
         }
         return users;
     }
 
     @Override
+    @Transactional
     public User setRoleToUser(Long userId, RoleName roleName, String serverName) {
         User user = getUserById(userId);
         user.setRole(roleName);
@@ -235,6 +241,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public User changeUserStatus(Long userId, Boolean status, String serverName) {
         User user = getUserById(userId);
         user.setActivate(status);
@@ -244,16 +251,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User changePassword(String oldPassword, String newPassword) {
-        if (oldPassword == null || oldPassword.isBlank() || newPassword == null || newPassword.isBlank()) {
-            throw new BadRequestException("Password is null or blank");
-        }
+    @Transactional
+    public User changePassword(ChangePasswordVM vm) {
         User user = getCurrentUser();
-        String checkPassword = passwordEncoder.encode(oldPassword);
-        if (!checkPassword.equalsIgnoreCase(user.getPassword())) {
+        boolean match = passwordEncoder.matches(vm.getOldPassword(), user.getPassword());
+        if (!match) {
             throw new BadRequestException("Old password does not match.");
         }
-        String updatePassword = passwordEncoder.encode(newPassword);
+        String updatePassword = passwordEncoder.encode(vm.getNewPassword());
         user.setPassword(updatePassword);
         userRepository.save(user);
         return user;

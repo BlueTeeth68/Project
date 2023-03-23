@@ -77,10 +77,10 @@ public class GenreServiceImpl implements IGenreService {
     @Override
     public Page<Genre> getAllGenreByPagingAndSortByName(int page, int size) {
         if (size <= 0) {
-            throw new BadRequestException("limit must be greater than 0.");
+            throw new BadRequestException("Size must be greater than 0.");
         }
         if (page < 0) {
-            throw new BadRequestException("offset must be greater than 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
         return genreRepository.findAll(pageOption);
@@ -103,25 +103,16 @@ public class GenreServiceImpl implements IGenreService {
         return result;
     }
 
+    @Transactional
     @Override
-    public Genre createNewGenre(Genre genre) {
-
-        if (genre.getId() != null) {
-            throw new BadRequestException("New genre can not have an id.");
-        }
-        if (genreRepository.existsByName(genre.getName().toLowerCase())) {
-            log.error("Input genreName {} is already exist.", genre.getName());
+    public Genre createNewGenre(String genreName) {
+        if (genreRepository.existsByName(genreName.toLowerCase())) {
+            log.error("Input genreName {} is already exist.", genreName);
             throw new DataAlreadyExistsException("Genre is already exists.");
         }
-
-        Genre result;
-
-        try {
-            log.debug("Creating new genre.......");
-            result = genreRepository.save(genre);
-        } catch (Exception ex) {
-            throw new BadRequestException("Error when creating genre " + genre.getName());
-        }
+        Genre result = new Genre();
+        result.setName(genreName);
+        genreRepository.save(result);
         return result;
     }
 

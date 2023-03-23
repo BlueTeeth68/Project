@@ -1,6 +1,7 @@
 package com.mangareader.repository;
 
 import com.mangareader.domain.Manga;
+import com.mangareader.domain.MangaStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,6 +40,6 @@ public interface MangaRepository extends JpaRepository<Manga, Long> {
             " ORDER BY (m.view * m.rate) DESC ")
     Page<Manga> findPageableSuggestManga(Pageable pageOption);
 
-    Page<Manga> findByStatus(String status, Pageable pageOption);
+    Page<Manga> findByStatus(MangaStatus status, Pageable pageOption);
 
 }

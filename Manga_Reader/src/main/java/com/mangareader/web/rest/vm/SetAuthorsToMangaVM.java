@@ -13,7 +13,7 @@ import java.util.Set;
 public class SetAuthorsToMangaVM {
 
     @NotNull
-    private Long id;
+    private Long mangaId;
 
     @NotNull
     private Set<Long> authorIds;

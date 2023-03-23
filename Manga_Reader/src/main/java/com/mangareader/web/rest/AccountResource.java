@@ -56,7 +56,7 @@ public class AccountResource {
         user = userService.addServerNameToAvatarURL(user, APIUtil.getServerName(request));
         CommonUserDTO result = userMapper.entityToCommonUserDTO(user);
 
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PatchMapping()
@@ -81,7 +81,7 @@ public class AccountResource {
     public ResponseEntity<User> changePassword(
             @Valid @RequestBody ChangePasswordVM vm
     ) {
-        return null;
+        return new ResponseEntity<>(userService.changePassword(vm), HttpStatus.OK);
     }
 
     @DeleteMapping

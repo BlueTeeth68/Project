@@ -26,7 +26,7 @@ public interface IGenreService {
 
     List<Genre> getAllGenreSortedByName();
 
-    Genre createNewGenre(Genre genre);
+    Genre createNewGenre(String genreName);
 
     Genre changeGenreName(Long id, String genreName);
 

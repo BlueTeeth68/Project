@@ -24,20 +24,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
-@SecurityRequirement(name = "authorize")
+
 public class KeywordResource {
 
     private final IKeywordService keywordService;
     private final KeywordMapper keywordMapper;
-
-    @GetMapping()
-    public ResponseEntity<String> getKeywordById(
-            @RequestParam String name,
-            @RequestParam String mangaId
-    ) {
-        Keyword result = keywordService.getKeywordByKeywordId(name, mangaId);
-        return new ResponseEntity<>(result.getName(), HttpStatus.FOUND);
-    }
 
     @GetMapping("/manga")
     public ResponseEntity<List<String>> getKeywordOfManga(
@@ -48,11 +39,12 @@ public class KeywordResource {
         keywords.forEach(
                 k -> result.add(k.getName())
         );
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
+    @SecurityRequirement(name = "authorize")
     public ResponseEntity<String> addKeywordToManga(
             @Valid @RequestBody KeywordDTO keywordDTO
     ) {
@@ -63,6 +55,7 @@ public class KeywordResource {
 
     @PatchMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
+    @SecurityRequirement(name = "authorize")
     public ResponseEntity<String> changeKeywordName(
             @Valid @RequestBody ChangeKeywordVM vm
     ) {
@@ -72,6 +65,7 @@ public class KeywordResource {
 
     @DeleteMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
+    @SecurityRequirement(name = "authorize")
     public ResponseEntity<?> deleteKeyword(
             @RequestParam String name,
             @RequestParam String mangaId

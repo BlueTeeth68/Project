@@ -48,13 +48,13 @@ public class UserResource {
         String serverName = APIUtil.getServerName(request);
         result = userService.addServerNameToAvatarURL(result, serverName);
 
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/list")
     public ResponseEntity<PagingReturnDTO<User>> getAllAndPaginateUsers(
             @RequestParam(required = false, defaultValue = "100") String size,
-            @RequestParam(required = false, defaultValue = "1") String page
+            @RequestParam(required = false, defaultValue = "0") String page
     ) {
         Page<User> users = userService.getAllUsersWithPageable(page, size);
         String serverName = APIUtil.getServerName(request);
@@ -63,7 +63,7 @@ public class UserResource {
         result.setContent(userService.addServerNameToAvatarURL(users.getContent(), serverName));
         result.setTotalElements(users.getTotalElements());
         result.setTotalPages(users.getTotalPages());
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PatchMapping("/role")

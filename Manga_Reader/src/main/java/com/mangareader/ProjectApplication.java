@@ -85,29 +85,17 @@ public class ProjectApplication {
             }
 
             //add genres to database
-            Genre genre = new Genre();
-            genre.setName("Action");
-            genreService.createNewGenre(genre);
+            genreService.createNewGenre("Action");
 
-            genre = new Genre();
-            genre.setName("Shounen");
-            genreService.createNewGenre(genre);
+            genreService.createNewGenre("Shounen");
 
-            genre = new Genre();
-            genre.setName("Romance");
-            genreService.createNewGenre(genre);
+            genreService.createNewGenre("Romance");
 
-            genre = new Genre();
-            genre.setName("Fiction");
-            genreService.createNewGenre(genre);
+            genreService.createNewGenre("Fiction");
 
-            genre = new Genre();
-            genre.setName("Fantastic");
-            genreService.createNewGenre(genre);
+            genreService.createNewGenre("Fantastic");
 
-            genre = new Genre();
-            genre.setName("Scientific");
-            genreService.createNewGenre(genre);
+            genreService.createNewGenre("Scientific");
 
             //add author to database
             Author author;

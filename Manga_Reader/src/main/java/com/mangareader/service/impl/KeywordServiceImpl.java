@@ -29,6 +29,7 @@ public class KeywordServiceImpl implements IKeywordService {
     private final IMangaService mangaService;
 
     @Override
+    @Transactional
     public Keyword createKeyWord(Keyword keyword) {
 
         if (keyword.getName() == null || keyword.getName().isBlank()) {
@@ -120,15 +121,19 @@ public class KeywordServiceImpl implements IKeywordService {
             throw new ResourceNotFoundException("Keyword does not exist");
         }
         log.info("Create new keyword id used to check exist when update.");
-        KeywordId newId = new KeywordId(vm.getName(), id.getManga());
+        KeywordId newId = new KeywordId(vm.getNewName(), id.getManga());
         if (keywordRepository.existsById(newId)) {
             log.error("New keyword is already exist.");
             throw new DataAlreadyExistsException("This keyword name has been existed from database");
         }
         log.info("Getting old keyword from database.......");
-        Keyword keyword = getKeywordByKeywordId(vm.getName(), vm.getMangaId());
+        keywordRepository.deleteById(id);
+        Keyword keyword = new Keyword();
         keyword.setName(vm.getNewName());
-        log.info("Saving new keyword to database");
+        keyword.setManga(manga);
+//        Keyword keyword = getKeywordByKeywordId(vm.getName(), vm.getMangaId());
+//        keyword.setName(vm.getNewName());
+//        log.info("Saving new keyword to database");
         return keywordRepository.save(keyword);
     }
 

@@ -1,11 +1,12 @@
 package com.mangareader.service;
 
 import com.mangareader.domain.Manga;
+import com.mangareader.domain.MangaStatus;
+import com.mangareader.web.rest.vm.ChangeMangaVM;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
@@ -35,11 +36,9 @@ public interface IMangaService {
 
     Page<Manga> getPageableSuggestManga(String page, String size);
 
-    Page<Manga> getPageableMangaByStatus(String status, int page, int size);
+    Page<Manga> getPageableMangaByStatus(MangaStatus status, int page, int size);
 
     Page<Manga> getPageableMangaByStatus(String status, String page, String size);
-
-    List<Manga> getAllManga();
 
     Page<Manga> getAllPageableMangaOrderByLatestUpdate(int page, int size);
 
@@ -51,7 +50,7 @@ public interface IMangaService {
 
     Manga addAuthorsToManga(Long mangaId, Set<Long> authorIds, String serverName);
 
-    Manga updateCoverImage(Long id, MultipartFile file, String serverName);
+    Manga updateCoverImage(Long id, MultipartFile file);
 
     Manga updateCoverImage(String id, MultipartFile file, String serverName);
 
@@ -62,4 +61,6 @@ public interface IMangaService {
     Boolean existsById(Long id);
 
     void checkMangaAuthorize(Long mangaId);
+
+    Manga changeMangaInformation(ChangeMangaVM vm);
 }

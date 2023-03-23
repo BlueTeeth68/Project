@@ -32,9 +32,9 @@ public class AuthorServiceImpl implements IAuthorService {
     private final AuthorRepository authorRepository;
     private final IUserService userService;
 
+    @Transactional
     @Override
     public Author createAuthor(Author author) {
-
         if (author.getId() != null) {
             log.error("Author already has id exception.");
             throw new BadRequestException("Author can not already have an id");
@@ -88,10 +88,10 @@ public class AuthorServiceImpl implements IAuthorService {
     @Override
     public Page<Author> getLimitAuthor(int size, int page) {
         if (size <= 0) {
-            throw new BadRequestException("limit must be greater than 0.");
+            throw new BadRequestException("Size must be greater than 0.");
         }
         if (page < 0) {
-            throw new BadRequestException("offset must be greater than or equal to 0.");
+            throw new BadRequestException("Page must be greater than or equal to 0.");
         }
         Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
         return authorRepository.findAll(pageOption);

@@ -30,14 +30,14 @@ public class AuthorResource {
     @GetMapping("/list")
     public ResponseEntity<PagingReturnDTO<Author>> getLimitAuthor(
             @RequestParam(defaultValue = "50") String size,
-            @RequestParam(defaultValue = "1") String page
+            @RequestParam(defaultValue = "0") String page
     ) {
         Page<Author> authors = authorService.getLimitAuthor(size, page);
         PagingReturnDTO<Author> result = new PagingReturnDTO<>();
         result.setContent(authorService.setAvatarUrlToUser(authors.getContent(), APIUtil.getServerName(request)));
         result.setTotalElements(authors.getTotalElements());
         result.setTotalPages(authors.getTotalPages());
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping
@@ -47,7 +47,7 @@ public class AuthorResource {
     ) {
         List<Author> result = authorService.getAuthorByIdOrName(id, name);
         result = authorService.setAvatarUrlToUser(result, APIUtil.getServerName(request));
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/created-by")
@@ -56,10 +56,11 @@ public class AuthorResource {
     ) {
         List<Author> result = authorService.getAuthorByCreatedUser(userId);
         result = authorService.setAvatarUrlToUser(result, APIUtil.getServerName(request));
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
+
     public ResponseEntity<Author> createNewAuthor(
             @RequestBody String name
     ) {

@@ -3,6 +3,7 @@ package com.mangareader.service;
 import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.exception.ResourceNotFoundException;
+import com.mangareader.web.rest.vm.ChangePasswordVM;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,6 +55,6 @@ public interface IUserService {
 
     User changeUserStatus(Long userId, Boolean status, String serverName);
 
-    User changePassword(String oldPassword, String newPassword);
+    User changePassword(ChangePasswordVM vm);
 
 }

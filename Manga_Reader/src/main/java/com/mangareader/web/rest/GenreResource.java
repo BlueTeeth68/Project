@@ -28,7 +28,7 @@ public class GenreResource {
     @GetMapping("/list")
     public ResponseEntity<PagingReturnDTO<Genre>> getAllGenre(
             @RequestParam(required = false, defaultValue = "50") String size,
-            @RequestParam(required = false, defaultValue = "1") String page
+            @RequestParam(required = false, defaultValue = "0") String page
     ) {
 
         Page<Genre> genres = genreService.getAllGenreByPagingAndSortByName(page, size);
@@ -45,7 +45,7 @@ public class GenreResource {
             @RequestParam String id
     ) {
         Genre genre = genreService.getGenreById(id);
-        return new ResponseEntity<>(genre, HttpStatus.FOUND);
+        return new ResponseEntity<>(genre, HttpStatus.OK);
     }
 
     @GetMapping("/name")
@@ -53,20 +53,22 @@ public class GenreResource {
             @RequestParam String name
     ) {
         List<Genre> genres = genreService.getGenreByNameContaining(name);
-        return new ResponseEntity<>(genres, HttpStatus.FOUND);
+        return new ResponseEntity<>(genres, HttpStatus.OK);
     }
 
     @PostMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "authorize")
     public ResponseEntity<Genre> createGenre(
             @Valid @RequestBody Genre genre
     ) {
-        Genre result = genreService.createNewGenre(genre);
+        Genre result = genreService.createNewGenre(genre.getName());
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @PatchMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "authorize")
     public ResponseEntity<Genre> changeGenreName(
             @Valid @RequestBody Genre genre
     ) {
@@ -76,6 +78,7 @@ public class GenreResource {
 
     @DeleteMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "authorize")
     public ResponseEntity<?> deleteGenre(
             @RequestParam String id
     ) {
