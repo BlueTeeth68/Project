@@ -79,11 +79,11 @@ public class GenreServiceImpl implements IGenreService {
         if (size <= 0) {
             throw new BadRequestException("limit must be greater than 0.");
         }
-        if (page <= 0) {
+        if (page < 0) {
             throw new BadRequestException("offset must be greater than 0.");
         }
-        Pageable pageOption = PageRequest.of(page, size, Sort.by("name"));
-        return genreRepository.findAllGenreWithPageableSortByName(pageOption);
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
+        return genreRepository.findAll(pageOption);
     }
 
     @Override

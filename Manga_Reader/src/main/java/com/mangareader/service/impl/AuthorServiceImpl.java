@@ -90,7 +90,7 @@ public class AuthorServiceImpl implements IAuthorService {
         if (size <= 0) {
             throw new BadRequestException("limit must be greater than 0.");
         }
-        if (page <= 0) {
+        if (page < 0) {
             throw new BadRequestException("offset must be greater than or equal to 0.");
         }
         Pageable pageOption = PageRequest.of(page, size, Sort.by("name").ascending());
@@ -125,7 +125,7 @@ public class AuthorServiceImpl implements IAuthorService {
 
     @Override
     public List<Author> getAuthorByCreatedUser(Long userId) {
-        return authorRepository.findByUser(userId);
+        return authorRepository.findByUserId(userId);
     }
 
     @Override

@@ -17,8 +17,6 @@ public interface MangaRepository extends JpaRepository<Manga, Long> {
 
     Page<Manga> findAllByOrderByLatestUpdateDesc(Pageable pageOption);
 
-    List<Manga> findByNameContainingOrderByName(String name);
-
     @Query(value = " SELECT DISTINCT m FROM Manga m " +
             " WHERE m.name LIKE CONCAT('%', :keyword, '%') " +
             " OR m.id IN (SELECT DISTINCT k.manga.id FROM Keyword k " +

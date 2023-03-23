@@ -19,6 +19,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -124,11 +125,11 @@ public class UserServiceImpl implements IUserService {
         if (size <= 0) {
             throw new BadRequestException("size must be greater than 0.");
         }
-        if (page <= 0) {
+        if (page < 0) {
             throw new BadRequestException("page must be greater than 0.");
         }
-        Pageable pageOption = PageRequest.of(page, size);
-        return userRepository.findAllUserWithPageable(pageOption);
+        Pageable pageOption = PageRequest.of(page, size, Sort.by("display_name"));
+        return userRepository.findAll(pageOption);
     }
 
     @Override

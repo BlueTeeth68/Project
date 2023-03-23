@@ -66,7 +66,7 @@
 - Require: ADMIN
 - URL: /admin/user/list
 - Method: GET
-- Request param: size, page (size > 0, page > 0)
+- Request param: size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<User>
 - Description: Admin can get all the user from the database. The result return relieve on the size and page in request (
@@ -181,7 +181,7 @@
 - Require: none
 - URL: /manga/list
 - Method: GET
-- Request param: size, page (size > 0, page > 0)
+- Request param: size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<MangaDTO>
 - Description: user can load all manga from the database, sorted by latest update (desc). The result return is based on
@@ -192,7 +192,7 @@
 - Require: none
 - URL: /manga/name
 - Method: GET
-- Request param: keyword, size, page (size > 0, page > 0)
+- Request param: keyword, size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<MangaDTO>
 - Description: user can find manga by its name or keyword, sorted by name. The result return is based on the size and
@@ -204,7 +204,7 @@
 - Require: none
 - URL: /manga/genre
 - Method: GET
-- Request param: id, size, page (size > 0, page > 0)
+- Request param: id, size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<MangaDTO>
 - Description: User can find manga by its genre, sorted by name. The result return is based on size and page on the
@@ -226,7 +226,7 @@
 - Require: none
 - URL: /manga/author
 - Method: GET
-- Request param: id, size, page (size > 0, page > 0)
+- Request param: id, size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<MangaDTO>
 - Description: user can find manga by its author id, sorted by name. The result return is based on size and page on the
@@ -237,7 +237,7 @@
 - Require: none
 - URL: /manga/translator
 - Method: GET
-- Request param: id, size, page (size > 0, page > 0)
+- Request param: id, size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<MangaDTO>
 - Description: user can find manga by its translator id, sorted by name. The result return is based on size and page on
@@ -249,7 +249,7 @@
 - Require: none
 - URL: /manga/suggest
 - Method: GET
-- Request param: size, page (size > 0, page > 0)
+- Request param: size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<MangaDTO>
 - Description: Return all manga, order by (rate * view). The result return is based on size and page on the request.
@@ -260,7 +260,7 @@
 - Require: none
 - URL: /manga/status
 - Method: GET
-- Request param: status (Ongoing/Completed), size, page (size > 0, page > 0)
+- Request param: status (Ongoing/Completed), size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<MangaDTO>
 - Description: user can find manga by status, sorted by name. Default size = 20, default page = 1
@@ -337,7 +337,7 @@
 - Require: none
 - URL: /genre/list
 - Method: GET
-- Request param: size, page (size > 0, page > 0)
+- Request param: size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<Genre>
 - Description: user can get all genre from the database. The result return is based on size and page on the request.
@@ -400,7 +400,7 @@
 - Require: ADMIN or TRANSLATOR
 - URL: /author/list
 - Method: GET
-- Request param: size, page (size > 0, page > 0)
+- Request param: size, page (size > 0, page >= 0)
 - Request body: none
 - Response body: PagingReturnDTO<Author>
 - Description: ADMIN or TRANSLATOR can get all author list from database. The result return is based on size and page on

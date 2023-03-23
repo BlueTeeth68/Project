@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
-    List<Author> findByUser(Long userId);
+    List<Author> findByUserId(Long userId);
 
     List<Author> findByNameContaining(String name);
 

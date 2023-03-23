@@ -49,7 +49,7 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Page<Manga> getPageableMangaByGenre(Long genreId, int page, int size) {
-        if (page <= 0) {
+        if (page < 0) {
             log.error("Invalid page");
             throw new BadRequestException("page must be greater than 0.");
         }
@@ -71,7 +71,7 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Page<Manga> getPageableMangaByAuthor(Long authorId, int page, int size) {
-        if (page <= 0) {
+        if (page < 0) {
             log.error("Invalid page");
             throw new BadRequestException("Page must be greater than 0.");
         }
@@ -93,7 +93,7 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Page<Manga> getPageableMangaByTranslator(Long translatorId, int page, int size) {
-        if (page <= 0) {
+        if (page < 0) {
             log.error("Invalid page");
             throw new BadRequestException("Page must be greater than 0.");
         }
@@ -120,7 +120,7 @@ public class MangaServiceImpl implements IMangaService {
             log.error("Invalid keyword.");
             throw new BadRequestException("Keyword is null or blank.");
         }
-        if (page <= 0) {
+        if (page < 0) {
             log.error("Invalid page.");
             throw new BadRequestException("Page must be greater than 0.");
         }
@@ -142,7 +142,7 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Page<Manga> getPageableSuggestManga(int page, int size) {
-        if (page <= 0) {
+        if (page < 0) {
             log.error("Invalid page");
             throw new BadRequestException("Page must be greater than 0.");
         }
@@ -164,7 +164,7 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Page<Manga> getPageableMangaByStatus(String status, int page, int size) {
-        if (page <= 0) {
+        if (page < 0) {
             log.error("Invalid page");
             throw new BadRequestException("Page must be greater than 0.");
         }
@@ -186,12 +186,6 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
-    public List<Manga> getMangaByName(String name) {
-        log.info("Getting mangas from database by name LIKE.......");
-        return mangaRepository.findByNameContainingOrderByName(name);
-    }
-
-    @Override
     public List<Manga> getAllManga() {
         log.info("Get all manga from database sorted by id.");
         List<Manga> result = mangaRepository.findAll();
@@ -204,7 +198,7 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Page<Manga> getAllPageableMangaOrderByLatestUpdate(int page, int size) {
-        if (page <= 0) {
+        if (page < 0) {
             log.error("Invalid page");
             throw new BadRequestException("page must be greater than 0.");
         }
@@ -225,6 +219,22 @@ public class MangaServiceImpl implements IMangaService {
 
     @Override
     public Manga createManga(Manga manga) {
+        if (manga.getId() != null) {
+            log.error("manga id is not null");
+            throw new BadRequestException("New manga cannot have an ID");
+        }
+        if (manga.getName() == null || manga.getName().isBlank()) {
+            log.error("Manga name is null");
+            throw new BadRequestException("Manga name can not be null");
+        }
+        if (manga.getYearOfPublication() == null) {
+            log.error("Year of publication is null");
+            throw new BadRequestException("Year of public cation cannot be empty.");
+        }
+        if (manga.getUser() == null) {
+            log.error("Created user of manga is null");
+            throw new BadRequestException("User can not be null");
+        }
         return mangaRepository.save(manga);
     }
 

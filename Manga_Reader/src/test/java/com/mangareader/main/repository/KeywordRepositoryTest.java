@@ -2,9 +2,6 @@ package com.mangareader.main.repository;
 
 import com.mangareader.domain.Keyword;
 import com.mangareader.repository.KeywordRepository;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 //@DataJpaTest
@@ -29,10 +28,9 @@ public class KeywordRepositoryTest {
     }
 
     @Test
-    @DisplayName("Test deleteAllKeywordOfManga case 1")
+    @DisplayName("Test deleteByMangaId case 1")
     @Transactional
-    void deleteAllKeywordOfManga_must_delete_all_keyword_of_manga() {
-//        keywordRepository.deleteAllKeywordOfManga(1L);
+    void deleteByMangaId_must_delete_all_keyword_of_manga() {
         keywordRepository.deleteByMangaId(1L);
         List<Keyword> keywords = keywordRepository.findByMangaIdOrderByName(1L);
         assertEquals(0, keywords.size());

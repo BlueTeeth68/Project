@@ -136,6 +136,7 @@ public class MangaResource {
             @Valid @RequestBody CreateMangaVM vm
     ) {
         Manga manga = new Manga();
+        manga.setUser(userService.getCurrentUser());
         manga.setName(vm.getName());
         manga.setSummary(vm.getSummary());
         manga.setYearOfPublication(vm.getYearOfPublication());

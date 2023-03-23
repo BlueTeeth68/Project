@@ -24,6 +24,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
         info = @Info(title = "Manga reader website", version = "1.0", description = "Swagger UI for testing APIs in Manga reader website.")
 )
 public class ProjectApplication {
+
+    public ProjectApplication() {
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(ProjectApplication.class, args);
     }
@@ -51,8 +55,8 @@ public class ProjectApplication {
             userService.createUser(user);
 
             user = new User();
-            user.setUsername("TestTranslator");
-            user.setDisplayName("Test Translator");
+            user.setUsername("TestTranslator1");
+            user.setDisplayName("Test Translator 1");
             user.setPassword(password);
             user.setRole(RoleName.TRANSLATOR);
             userService.createUser(user);
@@ -106,38 +110,62 @@ public class ProjectApplication {
             genreService.createNewGenre(genre);
 
             //add author to database
-            Author author = new Author();
-            author.setName("Author 1");
-            User createdBy = userService.getUserById(2L);
-            author.setUser(createdBy);
-            authorService.createAuthor(author);
+            Author author;
+            User createdBy;
 
-            author = new Author();
-            author.setName("Author 2");
-            createdBy = userService.getUserById(2L);
-            author.setUser(createdBy);
-            authorService.createAuthor(author);
+            for (int i = 1; i < 4; i++) {
+                author = new Author();
+                author.setName("Author " + i);
+                createdBy = userService.getUserById(2L);
+                author.setUser(createdBy);
+                authorService.createAuthor(author);
+            }
 
-            author = new Author();
-            author.setName("Author 3");
-            createdBy = userService.getUserById(2L);
-            author.setUser(createdBy);
-            authorService.createAuthor(author);
+            for (int i = 4; i < 7; i++) {
+                author = new Author();
+                author.setName("Author " + i);
+                createdBy = userService.getUserById(1L);
+                author.setUser(createdBy);
+                authorService.createAuthor(author);
+            }
 
             //Add manga to database
+            user = userService.getUserById(1L);
             Manga manga = new Manga();
+            manga.setUser(user);
             manga.setName("One piece");
-            manga.setYearOfPublication(2011);
+            manga.setYearOfPublication(2002);
             mangaService.createManga(manga);
 
             manga = new Manga();
+            manga.setUser(user);
             manga.setName("Naruto");
             manga.setYearOfPublication(2002);
             mangaService.createManga(manga);
 
             manga = new Manga();
+            manga.setUser(user);
             manga.setName("My Hero Academia");
-            manga.setYearOfPublication(2006);
+            manga.setYearOfPublication(2008);
+            mangaService.createManga(manga);
+
+            user = userService.getUserById(2L);
+            manga = new Manga();
+            manga.setUser(user);
+            manga.setName("Jujutsu Kaisen");
+            manga.setYearOfPublication(2016);
+            mangaService.createManga(manga);
+
+            manga = new Manga();
+            manga.setUser(user);
+            manga.setName("Attack on titan");
+            manga.setYearOfPublication(2010);
+            mangaService.createManga(manga);
+
+            manga = new Manga();
+            manga.setUser(user);
+            manga.setName("Bleach");
+            manga.setYearOfPublication(2004);
             mangaService.createManga(manga);
 
             // add keyword to manga
@@ -151,7 +179,37 @@ public class ProjectApplication {
             keyword.setName("Đảo Hải Tặc");
             keyword.setManga(manga);
             keywordService.createKeyWord(keyword);
+
+            keyword = new Keyword();
+            keyword.setName("Boruto");
+            keyword.setManga(mangaService.getMangaById(2L));
+            keywordService.createKeyWord(keyword);
+
+            keyword = new Keyword();
+            keyword.setName("Naruto Shippuden");
+            keyword.setManga(mangaService.getMangaById(2L));
+            keywordService.createKeyWord(keyword);
+
+            //add genre to manga
+
+            /*Set<String> genres = new HashSet<>();
+            genres.add(genreService.getGenreById(1L).getName());
+            genres.add(genreService.getGenreById(2L).getName());
+            genres.add(genreService.getGenreById(3L).getName());
+            for (int i = 1; i < 7; i++) {
+                manga = mangaService.getMangaById(Long.valueOf(i));
+                mangaService.addGenreToManga(manga.getId(), genres, "localhost:8080");
+            }*/
+
+            //add authors to manga
+            /*Set<Long> authors = new HashSet<>();
+            authors.add(1L);
+            authors.add(2L);
+            authors.add(3L);
+            for (int i = 1; i < 4; i++) {
+                manga = mangaService.getMangaById(Long.valueOf(i));
+                mangaService.addAuthorsToManga(manga.getId(), authors, "localhost:8080");
+            }*/
         };
     }
-
 }

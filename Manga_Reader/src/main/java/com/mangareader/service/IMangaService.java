@@ -39,8 +39,6 @@ public interface IMangaService {
 
     Page<Manga> getPageableMangaByStatus(String status, String page, String size);
 
-    List<Manga> getMangaByName(String name);
-
     List<Manga> getAllManga();
 
     Page<Manga> getAllPageableMangaOrderByLatestUpdate(int page, int size);
