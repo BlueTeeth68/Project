@@ -306,7 +306,7 @@
 
 #### Set authors to manga *  
 
-- Require: none
+- Require: ADMIN or TRANSLATOR
 - URL: /manga/author
 - Method: PATCH
 - Request param: none
@@ -316,7 +316,7 @@
 
 #### Set keyword to manga - ok
 
-- Require: none
+- Require: ADMIN or TRANSLATOR
 - URL: /manga/keyword
 - Method: PATCH
 - Request param: none
@@ -326,7 +326,23 @@
 
 #### Change manga information
 
+- Require: ADMIN or TRANSLATOR
+- URL: /manga
+- Method: PATCH
+- Request param: none
+- Request body: ChangeMangaVM(id, name, summary, status, yearOfPublication)
+- Response body: MangaDTO
+- Description: translator or admin change their manga information
+
 #### Vote manga
+
+- Require: authenticated user
+- URL: /manga/rate
+- Method: PATCH
+- Request param: none
+- Request body: RateVM (point, mangaId)
+- Response body: RateVM
+- Description: authenticated user can rate the manga
 
 #### Add chapter to manga
 

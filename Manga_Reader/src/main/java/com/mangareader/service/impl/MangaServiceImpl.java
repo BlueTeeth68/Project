@@ -328,4 +328,9 @@ public class MangaServiceImpl implements IMangaService {
         manga = mangaRepository.save(manga);
         return manga;
     }
+
+    @Override
+    public Manga saveManga(Manga manga) {
+        return mangaRepository.save(manga);
+    }
 }

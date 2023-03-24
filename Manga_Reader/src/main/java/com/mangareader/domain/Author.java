@@ -13,10 +13,9 @@ import java.util.Set;
 @Table(name = "author")
 @Getter
 @Setter
-@ToString
+//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class Author {
 
     @Id

@@ -1,8 +1,10 @@
 package com.mangareader.web.rest;
 
 import com.mangareader.domain.Manga;
+import com.mangareader.domain.Rate;
 import com.mangareader.service.IKeywordService;
 import com.mangareader.service.IMangaService;
+import com.mangareader.service.IRateService;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.MangaDTO;
 import com.mangareader.service.dto.PagingReturnDTO;
@@ -36,6 +38,7 @@ public class MangaResource {
     private final MangaMapper mangaMapper;
     private final IUserService userService;
     private final IKeywordService keywordService;
+    private final IRateService rateService;
 
     @GetMapping("/list")
     public ResponseEntity<PagingReturnDTO<MangaDTO>> getAllPageableManga(
@@ -205,4 +208,16 @@ public class MangaResource {
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
+    @PatchMapping("/rate")
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "authorize")
+    public ResponseEntity<RateVM> rateManga(
+            @Valid @RequestBody RateVM vm
+    ) {
+        Rate rate = rateService.rateManga(vm);
+        RateVM result = new RateVM();
+        result.setMangaId(rate.getManga().getId());
+        result.setPoint(rate.getPoint());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

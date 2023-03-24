@@ -2,6 +2,7 @@ package com.mangareader;
 
 import com.mangareader.domain.*;
 import com.mangareader.service.*;
+import com.mangareader.web.rest.vm.RateVM;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -10,7 +11,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 @SuppressWarnings("unused")
@@ -38,7 +48,8 @@ public class ProjectApplication {
             IGenreService genreService,
             IAuthorService authorService,
             IMangaService mangaService,
-            IKeywordService keywordService
+            IKeywordService keywordService,
+            IRateService rateService
     ) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -178,26 +189,61 @@ public class ProjectApplication {
             keyword.setManga(mangaService.getMangaById(2L));
             keywordService.createKeyWord(keyword);
 
+            //Set login user
+            User currentUser = userService.getUserById(1L);
+
+            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    currentUser.getUsername(),
+                    null,  //credential
+                    authorities// authorities
+            );
+
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authToken);
+            SecurityContextHolder.setContext(context);
+            //set login user
+
             //add genre to manga
 
-            /*Set<String> genres = new HashSet<>();
+            Set<String> genres = new HashSet<>();
             genres.add(genreService.getGenreById(1L).getName());
             genres.add(genreService.getGenreById(2L).getName());
             genres.add(genreService.getGenreById(3L).getName());
             for (int i = 1; i < 7; i++) {
                 manga = mangaService.getMangaById(Long.valueOf(i));
                 mangaService.addGenreToManga(manga.getId(), genres, "localhost:8080");
-            }*/
+            }
 
             //add authors to manga
-            /*Set<Long> authors = new HashSet<>();
+            Set<Long> authors = new HashSet<>();
             authors.add(1L);
             authors.add(2L);
             authors.add(3L);
             for (int i = 1; i < 4; i++) {
                 manga = mangaService.getMangaById(Long.valueOf(i));
                 mangaService.addAuthorsToManga(manga.getId(), authors, "localhost:8080");
-            }*/
+            }
+
+            //add rate to manga
+            RateVM rateVM = new RateVM(10, 3L);
+            rateService.rateManga(rateVM);
+
+            rateVM = new RateVM(8, 1L);
+            rateService.rateManga(rateVM);
+
+            rateVM = new RateVM(9, 2L);
+            rateService.rateManga(rateVM);
+
+            rateVM = new RateVM(10, 5L);
+            rateService.rateManga(rateVM);
+            //add rate to manga
+
+            //Clear security context
+            SecurityContextHolder.clearContext();
+
         };
     }
 }
