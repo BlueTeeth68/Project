@@ -2,21 +2,24 @@ package com.mangareader.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "chapter")
+@Table(name = "chapter", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"chapter_number", "manga_id"})
+})
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Chapter {
@@ -29,6 +32,7 @@ public class Chapter {
     private String name;
 
     //need to check that a manga can not have two similar chapter
+    @NotNull
     @Min(0)
     @Column(name = "chapter_number", nullable = false)
     private Float chapterNumber;
@@ -43,5 +47,5 @@ public class Chapter {
 
     @JsonIgnore
     @OneToMany(mappedBy = "chapter", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private Set<ChapterImage> chapterImages = new HashSet<>();
+    private List<ChapterImage> chapterImages = new ArrayList<>();
 }

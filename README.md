@@ -191,7 +191,7 @@
 - Method: GET
 - Request param: size, page (size > 0, page >= 0)
 - Request body: none
-- Response body: PagingReturnDTO<MangaDTO>
+- Response body: PagingReturnDTO<SearchMangaDTO>
 - Description: user can load all manga from the database, sorted by latest update (desc). The result return is based on
   the size and page on the request. The default value of size is 100, page is 1
 
@@ -202,7 +202,7 @@
 - Method: GET
 - Request param: keyword, size, page (size > 0, page >= 0)
 - Request body: none
-- Response body: PagingReturnDTO<MangaDTO>
+- Response body: PagingReturnDTO<SearchMangaDTO>
 - Description: user can find manga by its name or keyword, sorted by name. The result return is based on the size and
   page on the
   request. The default value of size is 20, page is 1
@@ -214,7 +214,7 @@
 - Method: GET
 - Request param: id, size, page (size > 0, page >= 0)
 - Request body: none
-- Response body: PagingReturnDTO<MangaDTO>
+- Response body: PagingReturnDTO<SearchMangaDTO>
 - Description: User can find manga by its genre, sorted by name. The result return is based on size and page on the
   request. Default id
   is 1, default size is 20, default page is 1
@@ -236,7 +236,7 @@
 - Method: GET
 - Request param: id, size, page (size > 0, page >= 0)
 - Request body: none
-- Response body: PagingReturnDTO<MangaDTO>
+- Response body: PagingReturnDTO<SearchMangaDTO>
 - Description: user can find manga by its author id, sorted by name. The result return is based on size and page on the
   request. Default id = 1, default size = 20, default page = 1
 
@@ -247,7 +247,7 @@
 - Method: GET
 - Request param: id, size, page (size > 0, page >= 0)
 - Request body: none
-- Response body: PagingReturnDTO<MangaDTO>
+- Response body: PagingReturnDTO<SearchMangaDTO>
 - Description: user can find manga by its translator id, sorted by name. The result return is based on size and page on
   the request.
   Default id = 1, default size = 20, default page = 1
@@ -259,7 +259,7 @@
 - Method: GET
 - Request param: size, page (size > 0, page >= 0)
 - Request body: none
-- Response body: PagingReturnDTO<MangaDTO>
+- Response body: PagingReturnDTO<SearchMangaDTO>
 - Description: Return all manga, order by (rate * view). The result return is based on size and page on the request.
   Default size = 20, default page = 1
 
@@ -270,7 +270,7 @@
 - Method: GET
 - Request param: status (Ongoing/Completed), size, page (size > 0, page >= 0)
 - Request body: none
-- Response body: PagingReturnDTO<MangaDTO>
+- Response body: PagingReturnDTO<SearchMangaDTO>
 - Description: user can find manga by status, sorted by name. Default size = 20, default page = 1
 
 #### Create manga *
@@ -344,13 +344,57 @@
 - Response body: RateVM
 - Description: authenticated user can rate the manga
 
+#### Get chapter by id
+
+- Require: none
+- URL: /manga/chapter/{id}
+- Method: GET
+- Request param: none
+- Request body: none
+- Response body: ChapterImageDTO (chapterDTO and its image's urls)
+- Description: User can find chapter by its id. The result is common information of chapter and its chapter image's
+  urls.
+
 #### Add chapter to manga
+
+- Require: ADMIN or TRANSLATOR
+- URL: /manga/chapter
+- Method: POST
+- Request param: none
+- Request body: CreateChapterVM
+- Response body: MangaDTO
+- Description: ADMIN user or TRANSLATOR (who create this manga) can add new chapter to manga. The latest update of manga
+  will be updated.
 
 #### Change chapter information
 
+- Require: ADMIN or TRANSLATOR
+- URL: /manga/chapter
+- Method: PATCH
+- Request param: none
+- Request body: UpdateChapterVM
+- Response body: MangaDTO
+- Description: ADMIN user or TRANSLATOR (who create this manga) can update information of chapter
+
 #### Add images to manga chapter
 
+- Require: ADMIN or TRANSLATOR
+- URL: manga/chapter/chapter-images/{chapterId}
+- Method: POST
+- Request param: MultipartFile[] files
+- Request body: none
+- Response body: MangaDTO
+- Description: ADMIN user or TRANSLATOR (who create this manga) can add chapter's images to chapter.
+
 #### Delete chapter
+
+- Require: ADMIN or TRANSLATOR
+- URL: /manga/chapter
+- Method: DELETE
+- Request param: id
+- Request body: none
+- Response body: void
+- Description: ADMIN user or TRANSLATOR (who create this manga) can delete a chapter.
 
 #### Delete Manga
 

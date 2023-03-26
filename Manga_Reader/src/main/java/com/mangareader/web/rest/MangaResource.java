@@ -8,6 +8,7 @@ import com.mangareader.service.IRateService;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.MangaDTO;
 import com.mangareader.service.dto.PagingReturnDTO;
+import com.mangareader.service.dto.SearchMangaDTO;
 import com.mangareader.service.mapper.MangaMapper;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.*;
@@ -41,13 +42,13 @@ public class MangaResource {
     private final IRateService rateService;
 
     @GetMapping("/list")
-    public ResponseEntity<PagingReturnDTO<MangaDTO>> getAllPageableManga(
+    public ResponseEntity<PagingReturnDTO<SearchMangaDTO>> getAllPageableManga(
             @RequestParam(required = false, defaultValue = "100") String size,
             @RequestParam(required = false, defaultValue = "0") String page
     ) {
         Page<Manga> mangas = mangaService.getAllPageableMangaOrderByLatestUpdate(page, size);
         String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<MangaDTO> result = mangaMapper.toPagingReturnDTOMangaDTO(mangas, serverName);
+        PagingReturnDTO<SearchMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -61,73 +62,73 @@ public class MangaResource {
     }
 
     @GetMapping("/genre")
-    public ResponseEntity<PagingReturnDTO<MangaDTO>> getPageableMangaByGenre(
+    public ResponseEntity<PagingReturnDTO<SearchMangaDTO>> getPageableMangaByGenre(
             @RequestParam(defaultValue = "1") String genreId,
             @RequestParam(defaultValue = "20") String size,
             @RequestParam(defaultValue = "0") String page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByGenre(genreId, page, size);
         String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<MangaDTO> result = mangaMapper.toPagingReturnDTOMangaDTO(mangas, serverName);
+        PagingReturnDTO<SearchMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/author")
-    public ResponseEntity<PagingReturnDTO<MangaDTO>> getPageableMangaByAuthor(
+    public ResponseEntity<PagingReturnDTO<SearchMangaDTO>> getPageableMangaByAuthor(
             @RequestParam(defaultValue = "1") String authorId,
             @RequestParam(defaultValue = "20") String size,
             @RequestParam(defaultValue = "0") String page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByAuthor(authorId, page, size);
         String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<MangaDTO> result = mangaMapper.toPagingReturnDTOMangaDTO(mangas, serverName);
+        PagingReturnDTO<SearchMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/name")
-    public ResponseEntity<PagingReturnDTO<MangaDTO>> getPageableMangasByNameOrKeywordOrderByName(
+    public ResponseEntity<PagingReturnDTO<SearchMangaDTO>> getPageableMangasByNameOrKeywordOrderByName(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "20") String size,
             @RequestParam(defaultValue = "0") String page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByNameOrKeyword(keyword, page, size);
         String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<MangaDTO> result = mangaMapper.toPagingReturnDTOMangaDTO(mangas, serverName);
+        PagingReturnDTO<SearchMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/translator")
-    public ResponseEntity<PagingReturnDTO<MangaDTO>> getPageableMangaByTranslator(
+    public ResponseEntity<PagingReturnDTO<SearchMangaDTO>> getPageableMangaByTranslator(
             @RequestParam(defaultValue = "1") String translatorId,
             @RequestParam(defaultValue = "20") String size,
             @RequestParam(defaultValue = "0") String page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByTranslator(translatorId, page, size);
         String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<MangaDTO> result = mangaMapper.toPagingReturnDTOMangaDTO(mangas, serverName);
+        PagingReturnDTO<SearchMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/suggest")
-    public ResponseEntity<PagingReturnDTO<MangaDTO>> getPageableSuggestMangas(
+    public ResponseEntity<PagingReturnDTO<SearchMangaDTO>> getPageableSuggestMangas(
             @RequestParam(defaultValue = "20") String size,
             @RequestParam(defaultValue = "0") String page
     ) {
         Page<Manga> mangas = mangaService.getPageableSuggestManga(page, size);
         String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<MangaDTO> result = mangaMapper.toPagingReturnDTOMangaDTO(mangas, serverName);
+        PagingReturnDTO<SearchMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/status")
-    public ResponseEntity<PagingReturnDTO<MangaDTO>> getMangasByStatus(
+    public ResponseEntity<PagingReturnDTO<SearchMangaDTO>> getMangasByStatus(
             @RequestParam String status,
             @RequestParam(defaultValue = "20") String size,
             @RequestParam(defaultValue = "0") String page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByStatus(status, page, size);
         String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<MangaDTO> result = mangaMapper.toPagingReturnDTOMangaDTO(mangas, serverName);
+        PagingReturnDTO<SearchMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

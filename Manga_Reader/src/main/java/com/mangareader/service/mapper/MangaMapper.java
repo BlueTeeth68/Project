@@ -1,10 +1,10 @@
 package com.mangareader.service.mapper;
 
+import com.mangareader.domain.Chapter;
 import com.mangareader.domain.Manga;
+import com.mangareader.service.IChapterService;
 import com.mangareader.service.IMangaService;
-import com.mangareader.service.dto.AuthorDTO;
-import com.mangareader.service.dto.MangaDTO;
-import com.mangareader.service.dto.PagingReturnDTO;
+import com.mangareader.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,10 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class MangaMapper {
     private final IMangaService mangaService;
+
+    private final IChapterService chapterService;
+
+    private final ChapterMapper chapterMapper;
 
     public MangaDTO toDTO(Manga input, String serverName) {
         MangaDTO result = new MangaDTO();
@@ -50,6 +54,10 @@ public class MangaMapper {
             authors.add(tmp);
         });
         result.setAuthors(authors);
+
+        List<Chapter> chapters = chapterService.getChapterByMangaId(input.getId());
+        List<ChapterDTO> chapterDTOS = chapterMapper.toListDTO(chapters);
+        result.setChapters(chapterDTOS);
         return result;
     }
 
@@ -71,6 +79,28 @@ public class MangaMapper {
         return mangaService.getMangaById(input.getId());
     }
 
+    public SearchMangaDTO toSearchMangaDTO(Manga input, String serverName) {
+        SearchMangaDTO result = new SearchMangaDTO();
+        result.setId(input.getId());
+        result.setName(input.getName());
+        if (input.getCoverImageUrl() != null) {
+            result.setCoverImageUrl(serverName + input.getCoverImageUrl());
+        }
+        result.setRate(input.getRate());
+        return result;
+    }
+
+    public List<SearchMangaDTO> toListSearchMangaDTO(List<Manga> input, String serverName) {
+        List<SearchMangaDTO> result = new ArrayList<>();
+        if (input == null) {
+            return null;
+        }
+        input.forEach(
+                manga -> result.add(toSearchMangaDTO(manga, serverName))
+        );
+        return result;
+    }
+
     public PagingReturnDTO<MangaDTO> toPagingReturnDTOMangaDTO(Page<Manga> mangas, String serverName) {
         List<MangaDTO> mangaDTOs = toListDTO(mangas.getContent(), serverName);
         PagingReturnDTO<MangaDTO> result = new PagingReturnDTO<>();
@@ -79,5 +109,15 @@ public class MangaMapper {
         result.setContent(mangaDTOs);
         return result;
     }
+
+    public PagingReturnDTO<SearchMangaDTO> toPagingReturnDTOSearchMangaDTO(Page<Manga> mangas, String serverName) {
+        List<SearchMangaDTO> searchMangaDTOS = toListSearchMangaDTO(mangas.getContent(), serverName);
+        PagingReturnDTO<SearchMangaDTO> result = new PagingReturnDTO<>();
+        result.setTotalPages(mangas.getTotalPages());
+        result.setTotalElements(mangas.getTotalElements());
+        result.setContent(searchMangaDTOS);
+        return result;
+    }
+
 
 }

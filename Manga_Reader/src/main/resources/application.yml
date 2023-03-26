@@ -13,6 +13,12 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
+  ## Upload file size setting
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 6MB
+      max-request-size: 100MB
 #        auto_quote_keyword: true
 
 ## Hibernate Logging
@@ -20,6 +26,8 @@ logging:
   level:
     org:
       hibernateSQL: DEBUG
+
+
 
 
 

@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChapterImageRepository extends JpaRepository<ChapterImage, Long> {
+
+    void deleteByChapterId(Long chapterId);
+
 }

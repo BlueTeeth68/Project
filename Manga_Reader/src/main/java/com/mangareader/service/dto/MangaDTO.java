@@ -4,7 +4,9 @@ import com.mangareader.domain.MangaStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -39,4 +41,6 @@ public class MangaDTO {
     private Set<String> genres = new HashSet<>();
 
     private Set<AuthorDTO> authors = new HashSet<>();
+
+    private List<ChapterDTO> chapters = new ArrayList<>();
 }

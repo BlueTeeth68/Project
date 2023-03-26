@@ -17,6 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -25,11 +27,6 @@ import java.util.stream.Stream;
 public class FileSystemStorageService implements IStorageService {
 
     private Path rootLocation;
-
-//    @Autowired
-//    public FileSystemStorageService(StorageProperties properties) {
-//        this.rootLocation = Paths.get(properties.getLocation());
-//    }
 
     @Override
     public String store(MultipartFile file, String location) {
@@ -42,7 +39,6 @@ public class FileSystemStorageService implements IStorageService {
             log.info("Creating file {}", file.getOriginalFilename());
             Path target = pathLocation.resolve(file.getOriginalFilename());
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-//            String url = target.toFile().toURI().toURL().toString();
             return file.getOriginalFilename();
         } catch (IOException e) {
             log.error("Failed to store file {}", file.getOriginalFilename());
@@ -65,12 +61,44 @@ public class FileSystemStorageService implements IStorageService {
             log.info("Creating file {}", file.getOriginalFilename());
             Path target = pathLocation.resolve(fileName);
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-//            String url = target.relativize(pathLocation).toFile().toURI().toURL().toString();
-//            String url = target.toFile().toURI().toURL().toString();
             return fileName;
         } catch (IOException e) {
             log.error("Failed to store file {}", file.getOriginalFilename());
             throw new StorageException("Failed to store file " + file.getOriginalFilename());
+        }
+    }
+
+    @Override
+    public List<String> storeMultipleFile(MultipartFile[] files, String location) {
+        try {
+            if (files == null) {
+                log.error("Failed to store empty file");
+                throw new StorageException("Failed to store empty file");
+            }
+            Path pathLocation = Paths.get(location);
+
+            //clear the location
+            Files.walk(pathLocation)
+                    .sorted(java.util.Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            File temp = pathLocation.toFile();
+            temp.mkdirs();
+
+            List<String> fileNames = new ArrayList<>();
+            int index = 1;
+
+            for (MultipartFile file : files) {
+                log.info("Creating file {}", file.getOriginalFilename());
+                Path target = pathLocation.resolve(String.valueOf(index));
+                Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+                fileNames.add(String.valueOf(index));
+                index++;
+            }
+            return fileNames;
+        } catch (IOException e) {
+            log.error("Failed to store file");
+            throw new StorageException("Failed to store file");
         }
     }
 
