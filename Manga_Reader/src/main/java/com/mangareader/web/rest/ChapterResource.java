@@ -40,6 +40,8 @@ public class ChapterResource {
             @PathVariable Long id
     ) {
         Chapter chapter = chapterService.getChapterById(id);
+        Manga manga = chapter.getManga();
+        mangaService.increaseMangaView(manga.getId());
         ChapterImageDTO chapterImageDTO = chapterMapper.toChapterImageDTO(
                 chapter,
                 APIUtil.getServerName(request)

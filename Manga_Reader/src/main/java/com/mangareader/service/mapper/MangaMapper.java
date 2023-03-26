@@ -87,6 +87,7 @@ public class MangaMapper {
             result.setCoverImageUrl(serverName + input.getCoverImageUrl());
         }
         result.setRate(input.getRate());
+        result.setView(input.getView());
         return result;
     }
 

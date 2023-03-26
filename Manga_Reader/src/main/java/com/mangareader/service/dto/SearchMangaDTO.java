@@ -15,4 +15,6 @@ public class SearchMangaDTO {
     private String coverImageUrl;
 
     private Float rate;
+
+    private Integer view;
 }

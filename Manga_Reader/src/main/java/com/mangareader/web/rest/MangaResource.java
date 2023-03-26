@@ -221,4 +221,15 @@ public class MangaResource {
         result.setPoint(rate.getPoint());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "authorize")
+    public ResponseEntity<?> deleteManga(
+            @PathVariable Long id
+    ) {
+        mangaService.deleteManga(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

@@ -283,7 +283,8 @@ public class MangaServiceImpl implements IMangaService {
     @Override
     @Transactional
     public void deleteManga(Long id) {
-
+        checkMangaAuthorize(id);
+        mangaRepository.deleteById(id);
     }
 
     @Override
@@ -332,5 +333,13 @@ public class MangaServiceImpl implements IMangaService {
     @Override
     public Manga saveManga(Manga manga) {
         return mangaRepository.save(manga);
+    }
+
+    @Override
+    @Transactional
+    public void increaseMangaView(Long mangaId) {
+        Manga manga = getMangaById(mangaId);
+        manga.setView(manga.getView() + 1);
+        mangaRepository.save(manga);
     }
 }

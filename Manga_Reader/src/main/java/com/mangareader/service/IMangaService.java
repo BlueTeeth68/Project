@@ -65,4 +65,6 @@ public interface IMangaService {
     Manga changeMangaInformation(ChangeMangaVM vm);
 
     Manga saveManga(Manga manga);
+
+    void increaseMangaView(Long mangaId);
 }

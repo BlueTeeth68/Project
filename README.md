@@ -398,6 +398,14 @@
 
 #### Delete Manga
 
+- Require: ADMIN or TRANSLATOR
+- URL: /manga/{id}
+- Method: DELETE
+- Request param: none
+- Request body: none
+- Response body: void
+- Description: ADMIN user or TRANSLATOR (who create this manga) can delete a manga.
+
 #### Report manga
 
 #### Add manga to bookmark
