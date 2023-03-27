@@ -29,11 +29,10 @@ public class Author {
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "authors", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "authors")
     @JsonIgnoreProperties(value = "authors", allowSetters = true)
     private Set<Manga> mangas = new HashSet<>();
 
-    //    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by"/*, updatable = false*/)
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "username", "googleId",

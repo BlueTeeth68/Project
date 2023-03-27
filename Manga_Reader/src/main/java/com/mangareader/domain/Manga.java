@@ -17,7 +17,6 @@ import java.util.Set;
 @Table(name = "manga")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Manga {
@@ -75,7 +74,7 @@ public class Manga {
     @JoinColumn(name = "user_id"/*, updatable = false*/)
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @JoinTable(name = "manga_genre",
             joinColumns = @JoinColumn(name = "manga_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
@@ -83,7 +82,7 @@ public class Manga {
     @JsonIgnoreProperties(value = "mangas", allowSetters = true)
     private Set<Genre> genres = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @JoinTable(name = "manga_author",
             joinColumns = @JoinColumn(name = "manga_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")

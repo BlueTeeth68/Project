@@ -223,7 +223,7 @@ public class MangaResource {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
     @SecurityRequirement(name = "authorize")
     public ResponseEntity<?> deleteManga(
             @PathVariable Long id

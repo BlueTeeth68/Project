@@ -1,5 +1,6 @@
 package com.mangareader.exception;
 
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 @ControllerAdvice
 @SuppressWarnings("unused")
 public class GlobalException extends ResponseEntityExceptionHandler {
@@ -59,6 +61,16 @@ public class GlobalException extends ResponseEntityExceptionHandler {
         String error = "File is empty.";
         ErrorDetails errorDetails =
                 new ErrorDetails(HttpStatus.BAD_REQUEST, error, ex.getMessage());
+        return new ResponseEntity<>(
+                errorDetails, new HttpHeaders(), errorDetails.getStatus());
+    }
+
+    @ExceptionHandler({FileSizeLimitExceededException.class})
+    public ResponseEntity<Object> handleFileSizeLimitExceededException(
+            Exception ex, WebRequest request) {
+        String error = "File size is exceeded limit size.";
+        ErrorDetails errorDetails =
+                new ErrorDetails(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED, error, ex.getMessage());
         return new ResponseEntity<>(
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }

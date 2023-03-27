@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +16,6 @@ import java.util.Set;
 @Table(name = "genre")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Genre {
@@ -27,7 +29,7 @@ public class Genre {
     private String name;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "genres", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "genres")
     @JsonIgnoreProperties(value = {"user", "genres", "authors"}, allowSetters = true)
     private Set<Manga> mangas = new HashSet<>();
 
