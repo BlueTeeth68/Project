@@ -406,9 +406,27 @@
 - Response body: void
 - Description: ADMIN user or TRANSLATOR (who create this manga) can delete a manga.
 
-#### Report manga
-
 #### Add manga to bookmark
+
+- Require: authenticated user
+- URL: /bookmark/{mangaId}
+- Method: POST
+- Request param: none
+- Request body: none
+- Response body: void
+- Description: user can add manga to bookmark. If manga already exists, then remove bookmark.
+
+#### Get all bookmark of user
+
+- Require: authenticated user
+- URL: /bookmark
+- Method: Get
+- Request param: none
+- Request body: none
+- Response body: List<BookmarkDTO>
+- Description: user can get all their bookmark sorted by id desc. Each bookmarkDTO has common information of manga
+
+#### Report manga
 
 ### 3. Genre
 
@@ -580,7 +598,7 @@
 
 ### 6.Comment
 
-#### Get all comment and reply comment of manga
+#### Get all comment and reply comment of
 
 #### Comment on manga
 

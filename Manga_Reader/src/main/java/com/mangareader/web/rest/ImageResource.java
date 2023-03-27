@@ -3,7 +3,6 @@ package com.mangareader.web.rest;
 import com.mangareader.service.IChapterService;
 import com.mangareader.service.IMangaService;
 import com.mangareader.service.IUserService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/image")
 @RequiredArgsConstructor
 @SuppressWarnings("unused")
-@SecurityRequirement(name = "authorize")
 public class ImageResource {
 
     private final IUserService userService;

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchMangaDTO {
+public class CommonMangaDTO {
     private Long id;
 
     private String name;

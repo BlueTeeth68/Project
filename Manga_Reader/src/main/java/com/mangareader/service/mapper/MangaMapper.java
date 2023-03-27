@@ -79,8 +79,8 @@ public class MangaMapper {
         return mangaService.getMangaById(input.getId());
     }
 
-    public SearchMangaDTO toSearchMangaDTO(Manga input, String serverName) {
-        SearchMangaDTO result = new SearchMangaDTO();
+    public CommonMangaDTO toCommonMangaDTO(Manga input, String serverName) {
+        CommonMangaDTO result = new CommonMangaDTO();
         result.setId(input.getId());
         result.setName(input.getName());
         if (input.getCoverImageUrl() != null) {
@@ -91,13 +91,13 @@ public class MangaMapper {
         return result;
     }
 
-    public List<SearchMangaDTO> toListSearchMangaDTO(List<Manga> input, String serverName) {
-        List<SearchMangaDTO> result = new ArrayList<>();
+    public List<CommonMangaDTO> toListCommonMangaDTO(List<Manga> input, String serverName) {
+        List<CommonMangaDTO> result = new ArrayList<>();
         if (input == null) {
             return null;
         }
         input.forEach(
-                manga -> result.add(toSearchMangaDTO(manga, serverName))
+                manga -> result.add(toCommonMangaDTO(manga, serverName))
         );
         return result;
     }
@@ -111,12 +111,12 @@ public class MangaMapper {
         return result;
     }
 
-    public PagingReturnDTO<SearchMangaDTO> toPagingReturnDTOSearchMangaDTO(Page<Manga> mangas, String serverName) {
-        List<SearchMangaDTO> searchMangaDTOS = toListSearchMangaDTO(mangas.getContent(), serverName);
-        PagingReturnDTO<SearchMangaDTO> result = new PagingReturnDTO<>();
+    public PagingReturnDTO<CommonMangaDTO> toPagingReturnDTOSearchMangaDTO(Page<Manga> mangas, String serverName) {
+        List<CommonMangaDTO> commonMangaDTOS = toListCommonMangaDTO(mangas.getContent(), serverName);
+        PagingReturnDTO<CommonMangaDTO> result = new PagingReturnDTO<>();
         result.setTotalPages(mangas.getTotalPages());
         result.setTotalElements(mangas.getTotalElements());
-        result.setContent(searchMangaDTOS);
+        result.setContent(commonMangaDTOS);
         return result;
     }
 
