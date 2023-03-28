@@ -8,13 +8,13 @@ import com.mangareader.service.IBookmarkService;
 import com.mangareader.service.IMangaService;
 import com.mangareader.service.IUserService;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BookmarkServiceImpl implements IBookmarkService {
 
     private final BookmarkRepository bookmarkRepository;

@@ -11,11 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("unused")
 public class UserMapper {
 
     private final UserRepository userRepository;
 
-    public CommonUserDTO entityToCommonUserDTO(User user) {
+    public CommonUserDTO toCommonUserDTO(User user) {
+        if (user == null)
+            return null;
+
         CommonUserDTO result = new CommonUserDTO();
 
         log.info("Converting user {} to commonUserDTO.", user.getUsername());
@@ -27,7 +31,7 @@ public class UserMapper {
         return result;
     }
 
-    public User commonUserDTOToUser(CommonUserDTO commonUserDTO) {
+    public User toUserEntity(CommonUserDTO commonUserDTO) {
         if (commonUserDTO.getId() == null) {
             log.error("Id of commonUserDTO is null");
             return null;

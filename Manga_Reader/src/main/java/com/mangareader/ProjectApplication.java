@@ -2,6 +2,7 @@ package com.mangareader;
 
 import com.mangareader.domain.*;
 import com.mangareader.service.*;
+import com.mangareader.web.rest.vm.CreateCommentVM;
 import com.mangareader.web.rest.vm.RateVM;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -49,7 +50,8 @@ public class ProjectApplication {
             IAuthorService authorService,
             IMangaService mangaService,
             IKeywordService keywordService,
-            IRateService rateService
+            IRateService rateService,
+            ICommentService commentService
     ) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -240,6 +242,28 @@ public class ProjectApplication {
             rateVM = new RateVM(10, 5L);
             rateService.rateManga(rateVM);
             //add rate to manga
+
+
+            //create some comment
+
+            String content = "This is the most interesting manga that I've read.";
+            String content2 = "I love th is manga.";
+            String content3 = "Interesting";
+            commentService.createNewComment(new CreateCommentVM(3L, content));
+            commentService.createNewComment(new CreateCommentVM(3L, content2));
+            commentService.createNewComment(new CreateCommentVM(3L, content3));
+            commentService.createNewComment(new CreateCommentVM(1L, content));
+            commentService.createNewComment(new CreateCommentVM(2L, content));
+            commentService.createNewComment(new CreateCommentVM(4L, content));
+
+            //create some comment
+
+            //create some reply comment
+            String replyContent1 = "OK";
+            String replyContent2 = "I love this too.";
+            commentService.createNewComment(new CreateCommentVM(1L, replyContent1));
+            commentService.createNewComment(new CreateCommentVM(1L, replyContent2));
+            //create some reply comment
 
             //Clear security context
             SecurityContextHolder.clearContext();

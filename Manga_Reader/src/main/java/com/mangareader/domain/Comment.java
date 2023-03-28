@@ -2,22 +2,21 @@ package com.mangareader.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "comment")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
@@ -30,8 +29,9 @@ public class Comment {
     @Column(columnDefinition = "NVARCHAR(256)")
     private String content;
 
-    @Column(name = "is_change", columnDefinition = "bit")
-    private Boolean isChange = false;
+    @Enumerated
+    @Column(name = "status")
+    private CommentStatus status;
 
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
@@ -47,5 +47,5 @@ public class Comment {
 
     @JsonIgnore
     @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private Set<ReplyComment> replyComments = new HashSet<>();
+    private List<ReplyComment> replyComments = new ArrayList<>();
 }

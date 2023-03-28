@@ -54,7 +54,7 @@ public class AccountResource {
             throw new BadRequestException("Bad request for id and username value.");
         }
         user = userService.addServerNameToAvatarURL(user, APIUtil.getServerName(request));
-        CommonUserDTO result = userMapper.entityToCommonUserDTO(user);
+        CommonUserDTO result = userMapper.toCommonUserDTO(user);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

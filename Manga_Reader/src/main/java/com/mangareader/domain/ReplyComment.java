@@ -23,8 +23,9 @@ public class ReplyComment {
     @Column(columnDefinition = "NVARCHAR(256)")
     private String content;
 
-    @Column(name = "is_change", columnDefinition = "bit")
-    private Boolean isChange = false;
+    @Enumerated
+    @Column(name = "status")
+    private CommentStatus status;
 
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
