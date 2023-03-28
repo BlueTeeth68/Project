@@ -6,9 +6,9 @@ import com.mangareader.service.IKeywordService;
 import com.mangareader.service.IMangaService;
 import com.mangareader.service.IRateService;
 import com.mangareader.service.IUserService;
+import com.mangareader.service.dto.CommonMangaDTO;
 import com.mangareader.service.dto.MangaDTO;
 import com.mangareader.service.dto.PagingReturnDTO;
-import com.mangareader.service.dto.CommonMangaDTO;
 import com.mangareader.service.mapper.MangaMapper;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.*;
@@ -167,8 +167,8 @@ public class MangaResource {
             @Valid @RequestBody SetGenreToMangaVM vm
     ) {
         String serverName = APIUtil.getServerName(request);
-        Manga manga = mangaService.addGenreToManga(vm.getMangaId(), vm.getGenreName(), serverName);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        Manga manga = mangaService.addGenreToManga(vm.getMangaId(), vm.getGenreName());
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga, serverName);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -179,8 +179,8 @@ public class MangaResource {
             @Valid @RequestBody SetAuthorsToMangaVM vm
     ) {
         String serverName = APIUtil.getServerName(request);
-        Manga manga = mangaService.addAuthorsToManga(vm.getMangaId(), vm.getAuthorIds(), serverName);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        Manga manga = mangaService.addAuthorsToManga(vm.getMangaId(), vm.getAuthorIds());
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga, serverName);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -192,8 +192,8 @@ public class MangaResource {
             @RequestParam("file") MultipartFile file
     ) {
         String serverName = APIUtil.getServerName(request);
-        Manga manga = mangaService.updateCoverImage(mangaId, file, serverName);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        Manga manga = mangaService.updateCoverImage(mangaId, file);
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga, serverName);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -204,8 +204,8 @@ public class MangaResource {
             @Valid @RequestBody KeywordMangaVM vm
     ) {
         String serverName = APIUtil.getServerName(request);
-        Manga manga = keywordService.addKeywordToManga(vm.getMangaId(), vm.getKeywords(), serverName);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        Manga manga = keywordService.addKeywordToManga(vm.getMangaId(), vm.getKeywords());
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga, serverName);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 

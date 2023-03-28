@@ -1,6 +1,5 @@
 package com.mangareader.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -24,11 +23,15 @@ public class Notification {
     @Column(columnDefinition = "text")
     private String content;
 
+    @Column(columnDefinition = "link")
+    private String link;
+
     @Column(name = "is_read", columnDefinition = "bit")
     private Boolean isRead = false;
 
     @Column(updatable = false)
     private LocalDateTime date = LocalDateTime.now();
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

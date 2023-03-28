@@ -229,30 +229,22 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
-    public Manga addGenreToManga(Long mangaId, Set<String> genreName, String serverName) {
+    public Manga addGenreToManga(Long mangaId, Set<String> genreName) {
         checkMangaAuthorize(mangaId);
         Manga manga = getMangaById(mangaId);
         Set<Genre> genres = genreService.getGenreByName(genreName);
         manga.setGenres(genres);
-        manga = mangaRepository.save(manga);
-        if (manga.getCoverImageUrl() != null) {
-            manga.setCoverImageUrl(serverName + manga.getCoverImageUrl());
-        }
-        return manga;
+        return mangaRepository.save(manga);
     }
 
     @Override
 
-    public Manga addAuthorsToManga(Long mangaId, Set<Long> authorIds, String serverName) {
+    public Manga addAuthorsToManga(Long mangaId, Set<Long> authorIds) {
         checkMangaAuthorize(mangaId);
         Manga manga = getMangaById(mangaId);
         Set<Author> authors = authorService.getAuthorByIds(authorIds);
         manga.setAuthors(authors);
-        manga = mangaRepository.save(manga);
-        if (manga.getCoverImageUrl() != null) {
-            manga.setCoverImageUrl(serverName + manga.getCoverImageUrl());
-        }
-        return manga;
+        return mangaRepository.save(manga);
     }
 
     @Override
@@ -266,18 +258,13 @@ public class MangaServiceImpl implements IMangaService {
         String coverImageUrl = "/image/manga/" + folderName + "/" + "cover_image";
         manga.setCoverImageUrl(coverImageUrl);
         log.info("Saving manga to the database");
-        manga = mangaRepository.save(manga);
-        return manga;
+        return mangaRepository.save(manga);
     }
 
     @Override
-    public Manga updateCoverImage(String id, MultipartFile file, String serverName) {
+    public Manga updateCoverImage(String id, MultipartFile file) {
         Long idNum = APIUtil.parseStringToLong(id, "id is not a number");
-        Manga manga = updateCoverImage(idNum, file);
-        if (manga.getCoverImageUrl() != null) {
-            manga.setCoverImageUrl(serverName + manga.getCoverImageUrl());
-        }
-        return manga;
+        return updateCoverImage(idNum, file);
     }
 
     @Override
@@ -326,8 +313,7 @@ public class MangaServiceImpl implements IMangaService {
         if (vm.getYearOfPublication() != null) {
             manga.setYearOfPublication(vm.getYearOfPublication());
         }
-        manga = mangaRepository.save(manga);
-        return manga;
+        return mangaRepository.save(manga);
     }
 
     @Override

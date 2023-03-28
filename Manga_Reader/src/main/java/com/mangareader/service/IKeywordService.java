@@ -7,6 +7,7 @@ import com.mangareader.web.rest.vm.ChangeKeywordVM;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface IKeywordService {
 
     Keyword createKeyWord(Keyword keyword);
@@ -21,7 +22,7 @@ public interface IKeywordService {
 
 /*    List<Manga> getMangaByKeyword(String name);*/
 
-    Manga addKeywordToManga(Long mangaId, List<String> keywords, String serverName);
+    Manga addKeywordToManga(Long mangaId, List<String> keywords);
 
     Keyword changeKeywordName(ChangeKeywordVM vm);
 

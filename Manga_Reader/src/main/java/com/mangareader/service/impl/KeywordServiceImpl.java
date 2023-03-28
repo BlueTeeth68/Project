@@ -87,7 +87,7 @@ public class KeywordServiceImpl implements IKeywordService {
 
     @Override
     @Transactional
-    public Manga addKeywordToManga(Long mangaId, List<String> keywords, String serverName) {
+    public Manga addKeywordToManga(Long mangaId, List<String> keywords) {
         mangaService.checkMangaAuthorize(mangaId);
         deleteKeywordOfManga(mangaId);
 
@@ -102,9 +102,6 @@ public class KeywordServiceImpl implements IKeywordService {
                     keywordRepository.save(temp);
                 }
             });
-        }
-        if (manga.getCoverImageUrl() != null) {
-            manga.setCoverImageUrl(serverName + manga.getCoverImageUrl());
         }
         return manga;
     }

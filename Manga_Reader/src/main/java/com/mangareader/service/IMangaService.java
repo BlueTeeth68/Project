@@ -46,13 +46,13 @@ public interface IMangaService {
 
     Manga createManga(Manga manga);
 
-    Manga addGenreToManga(Long mangaId, Set<String> genreName, String serverName);
+    Manga addGenreToManga(Long mangaId, Set<String> genreName);
 
-    Manga addAuthorsToManga(Long mangaId, Set<Long> authorIds, String serverName);
+    Manga addAuthorsToManga(Long mangaId, Set<Long> authorIds);
 
     Manga updateCoverImage(Long id, MultipartFile file);
 
-    Manga updateCoverImage(String id, MultipartFile file, String serverName);
+    Manga updateCoverImage(String id, MultipartFile file);
 
     void deleteManga(Long id);
 

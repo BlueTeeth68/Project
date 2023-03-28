@@ -1,10 +1,7 @@
 package com.mangareader.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity

@@ -614,4 +614,14 @@
 
 ### 7.Notification
 
+#### Get all user's notifications sorted by date desc
+
+#### Create notification (auto)
+
+#### Change status of notification (read/ not read)
+
+#### Delete notification
+
+
+
 ### 8.Report

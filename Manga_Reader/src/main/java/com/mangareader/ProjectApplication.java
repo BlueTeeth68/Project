@@ -214,7 +214,7 @@ public class ProjectApplication {
             genres.add(genreService.getGenreById(3L).getName());
             for (int i = 1; i < 7; i++) {
                 manga = mangaService.getMangaById(Long.valueOf(i));
-                mangaService.addGenreToManga(manga.getId(), genres, "localhost:8080");
+                mangaService.addGenreToManga(manga.getId(), genres);
             }
 
             //add authors to manga
@@ -224,7 +224,7 @@ public class ProjectApplication {
             authors.add(3L);
             for (int i = 1; i < 4; i++) {
                 manga = mangaService.getMangaById(Long.valueOf(i));
-                mangaService.addAuthorsToManga(manga.getId(), authors, "localhost:8080");
+                mangaService.addAuthorsToManga(manga.getId(), authors);
             }
 
             //add rate to manga
