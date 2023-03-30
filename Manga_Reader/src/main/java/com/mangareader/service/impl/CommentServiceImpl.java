@@ -1,13 +1,16 @@
 package com.mangareader.service.impl;
 
 import com.mangareader.domain.*;
+import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.CommentRepository;
 import com.mangareader.repository.ReplyCommentRepository;
 import com.mangareader.service.ICommentService;
 import com.mangareader.service.IMangaService;
 import com.mangareader.service.IUserService;
+import com.mangareader.web.rest.vm.ChangeCommentVM;
 import com.mangareader.web.rest.vm.CreateCommentVM;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -49,6 +52,14 @@ public class CommentServiceImpl implements ICommentService {
         if (!mangaService.existsById(mangaId)) {
             throw new ResourceNotFoundException("Manga " + mangaId + " does not exist in database.");
         }
+
+        if (page < 0) {
+            throw new BadRequestException("Page must be greater than or equal to 0.");
+        }
+        if (size <= 0) {
+            throw new BadRequestException("Size must be greater than 0.");
+        }
+
         Pageable pageOption = PageRequest.of(page, size, Sort.by("createdDate").descending());
         List<CommentStatus> status = new ArrayList<>();
         status.add(CommentStatus.Active);
@@ -61,6 +72,14 @@ public class CommentServiceImpl implements ICommentService {
         if (!existsCommentById(commentId)) {
             throw new ResourceNotFoundException("There are no comment " + commentId + " in the database.");
         }
+
+        if (page < 0) {
+            throw new BadRequestException("Page must be greater than or equal to 0.");
+        }
+        if (size <= 0) {
+            throw new BadRequestException("Size must be greater than 0.");
+        }
+
         Pageable pageOption = PageRequest.of(page, size, Sort.by("createdDate").descending());
         List<CommentStatus> status = new ArrayList<>();
         status.add(CommentStatus.Active);
@@ -106,5 +125,57 @@ public class CommentServiceImpl implements ICommentService {
         replyComment.setUser(user);
         replyComment.setComment(comment);
         replyCommentRepository.save(replyComment);
+    }
+
+    @Override
+    public Comment changeCommentContent(ChangeCommentVM vm) {
+        User user = userService.getCurrentUser();
+        Comment comment = getCommentById(vm.getCommentId());
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new BadRequestException("Only owner can change comment.");
+        }
+        comment.setContent(vm.getContent());
+        comment.setStatus(CommentStatus.Changed);
+        return commentRepository.save(comment);
+    }
+
+    @Override
+    public ReplyComment changeReplyCommentContent(ChangeCommentVM vm) {
+        User user = userService.getCurrentUser();
+        ReplyComment replyComment = getReplyCommentById(vm.getCommentId());
+        if (!replyComment.getUser().getId().equals(user.getId())) {
+            throw new BadRequestException("Only owner can change comment.");
+        }
+        replyComment.setContent(vm.getContent());
+        replyComment.setStatus(CommentStatus.Changed);
+        return replyCommentRepository.save(replyComment);
+    }
+
+    @Override
+    public void deleteReplyComment(Long id) {
+        User user = userService.getCurrentUser();
+        ReplyComment replyComment = getReplyCommentById(id);
+        if (!replyComment.getUser().getId().equals(user.getId())) {
+            throw new BadRequestException("Only owner can change comment.");
+        }
+        replyComment.setStatus(CommentStatus.Deleted);
+        replyCommentRepository.save(replyComment);
+    }
+
+    @Override
+    @Transactional
+    public void deleteComment(Long id) {
+        User user = userService.getCurrentUser();
+        Comment comment = getCommentById(id);
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new BadRequestException("Only owner can change comment.");
+        }
+        comment.setStatus(CommentStatus.Deleted);
+        List<ReplyComment> replyComments = replyCommentRepository.findByCommentId(id);
+        replyComments.forEach(
+                replyComment -> replyComment.setStatus(CommentStatus.Deleted)
+        );
+        commentRepository.save(comment);
+        replyCommentRepository.saveAll(replyComments);
     }
 }

@@ -74,7 +74,7 @@ public class AuthenticationService {
         LoginTokenVM result = new LoginTokenVM();
         result.setUser(user);
         result.setAccessToken(accessToken);
-        result.setRefreshToken(accessToken);
+        result.setRefreshToken(refreshToken);
         return result;
     }
 

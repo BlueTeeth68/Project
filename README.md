@@ -240,7 +240,7 @@
 - Description: user can find manga by its author id, sorted by name. The result return is based on size and page on the
   request. Default id = 1, default size = 20, default page = 1
 
-#### Get mangas by translator id -doing
+#### Get mangas by translator id *
 
 - Require: none
 - URL: /manga/translator
@@ -263,7 +263,7 @@
 - Description: Return all manga, order by (rate * view). The result return is based on size and page on the request.
   Default size = 20, default page = 1
 
-#### Get mangas by status
+#### Get mangas by status *
 
 - Require: none
 - URL: /manga/status
@@ -314,7 +314,7 @@
 - Response body: MangaDTO
 - Description: translator or admin can set authors for their own manga
 
-#### Set keyword to manga - ok
+#### Set keyword to manga *
 
 - Require: ADMIN or TRANSLATOR
 - URL: /manga/keyword
@@ -324,7 +324,7 @@
 - Response body: MangaDTO
 - Description: translator or admin can set authors for their own manga
 
-#### Change manga information
+#### Change manga information *
 
 - Require: ADMIN or TRANSLATOR
 - URL: /manga
@@ -334,7 +334,7 @@
 - Response body: MangaDTO
 - Description: translator or admin change their manga information
 
-#### Vote manga
+#### Vote manga *
 
 - Require: authenticated user
 - URL: /manga/rate
@@ -344,7 +344,7 @@
 - Response body: RateVM
 - Description: authenticated user can rate the manga
 
-#### Get chapter by id
+#### Get chapter by id *
 
 - Require: none
 - URL: /manga/chapter/{id}
@@ -355,7 +355,7 @@
 - Description: User can find chapter by its id. The result is common information of chapter and its chapter image's
   urls.
 
-#### Add chapter to manga
+#### Add chapter to manga *
 
 - Require: ADMIN or TRANSLATOR
 - URL: /manga/chapter
@@ -366,7 +366,7 @@
 - Description: ADMIN user or TRANSLATOR (who create this manga) can add new chapter to manga. The latest update of manga
   will be updated.
 
-#### Change chapter information
+#### Change chapter information *
 
 - Require: ADMIN or TRANSLATOR
 - URL: /manga/chapter
@@ -376,7 +376,7 @@
 - Response body: MangaDTO
 - Description: ADMIN user or TRANSLATOR (who create this manga) can update information of chapter
 
-#### Add images to manga chapter
+#### Add images to manga chapter *
 
 - Require: ADMIN or TRANSLATOR
 - URL: manga/chapter/chapter-images/{chapterId}
@@ -386,7 +386,7 @@
 - Response body: MangaDTO
 - Description: ADMIN user or TRANSLATOR (who create this manga) can add chapter's images to chapter.
 
-#### Delete chapter
+#### Delete chapter *
 
 - Require: ADMIN or TRANSLATOR
 - URL: /manga/chapter
@@ -396,7 +396,7 @@
 - Response body: void
 - Description: ADMIN user or TRANSLATOR (who create this manga) can delete a chapter.
 
-#### Delete Manga
+#### Delete Manga *
 
 - Require: ADMIN or TRANSLATOR
 - URL: /manga/{id}
@@ -406,7 +406,7 @@
 - Response body: void
 - Description: ADMIN user or TRANSLATOR (who create this manga) can delete a manga.
 
-#### Add manga to bookmark
+#### Add manga to bookmark *
 
 - Require: authenticated user
 - URL: /bookmark/{mangaId}
@@ -416,7 +416,7 @@
 - Response body: void
 - Description: user can add manga to bookmark. If manga already exists, then remove bookmark.
 
-#### Get all bookmark of user
+#### Get all bookmark of user *
 
 - Require: authenticated user
 - URL: /bookmark
@@ -481,7 +481,7 @@
 - Response body: Genre
 - Description: Admin user can change the name of genre
 
-#### Delete genre (Testing)
+#### Delete genre *
 
 - Require: ADMIN
 - URL: /genre
@@ -493,7 +493,7 @@
 
 ### 4. Author
 
-#### Get all author from database - ok
+#### Get all author from database *
 
 - Require: ADMIN or TRANSLATOR
 - URL: /author/list
@@ -566,7 +566,7 @@
 - Response body: List<Keyword>
 - Description: User can search all keyword of a manga
 
-#### Add keyword to a manga -  *
+#### Add keyword to a manga *
 
 - Require: none
 - URL: /keyword
@@ -576,7 +576,7 @@
 - Response body: Keyword
 - Description: Admin or translator can add a keyword to a manga
 
-#### Change keyword name -  *
+#### Change keyword name *
 
 - Require: none
 - URL: /keyword
@@ -586,7 +586,7 @@
 - Response body: Keyword
 - Description: Admin or translator can change name of a keyword in a manga
 
-#### Delete keyword - * testing
+#### Delete keyword *
 
 - Require: none
 - URL: /keyword
@@ -600,15 +600,73 @@
 
 #### Get all comment and reply comment of
 
+- Require: none
+- URL: /manga/comment
+- Method: GET
+- Request param: mangaId, page, size
+- Request body: none
+- Response body: PagingReturnDTO<CommentDTO>
+- Description: user can get all comment and reply comment in a manga.
+
 #### Comment on manga
+
+- Require: logged-in user
+- URL: /manga/comment
+- Method: POST
+- Request param: page, size
+- Request body: CreateCommentVM
+- Response body: PagingReturnDTO<CommentDTO>
+- Description: logged-in user can comment on a manga
 
 #### Change comment content
 
+- Require: logged-in user
+- URL: /manga/comment
+- Method: PATCH
+- Request param: none
+- Request body: ChangeCommentVM
+- Response body: CommentDTO
+- Description: logged-in user can change their own comment content
+
 #### Delete comment
+
+- Require: logged-in user
+- URL: /manga/comment
+- Method: PATCH
+- Request param: id
+- Request body: none
+- Response body: none
+- Description: logged-in user can delete their own comment. Comment that is deleted is change status to deleted.
 
 #### Reply comment
 
+- Require: logged-in user
+- URL: /manga/comment/reply
+- Method: POST
+- Request param: page, size
+- Request body: CreateCommentVM
+- Response body: PagingReturnDTO<ReplyCommentDTO>
+- Description: logged-in user can reply a comment on a manga.
+
 #### Change reply comment
+
+- Require: logged-in user
+- URL: /manga/comment/reply
+- Method: PATCH
+- Request param:
+- Request body: ChangeCommentVM
+- Response body: ReplyCommentDTO
+- Description: logged-in user can change their own reply comment
+
+#### Delete reply comment
+
+- Require: logged-in user
+- URL: /manga/comment/reply
+- Method: PATCH
+- Request param: id
+- Request body: none
+- Response body: none
+- Description: logged-in user can delete their own reply comment. Comment that is deleted is change status to deleted.
 
 #### Report comment
 
@@ -621,7 +679,5 @@
 #### Change status of notification (read/ not read)
 
 #### Delete notification
-
-
 
 ### 8.Report

@@ -261,8 +261,12 @@ public class ProjectApplication {
             //create some reply comment
             String replyContent1 = "OK";
             String replyContent2 = "I love this too.";
-            commentService.createNewComment(new CreateCommentVM(1L, replyContent1));
-            commentService.createNewComment(new CreateCommentVM(1L, replyContent2));
+            String replyContent3 = "beg" + "laughter" + "ceremony" + "priest";
+            commentService.createReplyComment(new CreateCommentVM(1L, replyContent1));
+            commentService.createReplyComment(new CreateCommentVM(1L, replyContent2));
+            commentService.createReplyComment(new CreateCommentVM(2L, replyContent1));
+            commentService.createReplyComment(new CreateCommentVM(3L, replyContent3));
+            commentService.createReplyComment(new CreateCommentVM(3L, replyContent1));
             //create some reply comment
 
             //Clear security context

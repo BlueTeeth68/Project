@@ -53,7 +53,7 @@ public class JWTService {
         return extractClaim(token, Claims::getExpiration, key);
     }
 
-    //create token
+    //create access token
     public String generateAccessToken(
             String userName
     ) {
@@ -66,7 +66,7 @@ public class JWTService {
                 .compact();
     }
 
-    //create token
+    //create refresh token
     public String generateRefreshToken(
             String userName
     ) {

@@ -20,4 +20,6 @@ public interface ReplyCommentRepository extends JpaRepository<ReplyComment, Long
     Page<ReplyComment> findByStatus(CommentStatus status, Pageable pageOption);
 
     Page<ReplyComment> findByStatusIn(List<CommentStatus> status, Pageable pageOption);
+
+    List<ReplyComment> findByCommentId(Long id);
 }

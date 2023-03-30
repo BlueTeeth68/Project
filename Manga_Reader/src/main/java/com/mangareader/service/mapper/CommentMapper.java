@@ -1,6 +1,7 @@
 package com.mangareader.service.mapper;
 
 import com.mangareader.domain.Comment;
+import com.mangareader.domain.CommentStatus;
 import com.mangareader.domain.ReplyComment;
 import com.mangareader.domain.User;
 import com.mangareader.service.dto.CommentDTO;
@@ -40,7 +41,7 @@ public class CommentMapper {
         List<ReplyCommentDTO> result = new ArrayList<>();
         input.forEach(
                 replyComment -> {
-                    if (replyComment != null) {
+                    if (replyComment != null && replyComment.getStatus() != CommentStatus.Deleted) {
                         result.add(toReplyCommentDTO(replyComment));
                     }
                 }
@@ -59,6 +60,8 @@ public class CommentMapper {
         User user = input.getUser();
         CommonUserDTO commonUserDTO = userMapper.toCommonUserDTO(user);
         result.setUser(commonUserDTO);
+
+
         List<ReplyCommentDTO> replyCommentDTOs = toListReplyCommonDTO(input.getReplyComments());
         result.setCommentDTOS(replyCommentDTOs);
         return result;
