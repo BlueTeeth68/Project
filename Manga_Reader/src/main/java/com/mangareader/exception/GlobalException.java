@@ -5,6 +5,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -25,7 +28,7 @@ public class GlobalException extends ResponseEntityExceptionHandler {
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }
 
-    @ExceptionHandler({AccessDeniedException.class, AccessDeniedException.class})
+    @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<Object> handleAccessDeniedException(
             Exception ex, WebRequest request) {
         String error = "Access denied.";
@@ -71,6 +74,18 @@ public class GlobalException extends ResponseEntityExceptionHandler {
         String error = "File size is exceeded limit size.";
         ErrorDetails errorDetails =
                 new ErrorDetails(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED, error, ex.getMessage());
+        return new ResponseEntity<>(
+                errorDetails, new HttpHeaders(), errorDetails.getStatus());
+    }
+
+    @ExceptionHandler({BadCredentialsException.class,
+            AuthenticationException.class,
+            AuthenticationCredentialsNotFoundException.class})
+    public ResponseEntity<Object> handleBadCredentialsException(
+            Exception ex, WebRequest request) {
+        String error = "Bad credential for JWT.";
+        ErrorDetails errorDetails =
+                new ErrorDetails(HttpStatus.UNAUTHORIZED, error, ex.getMessage());
         return new ResponseEntity<>(
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }

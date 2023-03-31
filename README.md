@@ -1,5 +1,8 @@
 # Read manga online website
 
+# Swagger URL: 
+http://localhost:8080/swagger-ui/index.html#/
+
 # Function list:
 
 - Register by Email, facebook or username and password

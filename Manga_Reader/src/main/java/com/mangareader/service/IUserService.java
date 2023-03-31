@@ -25,6 +25,8 @@ public interface IUserService {
 
     User getUserByUsername(String username) throws ResourceNotFoundException;
 
+    User getUserByDisplayName(String displayName) throws ResourceNotFoundException;
+
     List<User> getUsersByActivateStatus(Boolean activate) throws ResourceNotFoundException;
 
     List<User> getUsers() throws ResourceNotFoundException;

@@ -101,6 +101,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public User getUserByDisplayName(String displayName) throws ResourceNotFoundException {
+        return userRepository.findByDisplayName(displayName)
+                .orElseThrow(() -> new ResourceNotFoundException("User " + displayName + " does not exist."));
+    }
+
+    @Override
     public List<User> getUsersByActivateStatus(Boolean activate) throws ResourceNotFoundException {
         log.info("Find users by activate status {}", activate);
         List<User> result = userRepository.findByActivate(activate);

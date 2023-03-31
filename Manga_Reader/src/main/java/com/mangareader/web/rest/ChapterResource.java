@@ -47,6 +47,7 @@ public class ChapterResource {
     ) {
         Chapter chapter = chapterService.getChapterById(id);
         Manga manga = chapter.getManga();
+        //increase manga's view
         mangaService.increaseMangaView(manga.getId());
         ChapterImageDTO chapterImageDTO = chapterMapper.toChapterImageDTO(
                 chapter,
