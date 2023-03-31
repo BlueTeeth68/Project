@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class HistoryId {
 
     private User user;
-    private Chapter chapter;
+    private Manga manga;
 }

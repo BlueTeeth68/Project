@@ -3,7 +3,9 @@ package com.mangareader.web.rest;
 import com.mangareader.domain.Chapter;
 import com.mangareader.domain.Manga;
 import com.mangareader.service.IChapterService;
+import com.mangareader.service.IHistoryService;
 import com.mangareader.service.IMangaService;
+import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.ChapterImageDTO;
 import com.mangareader.service.dto.MangaDTO;
 import com.mangareader.service.mapper.ChapterMapper;
@@ -34,8 +36,11 @@ public class ChapterResource {
     private final MangaMapper mangaMapper;
     private final ChapterMapper chapterMapper;
     private final HttpServletRequest request;
+    private final IHistoryService historyService;
+    private final IUserService userService;
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "authorize", scopes = "read")
     public ResponseEntity<ChapterImageDTO> getChapterById(
             @PathVariable Long id
     ) {
@@ -46,6 +51,10 @@ public class ChapterResource {
                 chapter,
                 APIUtil.getServerName(request)
         );
+        //update history
+        if (userService.isUserLogin()) {
+            historyService.createNewHistory(id);
+        }
         return new ResponseEntity<>(chapterImageDTO, HttpStatus.OK);
     }
 

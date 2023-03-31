@@ -57,4 +57,6 @@ public interface IUserService {
 
     User changePassword(ChangePasswordVM vm);
 
+    boolean isUserLogin();
+
 }
