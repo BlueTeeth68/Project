@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,9 +69,9 @@ public class AccountResource {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/avatar")
+    @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> changeUserAvatar(
-            @RequestParam("file") MultipartFile file
+            @RequestPart("file") MultipartFile file
     ) {
         String serverName = APIUtil.getServerName(request);
         User result = userService.updateAvatar(file, serverName);

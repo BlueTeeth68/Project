@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -184,12 +185,12 @@ public class MangaResource {
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
-    @PatchMapping("/cover-image")
+    @PatchMapping(value = "/cover-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
     @SecurityRequirement(name = "authorize")
     public ResponseEntity<MangaDTO> changeCoverImage(
             @RequestParam String mangaId,
-            @RequestParam("file") MultipartFile file
+            @RequestPart("file") MultipartFile file
     ) {
         String serverName = APIUtil.getServerName(request);
         Manga manga = mangaService.updateCoverImage(mangaId, file);

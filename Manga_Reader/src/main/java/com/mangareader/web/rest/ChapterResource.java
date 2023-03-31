@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -70,11 +71,11 @@ public class ChapterResource {
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/chapter-images/{chapterId}")
+    @PostMapping(value = "/chapter-images/{chapterId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
     @SecurityRequirement(name = "authorize")
     public ResponseEntity<MangaDTO> addImagesToChapter(
-            @RequestParam MultipartFile[] files,
+            @RequestPart MultipartFile[] files,
             @PathVariable Long chapterId
     ) {
         Manga manga = chapterService.addImagesToChapter(files, chapterId);
