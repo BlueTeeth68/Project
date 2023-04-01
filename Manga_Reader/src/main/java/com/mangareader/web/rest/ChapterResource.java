@@ -13,6 +13,10 @@ import com.mangareader.service.mapper.MangaMapper;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeChapterVM;
 import com.mangareader.web.rest.vm.CreateChapterVM;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -30,6 +34,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 @SuppressWarnings("unused")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Query successfully"),
+        @ApiResponse(responseCode = "201", description = "Created successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request for input parameters", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
+        @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
+})
 public class ChapterResource {
 
     private final IChapterService chapterService;
@@ -40,10 +51,13 @@ public class ChapterResource {
     private final IHistoryService historyService;
     private final IUserService userService;
 
-    @GetMapping("/{id}")
-    @SecurityRequirement(name = "authorize", scopes = "read")
+    @Operation(
+            summary = "Get chapter by id",
+            description = "Any user can get chapter by its id.", tags = "Chapter",
+            security = @SecurityRequirement(name = "authorize", scopes = "read"))
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChapterImageDTO> getChapterById(
-            @PathVariable Long id
+            @RequestParam long id
     ) {
         Chapter chapter = chapterService.getChapterById(id);
         Manga manga = chapter.getManga();
@@ -60,9 +74,14 @@ public class ChapterResource {
         return new ResponseEntity<>(chapterImageDTO, HttpStatus.OK);
     }
 
-    @PostMapping()
+    @Operation(
+            summary = "Create new chapter",
+            description = "Admin or translator user cna create new chapter " +
+                    "of their manga. Admin can add chapter of other's mangas. " +
+                    "The latest update of manga will be update.", tags = "Chapter",
+            security = @SecurityRequirement(name = "authorize"))
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<MangaDTO> createNewChapter(
             @Valid @RequestBody CreateChapterVM vm
     ) {
@@ -72,21 +91,29 @@ public class ChapterResource {
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/chapter-images/{chapterId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Change chapter cover image",
+            description = "Admin or translator can add chapter images to their chapter. " +
+                    "Admin user can add chapter images to other's chapter.", tags = "Chapter",
+            security = @SecurityRequirement(name = "authorize"))
+    @PostMapping(value = "/chapter-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<MangaDTO> addImagesToChapter(
             @RequestPart MultipartFile[] files,
-            @PathVariable Long chapterId
+            @RequestParam long chapterId
     ) {
         Manga manga = chapterService.addImagesToChapter(files, chapterId);
         MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
         return new ResponseEntity<>(mangaDTO, HttpStatus.CREATED);
     }
 
-    @PatchMapping()
+    @Operation(
+            summary = "Update chapter information",
+            description = "Admin or translator can update their chapter's information. " +
+                    "Admin user can update other's chapter's information.", tags = "Chapter",
+            security = @SecurityRequirement(name = "authorize"))
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<MangaDTO> updateChapterInformation(
             @Valid @RequestBody ChangeChapterVM vm
     ) {
@@ -95,9 +122,13 @@ public class ChapterResource {
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Delete chapter",
+            description = "Admin or translator can delete their chapter. " +
+                    "Admin user can delete other's chapter.", tags = "Chapter",
+            security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<MangaDTO> deleteChapter(
             @RequestParam String id
     ) {
