@@ -1,9 +1,14 @@
 package com.mangareader.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mangareader.exception.ErrorDetails;
 import com.mangareader.security.jwt.JWTAuthenticateFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -41,6 +46,31 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((request, response, ex) -> {
+                    if (ex instanceof BadCredentialsException) {
+                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        response.setStatus(HttpStatus.BAD_REQUEST.value());
+                        response.getWriter().write(new ObjectMapper()
+                                .writeValueAsString(new ErrorDetails(HttpStatus.BAD_REQUEST, "Bad credential for Bearer token", ex.getMessage())));
+                    } else {
+                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                        response.getWriter().write(new ObjectMapper()
+                                .writeValueAsString(new ErrorDetails(HttpStatus.UNAUTHORIZED, "Unauthorized", ex.getMessage())));
+                    }
+                })
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(
+                        (request, response, ex) -> {
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.getWriter().write(new ObjectMapper()
+                                    .writeValueAsString(new ErrorDetails(HttpStatus.FORBIDDEN, "You do not have authority to access this resource", ex.getMessage())));
+                        }
+                )
         ;
 
         return http.build();

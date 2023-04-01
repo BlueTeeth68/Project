@@ -238,6 +238,7 @@ public class MangaResource {
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/author", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
+
     public ResponseEntity<MangaDTO> addAuthorToManga(
             @Valid @RequestBody SetAuthorsToMangaVM vm
     ) {
