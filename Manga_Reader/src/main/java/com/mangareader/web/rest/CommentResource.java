@@ -9,11 +9,16 @@ import com.mangareader.service.dto.ReplyCommentDTO;
 import com.mangareader.service.mapper.CommentMapper;
 import com.mangareader.web.rest.vm.ChangeCommentVM;
 import com.mangareader.web.rest.vm.CreateCommentVM;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -26,12 +31,23 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 @SuppressWarnings("unused")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Query successfully"),
+        @ApiResponse(responseCode = "201", description = "Created successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request for input parameters", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
+        @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
+})
 public class CommentResource {
 
     private final ICommentService commentService;
     private final CommentMapper commentMapper;
 
-    @GetMapping()
+    @Operation(
+            summary = "Get all manga comment",
+            description = "Any user can get all manga comment.", tags = "Comment",
+            security = @SecurityRequirement(name = "authorize", scopes = "read"))
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommentDTO>> getALlCommentOfManga(
             @RequestParam(required = false, defaultValue = "0") Long mangaId,
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -47,9 +63,13 @@ public class CommentResource {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping()
+    @Operation(
+            summary = "Comment on manga",
+            description = "Logged in user can comment on a manga. " +
+                    "The return result is all comment of manga.", tags = "Comment",
+            security = @SecurityRequirement(name = "authorize"))
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<PagingReturnDTO<CommentDTO>> createComment(
             @Valid @RequestBody CreateCommentVM vm,
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -68,9 +88,13 @@ public class CommentResource {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/reply")
+    @Operation(
+            summary = "Reply a comment on a post",
+            description = "Logged in user can reply a comment on a post. " +
+                    "The return result is all reply comment of original comment.", tags = "Comment",
+            security = @SecurityRequirement(name = "authorize"))
+    @PostMapping(value = "/reply", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<PagingReturnDTO<ReplyCommentDTO>> replyComment(
             @Valid @RequestBody CreateCommentVM vm,
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -89,9 +113,13 @@ public class CommentResource {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PatchMapping()
+    @Operation(
+            summary = "Change comment content",
+            description = "Logged in user can change their comment content. " +
+                    "The status of comment will be set to changed.", tags = "Comment",
+            security = @SecurityRequirement(name = "authorize"))
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<CommentDTO> changeCommentContent(
             @Valid @RequestBody ChangeCommentVM vm
     ) {
@@ -100,9 +128,13 @@ public class CommentResource {
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
-    @PatchMapping("/reply")
+    @Operation(
+            summary = "Change reply comment content",
+            description = "Logged in user can change their reply comment content. " +
+                    "The reply comment status will be set to changed.", tags = "Comment",
+            security = @SecurityRequirement(name = "authorize"))
+    @PatchMapping(value = "/reply", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<ReplyCommentDTO> changeReplyCommentContent(
             @Valid @RequestBody ChangeCommentVM vm
     ) {
@@ -111,9 +143,14 @@ public class CommentResource {
         return new ResponseEntity<>(replyCommentDTO, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Delete comment",
+            description = "Logged in user can delete their comment. " +
+                    "The status this comment and reply comment of this comment will be set to deleted. " +
+                    "Deleted comment won't be load from database.", tags = "Comment",
+            security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping()
     @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<?> deleteComment(
             @RequestParam long id
     ) {
@@ -121,9 +158,14 @@ public class CommentResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Delete comment",
+            description = "Logged in user can delete their reply comment. " +
+                    "The status this reply comment will be set to deleted. " +
+                    "Deleted comment won't be load from database.", tags = "Comment",
+            security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping("/reply")
     @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<?> deleteReplyComment(
             @RequestParam long id
     ) {
