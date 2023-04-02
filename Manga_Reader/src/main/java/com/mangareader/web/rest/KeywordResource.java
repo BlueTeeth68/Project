@@ -5,11 +5,16 @@ import com.mangareader.service.IKeywordService;
 import com.mangareader.service.dto.KeywordDTO;
 import com.mangareader.service.mapper.KeywordMapper;
 import com.mangareader.web.rest.vm.ChangeKeywordVM;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -24,13 +29,24 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Query successfully"),
+        @ApiResponse(responseCode = "201", description = "Created successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request for input parameters", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
+        @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
+})
 
 public class KeywordResource {
 
     private final IKeywordService keywordService;
     private final KeywordMapper keywordMapper;
 
-    @GetMapping("/manga")
+    @Operation(
+            summary = "Get manga keywords",
+            description = "Any user can get manga keywords.", tags = "Keyword",
+            security = @SecurityRequirement(name = "authorize", scopes = "read"))
+    @GetMapping(value = "/manga", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getKeywordOfManga(
             @RequestParam String mangaId
     ) {
@@ -42,9 +58,12 @@ public class KeywordResource {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping()
+    @Operation(
+            summary = "Create keyword for manga",
+            description = "Admin or translator user can create a keyword of their manga.", tags = "Keyword",
+            security = @SecurityRequirement(name = "authorize"))
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<String> addKeywordToManga(
             @Valid @RequestBody KeywordDTO keywordDTO
     ) {
@@ -53,9 +72,12 @@ public class KeywordResource {
         return new ResponseEntity<>(result.getName(), HttpStatus.CREATED);
     }
 
-    @PatchMapping()
+    @Operation(
+            summary = "Change keyword of manga",
+            description = "Admin or translator user can change keyword name of their manga.", tags = "Keyword",
+            security = @SecurityRequirement(name = "authorize"))
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<String> changeKeywordName(
             @Valid @RequestBody ChangeKeywordVM vm
     ) {
@@ -63,9 +85,12 @@ public class KeywordResource {
         return new ResponseEntity<>(result.getName(), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Delete keyword of manga",
+            description = "Admin or translator user can delete a keyword of their manga.", tags = "Keyword",
+            security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
-    @SecurityRequirement(name = "authorize")
     public ResponseEntity<?> deleteKeyword(
             @RequestParam String name,
             @RequestParam String mangaId

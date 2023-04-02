@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf6209bd-5e4a-4c7e-9899-a3c5e3e157a6" name="Changes" comment="config environment">
+    <list default="true" id="cf6209bd-5e4a-4c7e-9899-a3c5e3e157a6" name="Changes" comment="add swagger document to comment resource api">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/CommentResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/CommentResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/GenreResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/GenreResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/HistoryResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/HistoryResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/KeywordResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/KeywordResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/TestUserAPI.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,11 +89,19 @@
       <option name="project" value="LOCAL" />
       <updated>1680431044099</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="add swagger document to comment resource api">
+      <created>1680431884609</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1680431884609</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="config environment" />
-    <option name="LAST_COMMIT_MESSAGE" value="config environment" />
+    <MESSAGE value="add swagger document to comment resource api" />
+    <option name="LAST_COMMIT_MESSAGE" value="add swagger document to comment resource api" />
   </component>
 </project>
