@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="JpbDataSourceConfig">
-    <data-sources>
-      <data-source id="72206163-f7c2-44f6-a66e-a3b3ac4a16c3" name="manga-reader" url="jdbc:mysql://localhost:3306/manga-reader" driverClass="com.mysql.cj.jdbc.Driver" />
-    </data-sources>
-  </component>
-</project>
