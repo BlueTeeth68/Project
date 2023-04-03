@@ -55,7 +55,7 @@ public class UserMapperTest {
     @Test
     @DisplayName("Test 1: CommonUserDTO must equal to source User entity")
     public void commonUserDTOMustBeEqualToEntity() {
-        CommonUserDTO result = userMapper.entityToCommonUserDTO(user);
+        CommonUserDTO result = userMapper.toCommonUserDTO(user);
 
         assertEquals(result.getId(), user.getId());
         assertEquals(result.getActivate(), user.getActivate());
@@ -66,7 +66,7 @@ public class UserMapperTest {
     @Test
     @DisplayName("Test 2: User entity must be call from id of CommonUserDTO")
     public void TestCommonUserDTOToUserMapping() {
-        User result = userMapper.commonUserDTOToUser(commonUserDTO);
+        User result = userMapper.toUserEntity(commonUserDTO);
         assertEquals(result.getDisplayName(), "System Admin");
 
     }

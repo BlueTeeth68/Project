@@ -1,6 +1,4 @@
 spring:
-#  profiles:
-#    active: prod
   datasource:
     url: jdbc:mysql://localhost:3306/manga-reader
     username: root
@@ -8,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     generate-ddl: true
     properties:

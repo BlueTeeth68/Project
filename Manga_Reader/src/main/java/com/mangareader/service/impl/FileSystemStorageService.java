@@ -3,6 +3,7 @@ package com.mangareader.service.impl;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.exception.StorageException;
 import com.mangareader.service.IStorageService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -69,19 +70,25 @@ public class FileSystemStorageService implements IStorageService {
     }
 
     @Override
+    @Transactional
     public List<String> storeMultipleFile(MultipartFile[] files, String location) {
         try {
             if (files == null) {
-                log.error("Failed to store empty file");
+                log.info("Files length: {}", files.length);
+                log.error("Failed to store empty file: file is empty");
                 throw new StorageException("Failed to store empty file");
             }
+            log.info("Create path from location: {}", location);
             Path pathLocation = Paths.get(location);
 
             //clear the location
-            Files.walk(pathLocation)
-                    .sorted(java.util.Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
+            log.info("Clear location.");
+            if (Files.exists(pathLocation)) {
+                Files.walk(pathLocation)
+                        .sorted(java.util.Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+            }
             File temp = pathLocation.toFile();
             temp.mkdirs();
 
@@ -97,7 +104,7 @@ public class FileSystemStorageService implements IStorageService {
             }
             return fileNames;
         } catch (IOException e) {
-            log.error("Failed to store file");
+            log.error("Failed to store file: store error");
             throw new StorageException("Failed to store file");
         }
     }

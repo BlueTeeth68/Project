@@ -15,6 +15,7 @@ import com.mangareader.web.rest.vm.ChangeChapterVM;
 import com.mangareader.web.rest.vm.CreateChapterVM;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChapterServiceImpl implements IChapterService {
 
     private final String MANGA_FOLDER = "./image/manga/";
@@ -111,6 +113,8 @@ public class ChapterServiceImpl implements IChapterService {
     @Override
     @Transactional
     public Manga addImagesToChapter(MultipartFile[] files, Long chapterId) {
+        log.info("File length: {}", files.length);
+
         Chapter chapter = getChapterById(chapterId);
         Manga manga = chapter.getManga();
         Float chapterNumber = chapter.getChapterNumber();
@@ -118,6 +122,8 @@ public class ChapterServiceImpl implements IChapterService {
         mangaService.checkMangaAuthorize(mangaId);
 
         String location = "./image/manga/manga" + mangaId + "/" + chapterNumber;
+        log.info("Check file length before pass: {}", files.length);
+        log.info("Location before pass: {}", location);
         List<String> fileNames = storageService.storeMultipleFile(files, location);
         deleteAllChapterImageOfChapter(chapterId);
         fileNames.forEach(
