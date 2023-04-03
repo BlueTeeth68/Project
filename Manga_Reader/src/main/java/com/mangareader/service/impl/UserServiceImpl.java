@@ -164,7 +164,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public User changeDisplayName(String displayName, String serverName) {
+    public User changeDisplayName(String displayName) {
         if (displayName == null || displayName.isBlank()) {
             log.error("Error when retrieve displayName: {}.", displayName);
             throw new BadRequestException("displayName is empty.");
@@ -176,14 +176,12 @@ public class UserServiceImpl implements IUserService {
         }
         log.info("Set display name {} for user {}", displayName, user.getId());
         user.setDisplayName(displayName);
-        user = userRepository.save(user);
-        user = addServerNameToAvatarURL(user, serverName);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public User updateAvatar(MultipartFile file, String serverName) {
+    public User updateAvatar(MultipartFile file) {
 
         User user = getCurrentUser();
         String fileName = user.getId().toString();
@@ -191,10 +189,7 @@ public class UserServiceImpl implements IUserService {
         String avatarUrl = /*SERVER_NAME + */ "/image/avatar/" + fileName;
 
         user.setAvatarUrl(avatarUrl);
-        user = userRepository.save(user);
-        user = addServerNameToAvatarURL(user, serverName);
-
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
@@ -239,22 +234,18 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public User setRoleToUser(Long userId, RoleName roleName, String serverName) {
+    public User setRoleToUser(Long userId, RoleName roleName) {
         User user = getUserById(userId);
         user.setRole(roleName);
-        user = userRepository.save(user);
-        user = addServerNameToAvatarURL(user, serverName);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public User changeUserStatus(Long userId, Boolean status, String serverName) {
+    public User changeUserStatus(Long userId, Boolean status) {
         User user = getUserById(userId);
         user.setActivate(status);
-        user = userRepository.save(user);
-        user = addServerNameToAvatarURL(user, serverName);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override

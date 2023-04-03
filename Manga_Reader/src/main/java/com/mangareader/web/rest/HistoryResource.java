@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,7 @@ import java.util.List;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+@Tag(name = "11. History")
 public class HistoryResource {
 
     private final IHistoryService historyService;
@@ -43,7 +45,7 @@ public class HistoryResource {
 
     @Operation(
             summary = "View reading history",
-            description = "Logged in user can view their reading history.", tags = "History",
+            description = "Logged in user can view their reading history.",
             security = @SecurityRequirement(name = "authorize")
     )
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+@Tag(name = "05. Chapter")
 public class ChapterResource {
 
     private final IChapterService chapterService;
@@ -53,7 +55,7 @@ public class ChapterResource {
 
     @Operation(
             summary = "Get chapter by id",
-            description = "Any user can get chapter by its id.", tags = "Chapter",
+            description = "Any user can get chapter by its id.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChapterImageDTO> getChapterById(
@@ -78,7 +80,7 @@ public class ChapterResource {
             summary = "Create new chapter",
             description = "Admin or translator user cna create new chapter " +
                     "of their manga. Admin can add chapter of other's mangas. " +
-                    "The latest update of manga will be update.", tags = "Chapter",
+                    "The latest update of manga will be update.",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -92,9 +94,9 @@ public class ChapterResource {
     }
 
     @Operation(
-            summary = "Change chapter cover image",
+            summary = "Add images to chapter",
             description = "Admin or translator can add chapter images to their chapter. " +
-                    "Admin user can add chapter images to other's chapter.", tags = "Chapter",
+                    "Admin user can add chapter images to other's chapter.",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(value = "/chapter-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -110,7 +112,7 @@ public class ChapterResource {
     @Operation(
             summary = "Update chapter information",
             description = "Admin or translator can update their chapter's information. " +
-                    "Admin user can update other's chapter's information.", tags = "Chapter",
+                    "Admin user can update other's chapter's information.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -125,7 +127,7 @@ public class ChapterResource {
     @Operation(
             summary = "Delete chapter",
             description = "Admin or translator can delete their chapter. " +
-                    "Admin user can delete other's chapter.", tags = "Chapter",
+                    "Admin user can delete other's chapter.",
             security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")

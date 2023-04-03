@@ -2,6 +2,7 @@ package com.mangareader;
 
 import com.mangareader.domain.*;
 import com.mangareader.service.*;
+import com.mangareader.web.rest.vm.CreateChapterVM;
 import com.mangareader.web.rest.vm.CreateCommentVM;
 import com.mangareader.web.rest.vm.RateVM;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -43,7 +44,7 @@ public class ProjectApplication {
         SpringApplication.run(ProjectApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     CommandLineRunner run(
             IUserService userService,
             IGenreService genreService,
@@ -51,7 +52,8 @@ public class ProjectApplication {
             IMangaService mangaService,
             IKeywordService keywordService,
             IRateService rateService,
-            ICommentService commentService
+            ICommentService commentService,
+            IChapterService chapterService
     ) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -60,6 +62,7 @@ public class ProjectApplication {
         return args -> {
 
             //Add user to database
+            //create admin user
             User user = new User();
             user.setUsername("SystemAdmin");
             user.setDisplayName("System Admin");
@@ -68,30 +71,29 @@ public class ProjectApplication {
             userService.createUser(user);
 
             user = new User();
-            user.setUsername("TestTranslator1");
-            user.setDisplayName("Test Translator 1");
+            user.setUsername("trihandsome");
+            user.setDisplayName("Admin Tri");
             user.setPassword(password);
-            user.setRole(RoleName.TRANSLATOR);
+            user.setRole(RoleName.ADMIN);
             userService.createUser(user);
 
-            user = new User();
-            user.setUsername("TestTranslator2");
-            user.setDisplayName("Test Translator 2");
-            user.setPassword(password);
-            user.setRole(RoleName.TRANSLATOR);
-            userService.createUser(user);
+            //create translator
+            User translator;
+            for (int i = 1; i <= 5; i++) {
+                translator = new User();
+                translator.setUsername("Translator" + i);
+                translator.setDisplayName("Translator " + i);
+                translator.setPassword(password);
+                translator.setRole(RoleName.TRANSLATOR);
+                userService.createUser(translator);
+            }
 
-            User commonUser = new User();
-            commonUser.setUsername("User");
-            commonUser.setDisplayName("Common User");
-            commonUser.setPassword(password);
-            commonUser.setRole(RoleName.USER);
-            userService.createUser(commonUser);
-
-            for (int i = 0; i < 10; i++) {
+            //create common user
+            User commonUser;
+            for (int i = 1; i <= 10; i++) {
                 commonUser = new User();
-                commonUser.setUsername("User" + (i + 1));
-                commonUser.setDisplayName("Common User " + (i + 1));
+                commonUser.setUsername("User" + i);
+                commonUser.setDisplayName("Common User " + i);
                 commonUser.setPassword(password);
                 commonUser.setRole(RoleName.USER);
                 userService.createUser(commonUser);
@@ -99,33 +101,28 @@ public class ProjectApplication {
 
             //add genres to database
             genreService.createNewGenre("Action");
-
             genreService.createNewGenre("Shounen");
-
             genreService.createNewGenre("Romance");
-
             genreService.createNewGenre("Fiction");
-
             genreService.createNewGenre("Fantastic");
-
             genreService.createNewGenre("Scientific");
 
             //add author to database
             Author author;
             User createdBy;
 
-            for (int i = 1; i < 4; i++) {
+            for (int i = 1; i <= 3; i++) {
                 author = new Author();
                 author.setName("Author " + i);
-                createdBy = userService.getUserById(2L);
+                createdBy = userService.getUserById(1L);
                 author.setUser(createdBy);
                 authorService.createAuthor(author);
             }
 
-            for (int i = 4; i < 7; i++) {
+            for (int i = 4; i <= 7; i++) {
                 author = new Author();
                 author.setName("Author " + i);
-                createdBy = userService.getUserById(1L);
+                createdBy = userService.getUserById(2L);
                 author.setUser(createdBy);
                 authorService.createAuthor(author);
             }
@@ -169,6 +166,12 @@ public class ProjectApplication {
             manga.setYearOfPublication(2004);
             mangaService.createManga(manga);
 
+            manga = new Manga();
+            manga.setUser(user);
+            manga.setName("The Eminence In Shadow");
+            manga.setYearOfPublication(2016);
+            mangaService.createManga(manga);
+
             // add keyword to manga
             manga = mangaService.getMangaById(1L);
             Keyword keyword = new Keyword();
@@ -191,6 +194,35 @@ public class ProjectApplication {
             keyword.setManga(mangaService.getMangaById(2L));
             keywordService.createKeyWord(keyword);
 
+            keyword = new Keyword();
+            keyword.setName("MHA");
+            keyword.setManga(mangaService.getMangaById(3L));
+            keywordService.createKeyWord(keyword);
+
+            keyword = new Keyword();
+            keyword.setName("One For All");
+            keyword.setManga(mangaService.getMangaById(3L));
+            keywordService.createKeyWord(keyword);
+
+            keyword = new Keyword();
+            keyword.setName("Midoriya");
+            keyword.setManga(mangaService.getMangaById(3L));
+            keywordService.createKeyWord(keyword);
+
+            keyword = new Keyword();
+            keyword.setName("AOT");
+            keyword.setManga(mangaService.getMangaById(5L));
+            keywordService.createKeyWord(keyword);
+
+            keyword = new Keyword();
+            keyword.setName("Eren Yeager");
+            keyword.setManga(mangaService.getMangaById(5L));
+            keywordService.createKeyWord(keyword);
+
+            keyword = new Keyword();
+            keyword.setName("Titan");
+            keyword.setManga(mangaService.getMangaById(5L));
+            keywordService.createKeyWord(keyword);
             //Set login user
             User currentUser = userService.getUserById(1L);
 
@@ -213,8 +245,9 @@ public class ProjectApplication {
             Set<String> genres = new HashSet<>();
             genres.add(genreService.getGenreById(1L).getName());
             genres.add(genreService.getGenreById(2L).getName());
-            genres.add(genreService.getGenreById(3L).getName());
-            for (int i = 1; i < 7; i++) {
+            genres.add(genreService.getGenreById(4L).getName());
+            genres.add(genreService.getGenreById(5L).getName());
+            for (int i = 1; i < 8; i++) {
                 manga = mangaService.getMangaById(Long.valueOf(i));
                 mangaService.addGenreToManga(manga.getId(), genres);
             }
@@ -229,6 +262,14 @@ public class ProjectApplication {
                 mangaService.addAuthorsToManga(manga.getId(), authors);
             }
 
+            authors = new HashSet<>();
+            authors.add(4L);
+            authors.add(7L);
+            for (int i = 4; i <= 7; i++) {
+                manga = mangaService.getMangaById(Long.valueOf(i));
+                mangaService.addAuthorsToManga(manga.getId(), authors);
+            }
+
             //add rate to manga
             RateVM rateVM = new RateVM(10, 3L);
             rateService.rateManga(rateVM);
@@ -239,39 +280,116 @@ public class ProjectApplication {
             rateVM = new RateVM(9, 2L);
             rateService.rateManga(rateVM);
 
-            rateVM = new RateVM(10, 5L);
+            rateVM = new RateVM(8, 5L);
+            rateService.rateManga(rateVM);
+
+            rateVM = new RateVM(9, 6L);
+            rateService.rateManga(rateVM);
+
+            rateVM = new RateVM(8, 4L);
             rateService.rateManga(rateVM);
             //add rate to manga
-
 
             //create some comment
 
             String content = "This is the most interesting manga that I've read.";
             String content2 = "I love th is manga.";
             String content3 = "Interesting";
+            String content4 = "Life is a journey, not a destination.";
+            String content6 = "Whether you're a casual reader or a die-hard fan, there's always a manga that will capture your heart and leave you wanting more.";
+            String content7 = "Reading manga is not just a hobby, it's a passion that fuels the imagination and inspires creativity.";
+            String content5 = "Reading manga is like entering a whole new world where anything is possible. The stories are captivating and the artwork is simply breathtaking. It's no wonder why so many people around the world have fallen in love with this incredible art form.";
+
             commentService.createNewComment(new CreateCommentVM(3L, content));
             commentService.createNewComment(new CreateCommentVM(3L, content2));
             commentService.createNewComment(new CreateCommentVM(3L, content3));
-            commentService.createNewComment(new CreateCommentVM(1L, content));
-            commentService.createNewComment(new CreateCommentVM(2L, content));
-            commentService.createNewComment(new CreateCommentVM(4L, content));
+            commentService.createNewComment(new CreateCommentVM(1L, content4));
+            commentService.createNewComment(new CreateCommentVM(1L, content2));
+            commentService.createNewComment(new CreateCommentVM(1L, content6));
+            commentService.createNewComment(new CreateCommentVM(2L, content5));
+            commentService.createNewComment(new CreateCommentVM(2L, content4));
+            commentService.createNewComment(new CreateCommentVM(4L, content6));
+            commentService.createNewComment(new CreateCommentVM(7L, content7));
+            commentService.createNewComment(new CreateCommentVM(3L, content7));
+            commentService.createNewComment(new CreateCommentVM(3L, content6));
 
             //create some comment
 
             //create some reply comment
             String replyContent1 = "OK";
             String replyContent2 = "I love this too.";
-            String replyContent3 = "beg" + "laughter" + "ceremony" + "priest";
+            String replyContent3 = "beg " + " laughter" + " ceremony" + " priest";
+            String replyContent4 = "Manga is a beautiful escape from reality, offering endless adventures and inspiration.";
+            String replyContent5 = "Reading manga is like taking a journey to a world full of imagination and creativity.";
+            String replyContent6 = "Manga is not just a form of entertainment, it's a form of art that captures the beauty and complexity of life.";
             commentService.createReplyComment(new CreateCommentVM(1L, replyContent1));
             commentService.createReplyComment(new CreateCommentVM(1L, replyContent2));
             commentService.createReplyComment(new CreateCommentVM(2L, replyContent1));
             commentService.createReplyComment(new CreateCommentVM(3L, replyContent3));
             commentService.createReplyComment(new CreateCommentVM(3L, replyContent1));
+            commentService.createReplyComment(new CreateCommentVM(4L, replyContent5));
+            commentService.createReplyComment(new CreateCommentVM(2L, replyContent5));
+            commentService.createReplyComment(new CreateCommentVM(2L, replyContent6));
+            commentService.createReplyComment(new CreateCommentVM(3L, replyContent4));
+            commentService.createReplyComment(new CreateCommentVM(4L, replyContent4));
             //create some reply comment
+
+            //Create chapter
+            CreateChapterVM vm;
+
+            vm = new CreateChapterVM();
+            vm.setName("A Small Heart");
+            vm.setChapterNumber(383f);
+            vm.setMangaId(3L);
+            chapterService.createChapter(vm);
+
+            vm = new CreateChapterVM();
+            vm.setName("It's A Small World");
+            vm.setChapterNumber(384f);
+            vm.setMangaId(3L);
+            chapterService.createChapter(vm);
+
+            vm = new CreateChapterVM();
+            vm.setName("YOU SHOULD’VE PUT IT TOGETHER SOONER!");
+            vm.setChapterNumber(1077f);
+            vm.setMangaId(1L);
+            chapterService.createChapter(vm);
+
+            vm = new CreateChapterVM();
+            vm.setName("ESCAPE LIMIT");
+            vm.setChapterNumber(1078f);
+            vm.setMangaId(1L);
+            chapterService.createChapter(vm);
+
+            vm = new CreateChapterVM();
+            vm.setName("THE EMPEROR RED-HAIRED PIRATES");
+            vm.setChapterNumber(1079f);
+            vm.setMangaId(1L);
+            chapterService.createChapter(vm);
+
+            vm = new CreateChapterVM();
+            vm.setName("BATH");
+            vm.setChapterNumber(216f);
+            vm.setMangaId(4L);
+            chapterService.createChapter(vm);
+
+            vm = new CreateChapterVM();
+            vm.setName("BATH, PART 2");
+            vm.setChapterNumber(217f);
+            vm.setMangaId(4L);
+            chapterService.createChapter(vm);
+
+            vm = new CreateChapterVM();
+            vm.setName("BATH, PART 3");
+            vm.setChapterNumber(218f);
+            vm.setMangaId(4L);
+            chapterService.createChapter(vm);
+
+            //Create chapter
 
             //Clear security context
             SecurityContextHolder.clearContext();
 
         };
-    }
+    }*/
 }

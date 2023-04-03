@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ import org.springframework.web.bind.annotation.*;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+
+@Tag(name = "03. User")
 public class UserResource {
 
     private final IUserService userService;
@@ -40,7 +43,7 @@ public class UserResource {
 
     @Operation(
             summary = "Get user by id or userName",
-            description = "Admin user can search user by id or userName", tags = "User",
+            description = "Admin user can search user by id or userName",
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUserByIdOrUsername(
@@ -68,7 +71,7 @@ public class UserResource {
 
     @Operation(
             summary = "Get all user",
-            description = "Admin user can get user list with pageable", tags = "User",
+            description = "Admin user can get user list with pageable",
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<User>> getAllAndPaginateUsers(
@@ -87,27 +90,29 @@ public class UserResource {
 
     @Operation(
             summary = "Change user role",
-            description = "Admin user can change a user's role", tags = "User",
+            description = "Admin user can change a user's role",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/role", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> changeRoleOfUser(
             @RequestBody ChangeUserRoleVM vm
     ) {
         String serverName = APIUtil.getServerName(request);
-        User user = userService.setRoleToUser(vm.getId(), vm.getRoleName(), serverName);
+        User user = userService.setRoleToUser(vm.getId(), vm.getRoleName());
+        user = userService.addServerNameToAvatarURL(user, serverName);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @Operation(
             summary = "Block user",
-            description = "Admin user can block or unblock user", tags = "User",
+            description = "Admin user can block or unblock user",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/active-status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> changeActiveStatus(
             @RequestBody ChangeUserStatusVM vm
     ) {
         String serverName = APIUtil.getServerName(request);
-        User user = userService.changeUserStatus(vm.getId(), vm.getStatus(), serverName);
+        User user = userService.changeUserStatus(vm.getId(), vm.getStatus());
+        user = userService.addServerNameToAvatarURL(user, serverName);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

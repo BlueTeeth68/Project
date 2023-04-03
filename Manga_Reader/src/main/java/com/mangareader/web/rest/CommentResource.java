@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,8 @@ import java.util.List;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+
+@Tag(name = "06. Comment")
 public class CommentResource {
 
     private final ICommentService commentService;
@@ -45,7 +48,7 @@ public class CommentResource {
 
     @Operation(
             summary = "Get all manga comment",
-            description = "Any user can get all manga comment.", tags = "Comment",
+            description = "Any user can get all manga comment.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommentDTO>> getALlCommentOfManga(
@@ -66,7 +69,7 @@ public class CommentResource {
     @Operation(
             summary = "Comment on manga",
             description = "Logged in user can comment on a manga. " +
-                    "The return result is all comment of manga.", tags = "Comment",
+                    "The return result is all comment of manga.",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
@@ -91,7 +94,7 @@ public class CommentResource {
     @Operation(
             summary = "Reply a comment on a post",
             description = "Logged in user can reply a comment on a post. " +
-                    "The return result is all reply comment of original comment.", tags = "Comment",
+                    "The return result is all reply comment of original comment.",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(value = "/reply", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
@@ -116,7 +119,7 @@ public class CommentResource {
     @Operation(
             summary = "Change comment content",
             description = "Logged in user can change their comment content. " +
-                    "The status of comment will be set to changed.", tags = "Comment",
+                    "The status of comment will be set to changed.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
@@ -131,7 +134,7 @@ public class CommentResource {
     @Operation(
             summary = "Change reply comment content",
             description = "Logged in user can change their reply comment content. " +
-                    "The reply comment status will be set to changed.", tags = "Comment",
+                    "The reply comment status will be set to changed.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/reply", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
@@ -147,7 +150,7 @@ public class CommentResource {
             summary = "Delete comment",
             description = "Logged in user can delete their comment. " +
                     "The status this comment and reply comment of this comment will be set to deleted. " +
-                    "Deleted comment won't be load from database.", tags = "Comment",
+                    "Deleted comment won't be load from database.",
             security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping()
     @PreAuthorize("isAuthenticated()")
@@ -162,7 +165,7 @@ public class CommentResource {
             summary = "Delete comment",
             description = "Logged in user can delete their reply comment. " +
                     "The status this reply comment will be set to deleted. " +
-                    "Deleted comment won't be load from database.", tags = "Comment",
+                    "Deleted comment won't be load from database.",
             security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping("/reply")
     @PreAuthorize("isAuthenticated()")

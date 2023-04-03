@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,13 +33,14 @@ import java.util.List;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+@Tag(name = "07. Genre")
 public class GenreResource {
 
     private final IGenreService genreService;
 
     @Operation(
             summary = "Get list of genre",
-            description = "Any user can get list of genre.", tags = "Genre",
+            description = "Any user can get list of genre.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<Genre>> getAllGenre(
@@ -57,7 +59,7 @@ public class GenreResource {
 
     @Operation(
             summary = "Get genre by id",
-            description = "Any user can get genre by id.", tags = "Genre",
+            description = "Any user can get genre by id.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/id", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Genre> getGenreById(
@@ -69,7 +71,7 @@ public class GenreResource {
 
     @Operation(
             summary = "Get list of genre by name",
-            description = "Any user can search genre by their name.", tags = "Genre",
+            description = "Any user can search genre by their name.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/name", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Genre>> getGenreByName(
@@ -81,7 +83,7 @@ public class GenreResource {
 
     @Operation(
             summary = "Create new genre",
-            description = "Admin user can create new genre.", tags = "Genre",
+            description = "Admin user can create new genre.",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -94,7 +96,7 @@ public class GenreResource {
 
     @Operation(
             summary = "Change genre name",
-            description = "Admin user can change genre name.", tags = "Genre",
+            description = "Admin user can change genre name.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -107,7 +109,7 @@ public class GenreResource {
 
     @Operation(
             summary = "Delete genre by id",
-            description = "Admin user can delete a genre.", tags = "Genre",
+            description = "Admin user can delete a genre.",
             security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping()
     @PreAuthorize("hasAuthority('ADMIN')")

@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,8 @@ import org.springframework.web.multipart.MultipartFile;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+
+@Tag(name = "04. Manga")
 public class MangaResource {
 
     private final IMangaService mangaService;
@@ -55,7 +58,7 @@ public class MangaResource {
     @Operation(
             summary = "Get all manga",
             description = "User can get all manga from data base with pageable. The result is " +
-                    "sorted by latest update desc.", tags = "Manga",
+                    "sorted by latest update desc.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getAllPageableManga(
@@ -70,7 +73,7 @@ public class MangaResource {
 
     @Operation(
             summary = "Get manga by id",
-            description = "User can get manga by its id", tags = "Manga",
+            description = "User can get manga by its id",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MangaDTO> getMangaById(
@@ -84,7 +87,7 @@ public class MangaResource {
     @Operation(
             summary = "Get manga by genre",
             description = "User can get manga by its genre with pageable. The result is " +
-                    "sorted by name asc", tags = "Manga",
+                    "sorted by name asc",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/genre", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableMangaByGenre(
@@ -101,7 +104,7 @@ public class MangaResource {
     @Operation(
             summary = "Get mangas by author",
             description = "User can get mangas by its author with pageable. The result is " +
-                    "sorted by name asc.", tags = "Manga",
+                    "sorted by name asc.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/author", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableMangaByAuthor(
@@ -118,7 +121,7 @@ public class MangaResource {
     @Operation(
             summary = "Get mangas by name or keyword",
             description = "User can get mangas by its name or keyword with pageable. The result is " +
-                    "sorted by name asc.", tags = "Manga",
+                    "sorted by name asc.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/name", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableMangasByNameOrKeywordOrderByName(
@@ -135,7 +138,7 @@ public class MangaResource {
     @Operation(
             summary = "Get mangas by translator",
             description = "Get mangas by its translator with pageable. The result is " +
-                    "sorted by name.", tags = "Manga",
+                    "sorted by name.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/translator", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableMangaByTranslator(
@@ -152,7 +155,7 @@ public class MangaResource {
     @Operation(
             summary = "Get suggest manga",
             description = "User can get list suggest manga with pageable. The manga is sorted by " +
-                    "view * rate.", tags = "Manga",
+                    "view * rate.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableSuggestMangas(
@@ -168,7 +171,7 @@ public class MangaResource {
     @Operation(
             summary = "Get manga by status",
             description = "User can get manga by its status with pageable. The status can be Ongoing " +
-                    "or Completed.", tags = "Manga",
+                    "or Completed.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getMangasByStatus(
@@ -184,7 +187,7 @@ public class MangaResource {
 
     @Operation(
             summary = "Create new manga",
-            description = "Admin and Translator user can create a new manga.", tags = "Manga",
+            description = "Admin and Translator user can create a new manga.",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -205,7 +208,7 @@ public class MangaResource {
     @Operation(
             summary = "Change manga information",
             description = "Admin or Translator user can change their own manga's information. Admin user" +
-                    " can change any manga's information.", tags = "Manga",
+                    " can change any manga's information.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -219,7 +222,7 @@ public class MangaResource {
 
     @Operation(
             summary = "Set genre to manga",
-            description = "Admin or Translator user can set genre to their manga.", tags = "Manga",
+            description = "Admin or Translator user can set genre to their manga.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/genre", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -234,7 +237,7 @@ public class MangaResource {
 
     @Operation(
             summary = "Add author to manga",
-            description = "Admin or Translator user can set author list to their manga.", tags = "Manga",
+            description = "Admin or Translator user can set author list to their manga.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/author", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -250,7 +253,7 @@ public class MangaResource {
 
     @Operation(
             summary = "Change manga cover image",
-            description = "Admin or Translator user can change their manga's cover image.", tags = "Manga",
+            description = "Admin or Translator user can change their manga's cover image.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/cover-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -266,7 +269,7 @@ public class MangaResource {
 
     @Operation(
             summary = "Add keyword to manga",
-            description = "Admin or Translator user can set list of keyword to their manga.", tags = "Manga",
+            description = "Admin or Translator user can set list of keyword to their manga.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/keyword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -281,7 +284,7 @@ public class MangaResource {
 
     @Operation(
             summary = "Rate manga",
-            description = "Logged in user can rate a manga.", tags = "Manga",
+            description = "Logged in user can rate a manga.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/rate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
@@ -297,7 +300,7 @@ public class MangaResource {
 
     @Operation(
             summary = "Delete manga",
-            description = "Admin or Translator can delete their own manga.", tags = "Manga",
+            description = "Admin or Translator can delete their own manga.",
             security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")

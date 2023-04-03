@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,13 +28,15 @@ import java.net.URISyntaxException;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+
+@Tag(name = "01. Authenticate")
 public class AuthenticateResource {
 
     private final AuthenticationService authenticationService;
 
     @Operation(
             summary = "Register account",
-            description = "User can register a new account by provide username and password.", tags = "Authenticate")
+            description = "User can register a new account by provide username and password.")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginTokenVM> register(@Valid @RequestBody UsernamePasswordVM register) throws URISyntaxException {
         LoginTokenVM token = authenticationService.register(register);
@@ -42,7 +45,7 @@ public class AuthenticateResource {
 
     @Operation(
             summary = "Login",
-            description = "User can log in to their account by using username and password.", tags = "Authenticate")
+            description = "User can log in to their account by using username and password.")
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginTokenVM> authenticate(@Valid @RequestBody UsernamePasswordVM authenticate) {
         return ResponseEntity.ok(authenticationService.authenticate(authenticate));
@@ -50,7 +53,7 @@ public class AuthenticateResource {
 
     @Operation(
             summary = "Get access token",
-            description = "User can get access token by providing refresh token.", tags = "Authenticate")
+            description = "User can get access token by providing refresh token.")
     @PostMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginTokenVM> getNewAccessToken(
             @RequestHeader("refresh_token") String refreshToken

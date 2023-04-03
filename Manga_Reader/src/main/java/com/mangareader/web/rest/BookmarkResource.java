@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,8 @@ import java.util.List;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+@Tag(name = "10. Bookmark")
+
 public class BookmarkResource {
 
     private final IBookmarkService bookmarkService;
@@ -40,7 +43,7 @@ public class BookmarkResource {
 
     @Operation(
             summary = "Get list bookmark",
-            description = "Logged in user can get their bookmark list.", tags = "Bookmark")
+            description = "Logged in user can get their bookmark list.")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookmarkDTO>> getAllBookmarkOfCurrentUser() {
         List<Bookmark> bookmarks = bookmarkService.getBookmarksOfCurrentUser();
@@ -50,7 +53,7 @@ public class BookmarkResource {
 
     @Operation(
             summary = "Get list author",
-            description = "Logged in user can add manga to bookmark or redo it.", tags = "Bookmark")
+            description = "Logged in user can add manga to bookmark or redo it.")
     @PostMapping()
     public ResponseEntity<?> createBookmark(
             @RequestParam long mangaId

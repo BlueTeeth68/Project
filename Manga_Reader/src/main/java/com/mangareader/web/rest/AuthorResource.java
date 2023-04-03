@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ import java.util.List;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+@Tag(name = "08. Author")
 public class AuthorResource {
     private final IAuthorService authorService;
     private final HttpServletRequest request;
@@ -42,7 +44,7 @@ public class AuthorResource {
     @Operation(
             summary = "Get list author",
             description = "Admin or translator user can get list author " +
-                    "from the database.", tags = "Author",
+                    "from the database.",
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<Author>> getLimitAuthor(
@@ -60,7 +62,7 @@ public class AuthorResource {
     @Operation(
             summary = "Get author by id or name",
             description = "Admin or translator user can get author by " +
-                    "name or id.", tags = "Author",
+                    "name or id.",
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Author>> getAuthorByIdOrName(
@@ -75,7 +77,7 @@ public class AuthorResource {
     @Operation(
             summary = "Get author by created user",
             description = "Admin or translator user can get author by " +
-                    "created user's id.", tags = "Author",
+                    "created user's id.",
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(value = "/created-by", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Author>> getAuthorByUserId(
@@ -88,7 +90,7 @@ public class AuthorResource {
 
     @Operation(
             summary = "Create author",
-            description = "Admin or translator user can create a new author.", tags = "Author",
+            description = "Admin or translator user can create a new author.",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Author> createNewAuthor(
@@ -102,7 +104,7 @@ public class AuthorResource {
     @Operation(
             summary = "Change author's name",
             description = "Admin or translator user can change their author name." +
-                    " Admin user can change author's name of other user.", tags = "Author",
+                    " Admin user can change author's name of other user.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Author> changeAuthorName(
@@ -116,7 +118,7 @@ public class AuthorResource {
     @Operation(
             summary = "Delete author by id",
             description = "Admin or translator user can delete " +
-                    "their author by id. Admin user can delete others' author.", tags = "Author",
+                    "their author by id. Admin user can delete others' author.",
             security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping
     public ResponseEntity<?> deleteAuthor(

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ import java.util.List;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+@Tag(name = "09. Keyword")
 
 public class KeywordResource {
 
@@ -44,7 +46,7 @@ public class KeywordResource {
 
     @Operation(
             summary = "Get manga keywords",
-            description = "Any user can get manga keywords.", tags = "Keyword",
+            description = "Any user can get manga keywords.",
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/manga", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getKeywordOfManga(
@@ -60,7 +62,7 @@ public class KeywordResource {
 
     @Operation(
             summary = "Create keyword for manga",
-            description = "Admin or translator user can create a keyword of their manga.", tags = "Keyword",
+            description = "Admin or translator user can create a keyword of their manga.",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -74,7 +76,7 @@ public class KeywordResource {
 
     @Operation(
             summary = "Change keyword of manga",
-            description = "Admin or translator user can change keyword name of their manga.", tags = "Keyword",
+            description = "Admin or translator user can change keyword name of their manga.",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
@@ -87,7 +89,7 @@ public class KeywordResource {
 
     @Operation(
             summary = "Delete keyword of manga",
-            description = "Admin or translator user can delete a keyword of their manga.", tags = "Keyword",
+            description = "Admin or translator user can delete a keyword of their manga.",
             security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")

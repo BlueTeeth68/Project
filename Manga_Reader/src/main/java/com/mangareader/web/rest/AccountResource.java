@@ -12,10 +12,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
-
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Query successfully"),
         @ApiResponse(responseCode = "201", description = "Created successfully"),
@@ -35,6 +36,8 @@ import org.springframework.web.multipart.MultipartFile;
         @ApiResponse(responseCode = "401", description = "Unauthorized, missing or invalid JWT", content = @Content),
         @ApiResponse(responseCode = "403", description = "Access denied, do not have permission to access this resource", content = @Content),
 })
+
+@Tag(name = "02. Account")
 public class AccountResource {
 
     private final IUserService userService;
@@ -43,7 +46,7 @@ public class AccountResource {
 
     @Operation(
             summary = "Get current account user",
-            description = "Logged in user can get their account", tags = "Account",
+            description = "Logged in user can get their account",
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getCurrentLoginUser() {
@@ -54,7 +57,7 @@ public class AccountResource {
 
     @Operation(
             summary = "Search other user account",
-            description = "Logged in user can search other account by their id or display name", tags = "Account",
+            description = "Logged in user can search other account by their id or display name",
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommonUserDTO> getUserByIdOrUsername(
@@ -81,33 +84,35 @@ public class AccountResource {
 
     @Operation(
             summary = "Change display name",
-            description = "Logged in user can change their display name", tags = "Account",
+            description = "Logged in user can change their display name",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> changeDisplayName(
             @RequestParam String displayName
     ) {
         String serverName = APIUtil.getServerName(request);
-        User result = userService.changeDisplayName(displayName, serverName);
+        User result = userService.changeDisplayName(displayName);
+        result = userService.addServerNameToAvatarURL(result, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Operation(
             summary = "Change avatar",
-            description = "Logged in user can change their avatar", tags = "Account",
+            description = "Logged in user can change their avatar",
             security = @SecurityRequirement(name = "authorize"))
     @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> changeUserAvatar(
             @RequestPart("file") MultipartFile file
     ) {
         String serverName = APIUtil.getServerName(request);
-        User result = userService.updateAvatar(file, serverName);
+        User result = userService.updateAvatar(file);
+        result = userService.addServerNameToAvatarURL(result, serverName);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @Operation(
             summary = "Change password",
-            description = "Logged in user can change their password by inputting their old and new password", tags = "Account",
+            description = "Logged in user can change their password by inputting their old and new password",
             security = @SecurityRequirement(name = "authorize"))
     @PatchMapping(value = "/password", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> changePassword(
@@ -118,7 +123,7 @@ public class AccountResource {
 
     @Operation(
             summary = "Delete account",
-            description = "Logged in user can delete their account from the system", tags = "Account",
+            description = "Logged in user can delete their account from the system",
             security = @SecurityRequirement(name = "authorize"))
     @DeleteMapping()
     public ResponseEntity<?> deleteUserById(

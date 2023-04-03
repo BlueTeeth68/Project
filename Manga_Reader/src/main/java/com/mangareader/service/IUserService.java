@@ -39,9 +39,9 @@ public interface IUserService {
 
     User changeUserRole(Long id, RoleName roleName);
 
-    User changeDisplayName(String displayName, String serverName);
+    User changeDisplayName(String displayName);
 
-    User updateAvatar(MultipartFile file, String serverName);
+    User updateAvatar(MultipartFile file);
 
     Resource getAvatar(String fileName);
 
@@ -53,9 +53,9 @@ public interface IUserService {
 
     List<User> addServerNameToAvatarURL(List<User> users, String serverName);
 
-    User setRoleToUser(Long userId, RoleName roleName, String serverName);
+    User setRoleToUser(Long userId, RoleName roleName);
 
-    User changeUserStatus(Long userId, Boolean status, String serverName);
+    User changeUserStatus(Long userId, Boolean status);
 
     User changePassword(ChangePasswordVM vm);
 
