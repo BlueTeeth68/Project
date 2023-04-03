@@ -2,6 +2,8 @@
 
 # Swagger URL: 
 http://localhost:8080/swagger-ui/index.html#/
+# Swagger server URL:
+http://readmangaonline-env.eba-44cmjrz9.ap-southeast-1.elasticbeanstalk.com/swagger-ui/index.html
 
 # Function list:
 
@@ -32,6 +34,7 @@ http://localhost:8080/swagger-ui/index.html#/
 - Maven
 - jdk 17
 - Database: MySQL
+- Cloud: AWS
 
 # API:
 
