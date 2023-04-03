@@ -74,7 +74,6 @@ public class FileSystemStorageService implements IStorageService {
     public List<String> storeMultipleFile(MultipartFile[] files, String location) {
         try {
             if (files == null) {
-                log.info("Files length: {}", files.length);
                 log.error("Failed to store empty file: file is empty");
                 throw new StorageException("Failed to store empty file");
             }
@@ -113,10 +112,14 @@ public class FileSystemStorageService implements IStorageService {
     public Stream<Path> loadAll(String location) {
         try {
             log.info("Loading stored file ........");
+
             this.rootLocation = Paths.get(location);
-            return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(path -> this.rootLocation.relativize(path));
+            if (Files.exists(this.rootLocation)) {
+                return Files.walk(this.rootLocation, 1)
+                        .filter(path -> !path.equals(this.rootLocation))
+                        .map(path -> this.rootLocation.relativize(path));
+            }
+            throw new StorageException("Failed to read stored files");
         } catch (IOException e) {
             throw new StorageException("Failed to read stored files");
         }
