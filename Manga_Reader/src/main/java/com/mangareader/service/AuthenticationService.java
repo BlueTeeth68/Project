@@ -59,7 +59,7 @@ public class AuthenticationService {
         return result;
     }
 
-    public LoginTokenVM authenticate(UsernamePasswordVM request) {
+    public LoginTokenVM authenticate(UsernamePasswordVM request, String serverName) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -72,19 +72,25 @@ public class AuthenticationService {
         String accessToken = jwtService.generateAccessToken(user.getUsername());
         String refreshToken = jwtService.generateRefreshToken(user.getUsername());
         LoginTokenVM result = new LoginTokenVM();
+        if (user.getAvatarUrl() != null) {
+            user = userService.addServerNameToAvatarURL(user, serverName);
+        }
         result.setUser(user);
         result.setAccessToken(accessToken);
         result.setRefreshToken(refreshToken);
         return result;
     }
 
-    public LoginTokenVM getAccessTokenByRefreshToken(String refreshToken) {
+    public LoginTokenVM getAccessTokenByRefreshToken(String refreshToken, String serverName) {
         if (jwtService.isRefreshTokenValid(refreshToken)) {
             String userName = jwtService.extractRefreshUserName(refreshToken);
             User user = userService.getUserByUsername(userName);
             String newAccessToken = jwtService.generateAccessToken(userName);
             String newRefreshToken = jwtService.generateRefreshToken(userName);
             LoginTokenVM result = new LoginTokenVM();
+            if(user.getAvatarUrl() != null) {
+                user = userService.addServerNameToAvatarURL(user, serverName);
+            }
             result.setUser(user);
             result.setAccessToken(newAccessToken);
             result.setRefreshToken(newRefreshToken);

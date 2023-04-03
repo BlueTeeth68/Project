@@ -1,6 +1,7 @@
 package com.mangareader.web.rest;
 
 import com.mangareader.service.AuthenticationService;
+import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.LoginTokenVM;
 import com.mangareader.web.rest.vm.UsernamePasswordVM;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,7 @@ import java.net.URISyntaxException;
 public class AuthenticateResource {
 
     private final AuthenticationService authenticationService;
+    private final HttpServletRequest request;
 
     @Operation(
             summary = "Register account",
@@ -48,7 +51,8 @@ public class AuthenticateResource {
             description = "User can log in to their account by using username and password.")
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginTokenVM> authenticate(@Valid @RequestBody UsernamePasswordVM authenticate) {
-        return ResponseEntity.ok(authenticationService.authenticate(authenticate));
+        String serverName = APIUtil.getServerName(request);
+        return ResponseEntity.ok(authenticationService.authenticate(authenticate, serverName));
     }
 
     @Operation(
@@ -58,8 +62,9 @@ public class AuthenticateResource {
     public ResponseEntity<LoginTokenVM> getNewAccessToken(
             @RequestHeader("refresh_token") String refreshToken
     ) {
+        String serverName = APIUtil.getServerName(request);
         return new ResponseEntity<>(
-                authenticationService.getAccessTokenByRefreshToken(refreshToken),
+                authenticationService.getAccessTokenByRefreshToken(refreshToken, serverName),
                 HttpStatus.OK
         );
     }
