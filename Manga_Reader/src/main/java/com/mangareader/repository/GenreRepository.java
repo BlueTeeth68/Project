@@ -19,7 +19,7 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
 
     List<Genre> findAllByOrderByNameAsc();
 
-    List<Genre> findByNameContainingOrderByNameAsc(String name);
+    List<Genre> findByNameIgnoreCaseContainingOrderByNameAsc(String name);
 
 
     Page<Genre> findAll(Pageable pageOption);

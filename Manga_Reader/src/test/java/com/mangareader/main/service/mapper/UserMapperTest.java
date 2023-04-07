@@ -6,24 +6,19 @@ import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-@DataJpaTest
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserMapperTest {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private IUserService userService;
@@ -31,6 +26,17 @@ public class UserMapperTest {
     private User user;
 
     private CommonUserDTO commonUserDTO;
+
+    @BeforeAll
+    void setup() {
+        User user = new User();
+        user.setUsername("SystemAdmin");
+        user.setDisplayName("System Admin");
+        user.setPassword("0000");
+//        user.setPassword(password);
+        user.setRole(RoleName.ADMIN);
+        userService.createUser(user);
+    }
 
     @BeforeEach
     public void init() {

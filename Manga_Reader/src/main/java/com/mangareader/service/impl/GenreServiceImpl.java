@@ -64,7 +64,7 @@ public class GenreServiceImpl implements IGenreService {
     @Override
     public List<Genre> getGenreByNameContaining(String genreName) {
         log.info("Getting genre by name: " + genreName);
-        return genreRepository.findByNameContainingOrderByNameAsc(genreName);
+        return genreRepository.findByNameIgnoreCaseContainingOrderByNameAsc(genreName);
     }
 
     @Override

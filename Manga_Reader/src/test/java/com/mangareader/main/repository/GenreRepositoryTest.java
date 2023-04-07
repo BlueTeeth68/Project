@@ -2,8 +2,10 @@ package com.mangareader.main.repository;
 
 import com.mangareader.domain.Genre;
 import com.mangareader.repository.GenreRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -12,10 +14,39 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GenreRepositoryTest {
 
     @Autowired
     private GenreRepository genreRepository;
+
+    @BeforeAll
+    void setup() {
+        Genre genre;
+        genre = new Genre();
+        genre.setName("Action");
+        genreRepository.save(genre);
+
+        genre = new Genre();
+        genre.setName("Shounen");
+        genreRepository.save(genre);
+
+        genre = new Genre();
+        genre.setName("Romance");
+        genreRepository.save(genre);
+
+        genre = new Genre();
+        genre.setName("Fiction");
+        genreRepository.save(genre);
+
+        genre = new Genre();
+        genre.setName("Fantastic");
+        genreRepository.save(genre);
+
+        genre = new Genre();
+        genre.setName("Scientific");
+        genreRepository.save(genre);
+    }
 
     @Test
     @DisplayName("Test findAllByOrderByNameAsc case 1")
@@ -55,7 +86,7 @@ public class GenreRepositoryTest {
 
     @Test
     void findByNameContainingOrderByNameAsc() {
-        List<Genre> genres = genreRepository.findByNameContainingOrderByNameAsc("O");
+        List<Genre> genres = genreRepository.findByNameIgnoreCaseContainingOrderByNameAsc("O");
         assertNotNull(genres);
         assertEquals(4, genres.size());
         assertEquals("Romance", genres.get(2).getName());
