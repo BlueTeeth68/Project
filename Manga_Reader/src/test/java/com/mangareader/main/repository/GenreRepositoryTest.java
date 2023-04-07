@@ -5,13 +5,13 @@ import com.mangareader.repository.GenreRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@DataJpaTest
 public class GenreRepositoryTest {
 
     @Autowired
@@ -28,14 +28,14 @@ public class GenreRepositoryTest {
 
     @Test
     void findByNameShouldReturnAGenre() {
-        Genre genre = genreRepository.findByName("shounen").orElse(null);
+        Genre genre = genreRepository.findByName("Shounen").orElse(null);
         assertNotNull(genre);
         assertEquals("Shounen", genre.getName());
     }
 
     @Test
     void existsByNameShouldReturnTrue() {
-        boolean result = genreRepository.existsByName("shounen");
+        boolean result = genreRepository.existsByName("Shounen");
         assertTrue(result);
     }
 

@@ -5,19 +5,18 @@ import com.mangareader.domain.User;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Slf4j
-@SpringBootTest
+@DataJpaTest
 public class UserMapperTest {
 
     @Autowired

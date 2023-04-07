@@ -82,7 +82,7 @@ public class AuthorServiceImpl implements IAuthorService {
 
     @Override
     public List<Author> getAuthorsByName(String name) {
-        return authorRepository.findByNameContaining(name);
+        return authorRepository.findByNameIgnoreCaseContaining(name);
     }
 
     @Override

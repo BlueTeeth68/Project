@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .requestMatchers("/author/**").hasAnyAuthority("ADMIN", "TRANSLATOR")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
-                .authenticated()
+//                .authenticated()
+                .permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint((request, response, ex) -> {

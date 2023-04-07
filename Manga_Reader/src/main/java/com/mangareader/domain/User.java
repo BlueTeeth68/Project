@@ -5,24 +5,26 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "`user`")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "`id`")
     private Long id;
 
     @NotNull
@@ -32,7 +34,7 @@ public class User {
     private String username;
 
     @JsonIgnore
-    @Column(length = 80)
+    @Column(length = 80, name = "`password`")
     private String password;
 
     @Size(min = 1, max = 80)
@@ -51,14 +53,14 @@ public class User {
     @Column(name = "avatar_url", columnDefinition = "NVARCHAR(100)")
     private String avatarUrl;
 
-    @Column(columnDefinition = "bit")
+    @Column(columnDefinition = "bit", name = "`activate`")
     private Boolean activate = true;
 
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", columnDefinition = "VARCHAR(20)", nullable = false)
+    @Column(name = "`role`", columnDefinition = "VARCHAR(20)", nullable = false)
     private RoleName role;
 
     @JsonIgnore
@@ -104,15 +106,11 @@ public class User {
     @PreRemove
     void collapseForeignKey() {
         mangas.forEach(
-                manga -> {
-                    manga.setUser(null);
-                }
+                manga -> manga.setUser(null)
         );
 
         authors.forEach(
-                author -> {
-                    author.setUser(null);
-                }
+                author -> author.setUser(null)
         );
     }
 }

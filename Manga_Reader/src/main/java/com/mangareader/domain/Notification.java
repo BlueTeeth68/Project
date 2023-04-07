@@ -23,15 +23,14 @@ public class Notification {
     @Column(columnDefinition = "text")
     private String content;
 
-    @Column(columnDefinition = "link")
+    @Column(name = "link")
     private String link;
 
-    @Column(name = "is_read", columnDefinition = "bit")
-    private Boolean isRead = false;
+    @Column(name = "is_read", nullable = false)
+    private boolean isRead = false;
 
     @Column(updatable = false)
     private LocalDateTime date = LocalDateTime.now();
-
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

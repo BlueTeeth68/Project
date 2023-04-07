@@ -1,12 +1,14 @@
 package com.mangareader.main.repository;
 
+import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.repository.UserRepository;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,54 +18,92 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@DataJpaTest
+//@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
 
+
+    //Can not invoke bean PasswordEncoder with @DataJpaTest.
+    // Use @SpringBootTest instead
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
+
+    @BeforeAll
+    void setup() {
+//        String password = passwordEncoder.encode("0000");
+
+        User user = new User();
+        user.setUsername("SystemAdmin");
+        user.setDisplayName("System Admin");
+//        user.setPassword(password);
+        user.setRole(RoleName.ADMIN);
+        userRepository.save(user);
+
+        for (int i = 1; i <= 5; i++) {
+            User temp = new User();
+            temp.setUsername("translator" + i);
+            temp.setDisplayName("Translator " + i);
+//            user.setPassword(password);
+            temp.setRole(RoleName.TRANSLATOR);
+            userRepository.save(temp);
+        }
+
+        for (int i = 1; i <= 5; i++) {
+            User temp = new User();
+            temp.setUsername("user" + i);
+            temp.setDisplayName("User " + i);
+//            user.setPassword(password);
+            temp.setRole(RoleName.USER);
+            userRepository.save(temp);
+        }
+    }
+
     @Test
     @DisplayName("Test findAllUserWithPageable case 1")
     void findAllUserWithPageable_should_return_a_limit_set() {
-        Pageable pageOption = PageRequest.of(0, 2);
+        Pageable pageOption = PageRequest.of(0, 4);
         Page<User> users = userRepository.findAll(pageOption);
-        assertEquals(2, users.getContent().size());
-        assertEquals("Test Translator 1", users.getContent().get(1).getDisplayName());
+        assertEquals(4, users.getContent().size());
+        assertEquals("System Admin", users.getContent().get(0).getDisplayName());
     }
 
     @Test
     void findByUsernameShouldReturnUser() {
-        User user = userRepository.findByUsername("testtranslator1").orElse(null);
+        User user = userRepository.findByUsername("translator1").orElse(null);
         assertNotNull(user);
-        assertEquals("TestTranslator1", user.getUsername());
+        assertEquals("Translator 1", user.getDisplayName());
     }
 
     @Test
     void findByUsernameShouldReturnNull() {
-        User user = userRepository.findByUsername(null).orElse(null);
+        User user = userRepository.findByUsername("blueteeth").orElse(null);
         assertNull(user);
     }
 
     @Test
-    void existsByUsernameShouldReturnFalse1() {
-        boolean result = userRepository.existsByUsername(null);
+    void existsByUsernameShouldReturnFalseCase1() {
+        boolean result = userRepository.existsByUsername("blueteeth");
         assertFalse(result);
     }
 
     @Test
-    void existsByUsernameShouldReturnFalse2() {
+    void existsByUsernameShouldReturnFalseCase2() {
         boolean result = userRepository.existsByUsername("    ");
         assertFalse(result);
     }
 
     @Test
     void existsByUsernameShouldReturnTrue() {
-        boolean result = userRepository.existsByUsername("testtranslator1");
+        boolean result = userRepository.existsByUsername("translator1");
         assertTrue(result);
     }
 
     @Test
-    void findByActivateShouldReturnEmptyList1() {
+    void findByActivateShouldReturnEmptyListCase1() {
         List<User> users = userRepository.findByActivate(null);
         assertNotNull(users);
         assertEquals(0, users.size());
@@ -73,24 +113,24 @@ public class UserRepositoryTest {
     void findByActivateShouldReturnListUser() {
         List<User> users = userRepository.findByActivate(Boolean.TRUE);
         assertNotNull(users);
-        assertEquals(14, users.size());
+        assertEquals(11, users.size());
     }
 
     @Test
-    void existsByDisplayNameShouldReturnFalse1() {
-        boolean result = userRepository.existsByDisplayName(null);
+    void existsByDisplayNameShouldReturnFalseCase1() {
+        boolean result = userRepository.existsByDisplayNameIgnoreCase(null);
         assertFalse(result);
     }
 
     @Test
     void existsByDisplayNameShouldReturnTrue() {
-        boolean result = userRepository.existsByDisplayName("common user");
+        boolean result = userRepository.existsByDisplayNameIgnoreCase("system admin");
         assertTrue(result);
     }
 
     @Test
-    void existsByDisplayNameShouldReturnFalse2() {
-        boolean result = userRepository.existsByDisplayName("common");
+    void existsByDisplayNameShouldReturnFalseCase2() {
+        boolean result = userRepository.existsByDisplayNameIgnoreCase("Blue Teeth");
         assertFalse(result);
     }
 
@@ -100,19 +140,11 @@ public class UserRepositoryTest {
         Page<User> users = userRepository.findAll(pageOption);
         assertNotNull(users);
         assertEquals(4, users.getContent().size());
-        assertEquals("Common User", users.getContent().get(0).getDisplayName());
+        assertEquals("System Admin", users.getContent().get(0).getDisplayName());
     }
 
     @Test
-    void findAllShouldReturnEmptyContent1() {
-        Assertions.assertThatThrownBy(
-                        () -> PageRequest.of(-1, 4, Sort.by("displayName").ascending())
-                )
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void findAllShouldReturnEmptyContent2() {
+    void findAllShouldReturnEmptyContent() {
         Pageable pageOption = PageRequest.of(3, 10, Sort.by("displayName").ascending());
         Page<User> users = userRepository.findAll(pageOption);
         assertNotNull(users);

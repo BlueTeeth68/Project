@@ -43,9 +43,6 @@ public class UserServiceImpl implements IUserService {
 
     private final String AVATAR_FOLDER = "./image/avatar";
 
-//    @Value("${server.name}")
-//    private String SERVER_NAME;
-
     @Override
     @Transactional
     public User createUser(User user) {
@@ -102,7 +99,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User getUserByDisplayName(String displayName) throws ResourceNotFoundException {
-        return userRepository.findByDisplayName(displayName)
+        return userRepository.findByDisplayNameIgnoreCase(displayName)
                 .orElseThrow(() -> new ResourceNotFoundException("User " + displayName + " does not exist."));
     }
 
@@ -170,7 +167,7 @@ public class UserServiceImpl implements IUserService {
             throw new BadRequestException("displayName is empty.");
         }
         User user = getCurrentUser();
-        if (userRepository.existsByDisplayName(displayName)) {
+        if (userRepository.existsByDisplayNameIgnoreCase(displayName)) {
             log.error("Error when save display name {}", displayName);
             throw new DataAlreadyExistsException("Display name " + displayName + " already exists.");
         }

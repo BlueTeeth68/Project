@@ -13,13 +13,13 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
-    Optional<User> findByDisplayName(String displayName);
+    Optional<User> findByDisplayNameIgnoreCase(String displayName);
 
     boolean existsByUsername(String username);
 
     List<User> findByActivate(Boolean activate);
 
-    boolean existsByDisplayName(String displayName);
+    boolean existsByDisplayNameIgnoreCase(String displayName);
 
     Page<User> findAll(Pageable pageOption);
 }
