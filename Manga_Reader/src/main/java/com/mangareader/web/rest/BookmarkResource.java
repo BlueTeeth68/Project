@@ -4,7 +4,6 @@ import com.mangareader.domain.Bookmark;
 import com.mangareader.service.IBookmarkService;
 import com.mangareader.service.dto.BookmarkDTO;
 import com.mangareader.service.mapper.BookmarkMapper;
-import com.mangareader.service.util.APIUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,12 +46,12 @@ public class BookmarkResource {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookmarkDTO>> getAllBookmarkOfCurrentUser() {
         List<Bookmark> bookmarks = bookmarkService.getBookmarksOfCurrentUser();
-        List<BookmarkDTO> bookmarkDTOs = bookmarkMapper.toListBookmarkDTO(bookmarks, APIUtil.getServerName(request));
+        List<BookmarkDTO> bookmarkDTOs = bookmarkMapper.toListBookmarkDTO(bookmarks);
         return new ResponseEntity<>(bookmarkDTOs, HttpStatus.OK);
     }
 
     @Operation(
-            summary = "Get list author",
+            summary = "Add manga to bookmark",
             description = "Logged in user can add manga to bookmark or redo it.")
     @PostMapping()
     public ResponseEntity<?> createBookmark(

@@ -24,13 +24,11 @@ public class MangaMapper {
 
     private final ChapterMapper chapterMapper;
 
-    public MangaDTO toDTO(Manga input, String serverName) {
+    public MangaDTO toDTO(Manga input) {
         MangaDTO result = new MangaDTO();
         result.setId(input.getId());
         result.setName(input.getName());
-        if (input.getCoverImageUrl() != null) {
-            result.setCoverImageUrl(serverName + input.getCoverImageUrl());
-        }
+        result.setCoverImageUrl(input.getCoverImageUrl());
         result.setView(input.getView());
         result.setSummary(input.getSummary());
         result.setRate(input.getRate());
@@ -61,13 +59,13 @@ public class MangaMapper {
         return result;
     }
 
-    public List<MangaDTO> toListDTO(List<Manga> input, String serverName) {
+    public List<MangaDTO> toListDTO(List<Manga> input) {
         List<MangaDTO> result = new ArrayList<>();
         if (input == null) {
             return null;
         }
         input.forEach(
-                manga -> result.add(toDTO(manga, serverName))
+                manga -> result.add(toDTO(manga))
         );
         return result;
     }
@@ -79,31 +77,29 @@ public class MangaMapper {
         return mangaService.getMangaById(input.getId());
     }
 
-    public CommonMangaDTO toCommonMangaDTO(Manga input, String serverName) {
+    public CommonMangaDTO toCommonMangaDTO(Manga input) {
         CommonMangaDTO result = new CommonMangaDTO();
         result.setId(input.getId());
         result.setName(input.getName());
-        if (input.getCoverImageUrl() != null) {
-            result.setCoverImageUrl(serverName + input.getCoverImageUrl());
-        }
         result.setRate(input.getRate());
         result.setView(input.getView());
+        result.setCoverImageUrl(input.getCoverImageUrl());
         return result;
     }
 
-    public List<CommonMangaDTO> toListCommonMangaDTO(List<Manga> input, String serverName) {
+    public List<CommonMangaDTO> toListCommonMangaDTO(List<Manga> input) {
         List<CommonMangaDTO> result = new ArrayList<>();
         if (input == null) {
             return null;
         }
         input.forEach(
-                manga -> result.add(toCommonMangaDTO(manga, serverName))
+                manga -> result.add(toCommonMangaDTO(manga))
         );
         return result;
     }
 
-    public PagingReturnDTO<MangaDTO> toPagingReturnDTOMangaDTO(Page<Manga> mangas, String serverName) {
-        List<MangaDTO> mangaDTOs = toListDTO(mangas.getContent(), serverName);
+    public PagingReturnDTO<MangaDTO> toPagingReturnDTOMangaDTO(Page<Manga> mangas) {
+        List<MangaDTO> mangaDTOs = toListDTO(mangas.getContent());
         PagingReturnDTO<MangaDTO> result = new PagingReturnDTO<>();
         result.setTotalPages(mangas.getTotalPages());
         result.setTotalElements(mangas.getTotalElements());
@@ -111,8 +107,8 @@ public class MangaMapper {
         return result;
     }
 
-    public PagingReturnDTO<CommonMangaDTO> toPagingReturnDTOSearchMangaDTO(Page<Manga> mangas, String serverName) {
-        List<CommonMangaDTO> commonMangaDTOS = toListCommonMangaDTO(mangas.getContent(), serverName);
+    public PagingReturnDTO<CommonMangaDTO> toPagingReturnDTOSearchMangaDTO(Page<Manga> mangas) {
+        List<CommonMangaDTO> commonMangaDTOS = toListCommonMangaDTO(mangas.getContent());
         PagingReturnDTO<CommonMangaDTO> result = new PagingReturnDTO<>();
         result.setTotalPages(mangas.getTotalPages());
         result.setTotalElements(mangas.getTotalElements());

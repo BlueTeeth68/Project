@@ -1,7 +1,6 @@
 package com.mangareader.web.rest;
 
 import com.mangareader.service.AuthenticationService;
-import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.LoginTokenVM;
 import com.mangareader.web.rest.vm.UsernamePasswordVM;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,8 +50,7 @@ public class AuthenticateResource {
             description = "User can log in to their account by using username and password.")
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginTokenVM> authenticate(@Valid @RequestBody UsernamePasswordVM authenticate) {
-        String serverName = APIUtil.getServerName(request);
-        return ResponseEntity.ok(authenticationService.authenticate(authenticate, serverName));
+        return ResponseEntity.ok(authenticationService.authenticate(authenticate));
     }
 
     @Operation(
@@ -62,9 +60,8 @@ public class AuthenticateResource {
     public ResponseEntity<LoginTokenVM> getNewAccessToken(
             @RequestHeader("refresh_token") String refreshToken
     ) {
-        String serverName = APIUtil.getServerName(request);
         return new ResponseEntity<>(
-                authenticationService.getAccessTokenByRefreshToken(refreshToken, serverName),
+                authenticationService.getAccessTokenByRefreshToken(refreshToken),
                 HttpStatus.OK
         );
     }

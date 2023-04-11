@@ -4,7 +4,6 @@ import com.mangareader.domain.User;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.PagingReturnDTO;
-import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeUserRoleVM;
 import com.mangareader.web.rest.vm.ChangeUserStatusVM;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +46,7 @@ public class UserResource {
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUserByIdOrUsername(
-            @RequestParam(required = false) String id,
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false) String username
     ) {
         User result;
@@ -63,9 +62,6 @@ public class UserResource {
             throw new BadRequestException("Bad request for id and username value.");
         }
 
-        String serverName = APIUtil.getServerName(request);
-        result = userService.addServerNameToAvatarURL(result, serverName);
-
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -75,14 +71,13 @@ public class UserResource {
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<User>> getAllAndPaginateUsers(
-            @RequestParam(required = false, defaultValue = "100") String size,
-            @RequestParam(required = false, defaultValue = "0") String page
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "0") int page
     ) {
         Page<User> users = userService.getAllUsersWithPageable(page, size);
-        String serverName = APIUtil.getServerName(request);
 
         PagingReturnDTO<User> result = new PagingReturnDTO<>();
-        result.setContent(userService.addServerNameToAvatarURL(users.getContent(), serverName));
+        result.setContent(users.getContent());
         result.setTotalElements(users.getTotalElements());
         result.setTotalPages(users.getTotalPages());
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -96,9 +91,7 @@ public class UserResource {
     public ResponseEntity<User> changeRoleOfUser(
             @RequestBody ChangeUserRoleVM vm
     ) {
-        String serverName = APIUtil.getServerName(request);
         User user = userService.setRoleToUser(vm.getId(), vm.getRoleName());
-        user = userService.addServerNameToAvatarURL(user, serverName);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -110,9 +103,7 @@ public class UserResource {
     public ResponseEntity<User> changeActiveStatus(
             @RequestBody ChangeUserStatusVM vm
     ) {
-        String serverName = APIUtil.getServerName(request);
         User user = userService.changeUserStatus(vm.getId(), vm.getStatus());
-        user = userService.addServerNameToAvatarURL(user, serverName);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

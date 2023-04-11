@@ -50,7 +50,8 @@ public class User {
     @Column(name = "display_name", columnDefinition = "NVARCHAR(50)", unique = true)
     private String displayName;
 
-    @Column(name = "avatar_url", columnDefinition = "NVARCHAR(100)")
+    @Size(min = 1, max = 250)
+    @Column(name = "avatar_url", columnDefinition = "NVARCHAR(250)")
     private String avatarUrl;
 
     @Column(columnDefinition = "bit", name = "`activate`")

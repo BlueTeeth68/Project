@@ -50,7 +50,7 @@ public class KeywordResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/manga", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getKeywordOfManga(
-            @RequestParam String mangaId
+            @RequestParam long mangaId
     ) {
         List<Keyword> keywords = keywordService.getKeywordsOfMangaSortedByName(mangaId);
         List<String> result = new ArrayList<>();
@@ -95,7 +95,7 @@ public class KeywordResource {
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
     public ResponseEntity<?> deleteKeyword(
             @RequestParam String name,
-            @RequestParam String mangaId
+            @RequestParam long mangaId
     ) {
         keywordService.deleteKeyword(name, mangaId);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.mangareader.security.jwt;
 
+import com.mangareader.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -55,11 +58,15 @@ public class JWTService {
 
     //create access token
     public String generateAccessToken(
-            String userName
+            User user
     ) {
+        Map<String, String> claim = new HashMap<>();
+        claim.put("role", user.getRole().name());
+        claim.put("sub", user.getUsername());
+
         return Jwts
                 .builder()
-                .setSubject(userName)
+                .setClaims(claim)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
                 .signWith(getSignInKey(ACCESS_SECRET_KEY), SignatureAlgorithm.HS256)
@@ -68,11 +75,12 @@ public class JWTService {
 
     //create refresh token
     public String generateRefreshToken(
-            String userName
+            User user
     ) {
+
         return Jwts
                 .builder()
-                .setSubject(userName)
+                .setSubject(user.getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .signWith(getSignInKey(REFRESH_SECRET_KEY), SignatureAlgorithm.HS256)
                 .compact();

@@ -41,7 +41,7 @@ public class ChapterMapper {
         return result;
     }
 
-    public ChapterImageDTO toChapterImageDTO(Chapter input, String serverName) {
+    public ChapterImageDTO toChapterImageDTO(Chapter input) {
 
         if (input == null) {
             return null;
@@ -60,7 +60,7 @@ public class ChapterMapper {
             chapterImages.forEach(
                     chapterImage -> {
                         if (chapterImage != null) {
-                            chapterImageUrls.add(serverName + chapterImage.getImageUrl());
+                            chapterImageUrls.add(chapterImage.getImageUrl());
                         }
                     }
             );

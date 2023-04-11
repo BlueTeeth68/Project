@@ -6,7 +6,6 @@ import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.UserRepository;
-import com.mangareader.service.IStorageService;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
@@ -16,7 +15,6 @@ import com.mangareader.web.rest.vm.ChangePasswordVM;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -36,12 +35,9 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
-
-    private final IStorageService storageService;
-
+    private final AWSStorageService storageService;
     private final PasswordEncoder passwordEncoder;
-
-    private final String AVATAR_FOLDER = "./image/avatar";
+    private final String AVATAR_FOLDER = "image/avatar/";
 
     @Override
     @Transactional
@@ -138,14 +134,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Page<User> getAllUsersWithPageable(String page, String size) {
-
-        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number exception.");
-        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception.");
-        return getAllUsersWithPageable(pageNum, sizeNum);
-    }
-
-    @Override
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
@@ -178,21 +166,35 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public User updateAvatar(MultipartFile file) {
-
+    public User updateAvatar(MultipartFile file) throws TimeoutException {
         User user = getCurrentUser();
-        String fileName = user.getId().toString();
-        fileName = storageService.store(file, AVATAR_FOLDER, fileName);
-        String avatarUrl = /*SERVER_NAME + */ "/image/avatar/" + fileName;
 
-        user.setAvatarUrl(avatarUrl);
+        //get old avatarUrl
+        String oldUrl = user.getAvatarUrl();
+        log.info("Old Url is: {}", oldUrl);
+
+        String url = storageService.uploadImage(file, AVATAR_FOLDER);
+        log.info("New url is: {}", url);
+
+        user.setAvatarUrl(url);
+        //delete old avatar
+        if (oldUrl != null && !oldUrl.equals(url)) {
+            String[] tmp = oldUrl.split("image");
+            StringBuffer fileName = new StringBuffer();
+            for (int i = 1; i < tmp.length; i++) {
+                fileName.append("image");
+                fileName.append(tmp[i]);
+            }
+            log.info("File name is: {}", fileName);
+            storageService.deleteFile(fileName.toString());
+        }
         return userRepository.save(user);
     }
 
-    @Override
-    public Resource getAvatar(String fileName) {
-        return storageService.loadAsResource(fileName, AVATAR_FOLDER);
-    }
+//    @Override
+//    public Resource getAvatar(String fileName) {
+//        return storageService.loadAsResource(fileName, AVATAR_FOLDER);
+//    }
 
     @Override
     public void deleteUserById(Long id) {
@@ -206,27 +208,6 @@ public class UserServiceImpl implements IUserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         return getUserByUsername(username);
-    }
-
-    @Override
-    public User addServerNameToAvatarURL(User user, String serverName) {
-        if (user != null && user.getAvatarUrl() != null) {
-            user.setAvatarUrl(serverName + user.getAvatarUrl());
-        }
-        return user;
-    }
-
-    @Override
-    public List<User> addServerNameToAvatarURL(List<User> users, String serverName) {
-        if (users != null) {
-            users.forEach(
-                    user -> {
-                        if (user.getAvatarUrl() != null)
-                            user.setAvatarUrl(serverName + user.getAvatarUrl());
-                    }
-            );
-        }
-        return users;
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.mangareader.service.IHistoryService;
 import com.mangareader.service.dto.PagingReturnDTO;
 import com.mangareader.service.dto.ReturnHistoryDTO;
 import com.mangareader.service.mapper.HistoryMapper;
-import com.mangareader.service.util.APIUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,11 +50,10 @@ public class HistoryResource {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<ReturnHistoryDTO>> getHistoriesOfCurrentUser(
             @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "30") int size
+            @RequestParam(required = false, defaultValue = "10") int size
     ) {
         Page<History> histories = historyService.getAllHistoryOfCurrentUser(page, size);
-        String serverName = APIUtil.getServerName(request);
-        List<ReturnHistoryDTO> historyDTOs = historyMapper.toListReturnHistoryDTO(histories.getContent(), serverName);
+        List<ReturnHistoryDTO> historyDTOs = historyMapper.toListReturnHistoryDTO(histories.getContent());
         PagingReturnDTO<ReturnHistoryDTO> result = new PagingReturnDTO<>();
         result.setTotalElements(histories.getTotalElements());
         result.setTotalPages(histories.getTotalPages());

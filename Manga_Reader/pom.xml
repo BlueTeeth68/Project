@@ -123,6 +123,11 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.429</version>
+        </dependency>
 
     </dependencies>
 
@@ -170,17 +175,17 @@
 
         </plugins>
     </build>
-<!--    <profiles>-->
-<!--        -->
-<!--        <profile>-->
-<!--            <id>prod</id>-->
-<!--            <properties>-->
-<!--                <spring.profiles.active>-->
-<!--                    prod-->
-<!--                </spring.profiles.active>-->
-<!--            </properties>-->
-<!--        </profile>-->
+    <!--    <profiles>-->
+    <!--        -->
+    <!--        <profile>-->
+    <!--            <id>prod</id>-->
+    <!--            <properties>-->
+    <!--                <spring.profiles.active>-->
+    <!--                    prod-->
+    <!--                </spring.profiles.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
 
-<!--    </profiles>-->
+    <!--    </profiles>-->
 
 </project>

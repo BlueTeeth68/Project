@@ -4,10 +4,10 @@ import com.mangareader.domain.Chapter;
 import com.mangareader.domain.Manga;
 import com.mangareader.web.rest.vm.ChangeChapterVM;
 import com.mangareader.web.rest.vm.CreateChapterVM;
-import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings("unused")
 public interface IChapterService {
@@ -22,11 +22,8 @@ public interface IChapterService {
 
     Manga deleteChapter(Long chapterId);
 
-    Manga deleteChapter(String chapterId);
-
     void deleteAllChapterImageOfChapter(Long chapterId);
 
-    Manga addImagesToChapter(MultipartFile[] files, Long chapterId);
+    Manga addImagesToChapter(MultipartFile[] files, Long chapterId) throws TimeoutException;
 
-    Resource getChapterImage(String fileName);
 }

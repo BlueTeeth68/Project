@@ -2,6 +2,7 @@ package com.mangareader.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -17,7 +18,8 @@ public class ChapterImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "image_url", columnDefinition = "NVARCHAR(100)")
+    @Size(min = 1, max = 250)
+    @Column(name = "image_url", columnDefinition = "NVARCHAR(250)")
     private String imageUrl;
 
     @ManyToOne

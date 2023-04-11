@@ -24,13 +24,9 @@ public interface IAuthorService {
 
     Page<Author> getLimitAuthor(int size, int page);
 
-    Page<Author> getLimitAuthor(String size, String page);
-
-    List<Author> getAuthorByIdOrName(String id, String name);
+    List<Author> getAuthorByIdOrName(Long id, String name);
 
     List<Author> getAuthorByCreatedUser(Long userId);
-
-    List<Author> getAuthorByCreatedUser(String userId);
 
     User getUserByAuthor(Long authorId);
 
@@ -41,10 +37,6 @@ public interface IAuthorService {
     void deleteAuthor(Long authorId);
 
     void deleteAuthor(String id);
-
-    List<Author> setAvatarUrlToUser(List<Author> authors, String serverName);
-
-    Author setAvatarUrlToUser(Author author, String serverName);
 
     void checkAuthorize(Long authorId, Long userId);
 

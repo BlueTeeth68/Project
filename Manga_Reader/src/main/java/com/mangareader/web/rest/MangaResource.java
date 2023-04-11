@@ -1,6 +1,7 @@
 package com.mangareader.web.rest;
 
 import com.mangareader.domain.Manga;
+import com.mangareader.domain.MangaStatus;
 import com.mangareader.domain.Rate;
 import com.mangareader.service.IKeywordService;
 import com.mangareader.service.IMangaService;
@@ -10,7 +11,6 @@ import com.mangareader.service.dto.CommonMangaDTO;
 import com.mangareader.service.dto.MangaDTO;
 import com.mangareader.service.dto.PagingReturnDTO;
 import com.mangareader.service.mapper.MangaMapper;
-import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,6 +30,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/manga")
@@ -62,12 +64,11 @@ public class MangaResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getAllPageableManga(
-            @RequestParam(required = false, defaultValue = "100") String size,
-            @RequestParam(required = false, defaultValue = "0") String page
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "0") int page
     ) {
         Page<Manga> mangas = mangaService.getAllPageableMangaOrderByLatestUpdate(page, size);
-        String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
+        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -77,10 +78,10 @@ public class MangaResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MangaDTO> getMangaById(
-            @RequestParam(defaultValue = "1") String id
+            @RequestParam(defaultValue = "1") long id
     ) {
         Manga manga = mangaService.getMangaById(id);
-        MangaDTO result = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        MangaDTO result = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -91,13 +92,12 @@ public class MangaResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/genre", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableMangaByGenre(
-            @RequestParam(defaultValue = "1") String genreId,
-            @RequestParam(defaultValue = "20") String size,
-            @RequestParam(defaultValue = "0") String page
+            @RequestParam(defaultValue = "1") long genreId,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByGenre(genreId, page, size);
-        String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
+        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -108,13 +108,12 @@ public class MangaResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/author", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableMangaByAuthor(
-            @RequestParam(defaultValue = "1") String authorId,
-            @RequestParam(defaultValue = "20") String size,
-            @RequestParam(defaultValue = "0") String page
+            @RequestParam(defaultValue = "1") long authorId,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByAuthor(authorId, page, size);
-        String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
+        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -126,12 +125,11 @@ public class MangaResource {
     @GetMapping(value = "/name", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableMangasByNameOrKeywordOrderByName(
             @RequestParam String keyword,
-            @RequestParam(defaultValue = "20") String size,
-            @RequestParam(defaultValue = "0") String page
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByNameOrKeyword(keyword, page, size);
-        String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
+        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -142,13 +140,12 @@ public class MangaResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/translator", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableMangaByTranslator(
-            @RequestParam(defaultValue = "1") String translatorId,
-            @RequestParam(defaultValue = "20") String size,
-            @RequestParam(defaultValue = "0") String page
+            @RequestParam(defaultValue = "1") long translatorId,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByTranslator(translatorId, page, size);
-        String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
+        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -159,12 +156,11 @@ public class MangaResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getPageableSuggestMangas(
-            @RequestParam(defaultValue = "20") String size,
-            @RequestParam(defaultValue = "0") String page
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
     ) {
         Page<Manga> mangas = mangaService.getPageableSuggestManga(page, size);
-        String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
+        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -175,13 +171,12 @@ public class MangaResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<CommonMangaDTO>> getMangasByStatus(
-            @RequestParam String status,
-            @RequestParam(defaultValue = "20") String size,
-            @RequestParam(defaultValue = "0") String page
+            @RequestParam MangaStatus status,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
     ) {
         Page<Manga> mangas = mangaService.getPageableMangaByStatus(status, page, size);
-        String serverName = APIUtil.getServerName(request);
-        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas, serverName);
+        PagingReturnDTO<CommonMangaDTO> result = mangaMapper.toPagingReturnDTOSearchMangaDTO(mangas);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -201,7 +196,7 @@ public class MangaResource {
         manga.setYearOfPublication(vm.getYearOfPublication());
         manga.setUser(userService.getCurrentUser());
         manga = mangaService.createManga(manga);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.CREATED);
     }
 
@@ -216,7 +211,7 @@ public class MangaResource {
             @Valid @RequestBody ChangeMangaVM vm
     ) {
         Manga manga = mangaService.changeMangaInformation(vm);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -229,9 +224,8 @@ public class MangaResource {
     public ResponseEntity<MangaDTO> addGenreToManga(
             @Valid @RequestBody SetGenreToMangaVM vm
     ) {
-        String serverName = APIUtil.getServerName(request);
         Manga manga = mangaService.addGenreToManga(vm.getMangaId(), vm.getGenreName());
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, serverName);
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -245,9 +239,8 @@ public class MangaResource {
     public ResponseEntity<MangaDTO> addAuthorToManga(
             @Valid @RequestBody SetAuthorsToMangaVM vm
     ) {
-        String serverName = APIUtil.getServerName(request);
         Manga manga = mangaService.addAuthorsToManga(vm.getMangaId(), vm.getAuthorIds());
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, serverName);
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -258,12 +251,11 @@ public class MangaResource {
     @PatchMapping(value = "/cover-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
     public ResponseEntity<MangaDTO> changeCoverImage(
-            @RequestParam String mangaId,
+            @RequestParam long mangaId,
             @RequestPart("file") MultipartFile file
-    ) {
-        String serverName = APIUtil.getServerName(request);
+    ) throws TimeoutException {
         Manga manga = mangaService.updateCoverImage(mangaId, file);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, serverName);
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -276,9 +268,8 @@ public class MangaResource {
     public ResponseEntity<MangaDTO> addKeywordToManga(
             @Valid @RequestBody KeywordMangaVM vm
     ) {
-        String serverName = APIUtil.getServerName(request);
         Manga manga = keywordService.addKeywordToManga(vm.getMangaId(), vm.getKeywords());
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, serverName);
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 

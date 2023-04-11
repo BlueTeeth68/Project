@@ -19,12 +19,12 @@ public class HistoryMapper {
     private final MangaMapper mangaMapper;
     private final ChapterMapper chapterMapper;
 
-    public ReturnHistoryDTO toReturnHistoryDTO(History history, String serverName) {
+    public ReturnHistoryDTO toReturnHistoryDTO(History history) {
         if (history == null)
             return null;
         Manga manga = history.getManga();
         Chapter chapter = history.getChapter();
-        CommonMangaDTO commonMangaDTO = mangaMapper.toCommonMangaDTO(manga, serverName);
+        CommonMangaDTO commonMangaDTO = mangaMapper.toCommonMangaDTO(manga);
         ChapterDTO chapterDTO = chapterMapper.toDTO(chapter);
         ReturnHistoryDTO result = new ReturnHistoryDTO();
         result.setCommonMangaDTO(commonMangaDTO);
@@ -33,13 +33,13 @@ public class HistoryMapper {
         return result;
     }
 
-    public List<ReturnHistoryDTO> toListReturnHistoryDTO(List<History> histories, String serverName) {
+    public List<ReturnHistoryDTO> toListReturnHistoryDTO(List<History> histories) {
         List<ReturnHistoryDTO> result = new ArrayList<>();
         if (histories != null) {
             histories.forEach(
                     history -> {
                         if (history != null) {
-                            result.add(toReturnHistoryDTO(history, serverName));
+                            result.add(toReturnHistoryDTO(history));
                         }
                     }
             );

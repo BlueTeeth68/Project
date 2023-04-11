@@ -50,8 +50,8 @@ public class AuthenticationService {
         user.setRole(RoleName.USER);
         user = userService.createUser(user);
 
-        String accessToken = jwtService.generateAccessToken(user.getUsername());
-        String refreshToken = jwtService.generateRefreshToken(user.getUsername());
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
         LoginTokenVM result = new LoginTokenVM();
         result.setUser(user);
         result.setAccessToken(accessToken);
@@ -59,7 +59,7 @@ public class AuthenticationService {
         return result;
     }
 
-    public LoginTokenVM authenticate(UsernamePasswordVM request, String serverName) {
+    public LoginTokenVM authenticate(UsernamePasswordVM request) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -69,28 +69,22 @@ public class AuthenticationService {
         );
 
         User user = userService.getUserByUsername(request.getUsername());
-        String accessToken = jwtService.generateAccessToken(user.getUsername());
-        String refreshToken = jwtService.generateRefreshToken(user.getUsername());
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
         LoginTokenVM result = new LoginTokenVM();
-        if (user.getAvatarUrl() != null) {
-            user = userService.addServerNameToAvatarURL(user, serverName);
-        }
         result.setUser(user);
         result.setAccessToken(accessToken);
         result.setRefreshToken(refreshToken);
         return result;
     }
 
-    public LoginTokenVM getAccessTokenByRefreshToken(String refreshToken, String serverName) {
+    public LoginTokenVM getAccessTokenByRefreshToken(String refreshToken) {
         if (jwtService.isRefreshTokenValid(refreshToken)) {
             String userName = jwtService.extractRefreshUserName(refreshToken);
             User user = userService.getUserByUsername(userName);
-            String newAccessToken = jwtService.generateAccessToken(userName);
-            String newRefreshToken = jwtService.generateRefreshToken(userName);
+            String newAccessToken = jwtService.generateAccessToken(user);
+            String newRefreshToken = jwtService.generateRefreshToken(user);
             LoginTokenVM result = new LoginTokenVM();
-            if(user.getAvatarUrl() != null) {
-                user = userService.addServerNameToAvatarURL(user, serverName);
-            }
             result.setUser(user);
             result.setAccessToken(newAccessToken);
             result.setRefreshToken(newRefreshToken);

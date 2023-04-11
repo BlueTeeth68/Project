@@ -4,11 +4,11 @@ import com.mangareader.domain.RoleName;
 import com.mangareader.domain.User;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.web.rest.vm.ChangePasswordVM;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings("unused")
 public interface IUserService {
@@ -33,25 +33,17 @@ public interface IUserService {
 
     Page<User> getAllUsersWithPageable(int page, int size);
 
-    Page<User> getAllUsersWithPageable(String page, String size);
-
     Boolean existsByUsername(String username);
 
     User changeUserRole(Long id, RoleName roleName);
 
     User changeDisplayName(String displayName);
 
-    User updateAvatar(MultipartFile file);
-
-    Resource getAvatar(String fileName);
+    User updateAvatar(MultipartFile file) throws TimeoutException;
 
     void deleteUserById(Long id);
 
     User getCurrentUser();
-
-    User addServerNameToAvatarURL(User user, String serverName);
-
-    List<User> addServerNameToAvatarURL(List<User> users, String serverName);
 
     User setRoleToUser(Long userId, RoleName roleName);
 

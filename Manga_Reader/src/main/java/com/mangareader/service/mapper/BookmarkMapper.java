@@ -17,18 +17,18 @@ public class BookmarkMapper {
 
     private final MangaMapper mangaMapper;
 
-    public BookmarkDTO toBookmarkDTO(Bookmark input, String serverName) {
+    public BookmarkDTO toBookmarkDTO(Bookmark input) {
         if (input == null)
             return null;
         BookmarkDTO result = new BookmarkDTO();
         result.setId(input.getId());
         Manga manga = input.getManga();
-        CommonMangaDTO commonMangaDTO = mangaMapper.toCommonMangaDTO(manga, serverName);
+        CommonMangaDTO commonMangaDTO = mangaMapper.toCommonMangaDTO(manga);
         result.setCommonMangaDTO(commonMangaDTO);
         return result;
     }
 
-    public List<BookmarkDTO> toListBookmarkDTO(List<Bookmark> input, String serverName) {
+    public List<BookmarkDTO> toListBookmarkDTO(List<Bookmark> input) {
         if (input == null) {
             return null;
         }
@@ -36,7 +36,7 @@ public class BookmarkMapper {
         input.forEach(
                 bookmark -> {
                     if (bookmark != null) {
-                        bookmarkDTOS.add(toBookmarkDTO(bookmark, serverName));
+                        bookmarkDTOS.add(toBookmarkDTO(bookmark));
                     }
                 }
         );

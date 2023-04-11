@@ -98,20 +98,12 @@ public class AuthorServiceImpl implements IAuthorService {
     }
 
     @Override
-    public Page<Author> getLimitAuthor(String size, String page) {
-        int sizeNum = APIUtil.parseStringToInteger(size, "Size is not a number exception.");
-        int pageNum = APIUtil.parseStringToInteger(page, "Page is not a number exception");
-        return getLimitAuthor(sizeNum, pageNum);
-    }
-
-    @Override
-    public List<Author> getAuthorByIdOrName(String id, String name) {
+    public List<Author> getAuthorByIdOrName(Long id, String name) {
         List<Author> result = new ArrayList<>();
 
         //find by id
         if (id != null && name == null) {
-            Long idNum = APIUtil.parseStringToLong(id, "id is not a number exception.");
-            result.add(getAuthorById(idNum));
+            result.add(getAuthorById(id));
         }
         //find by name
         else if (id == null && name != null) {
@@ -126,12 +118,6 @@ public class AuthorServiceImpl implements IAuthorService {
     @Override
     public List<Author> getAuthorByCreatedUser(Long userId) {
         return authorRepository.findByUserId(userId);
-    }
-
-    @Override
-    public List<Author> getAuthorByCreatedUser(String userId) {
-        Long userIdNum = APIUtil.parseStringToLong(userId, "userId is not a number exception");
-        return getAuthorByCreatedUser(userIdNum);
     }
 
     @Override
@@ -174,35 +160,6 @@ public class AuthorServiceImpl implements IAuthorService {
         Long idNum = APIUtil.parseStringToLong(authorId, "id is not a number");
         checkAuthorize(idNum, user.getId());
         deleteAuthor(idNum);
-    }
-
-    @Override
-    public List<Author> setAvatarUrlToUser(List<Author> authors, String serverName) {
-        authors.forEach(
-                author -> {
-                    if (author.getUser() != null && author.getUser().getAvatarUrl() != null) {
-                        String avatarUrl = author.getUser().getAvatarUrl();
-                        if (!avatarUrl.contains(serverName)) {
-                            log.debug("AvatarURL now is: " + avatarUrl);
-                            author.getUser().setAvatarUrl(serverName + avatarUrl);
-                        }
-                    }
-                }
-        );
-        return authors;
-    }
-
-    @Override
-
-    public Author setAvatarUrlToUser(Author author, String serverName) {
-        if (author.getUser() != null && author.getUser().getAvatarUrl() != null) {
-            String avatarUrl = author.getUser().getAvatarUrl();
-            if (!avatarUrl.contains(serverName)) {
-                log.debug("AvatarURL now is: " + avatarUrl);
-                author.getUser().setAvatarUrl(serverName + avatarUrl);
-            }
-        }
-        return author;
     }
 
     @Override

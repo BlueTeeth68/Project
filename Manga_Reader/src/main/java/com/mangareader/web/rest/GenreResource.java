@@ -44,8 +44,8 @@ public class GenreResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingReturnDTO<Genre>> getAllGenre(
-            @RequestParam(required = false, defaultValue = "50") String size,
-            @RequestParam(required = false, defaultValue = "0") String page
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "0") int page
     ) {
 
         Page<Genre> genres = genreService.getAllGenreByPagingAndSortByName(page, size);
@@ -63,7 +63,7 @@ public class GenreResource {
             security = @SecurityRequirement(name = "authorize", scopes = "read"))
     @GetMapping(value = "/id", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Genre> getGenreById(
-            @RequestParam String id
+            @RequestParam long id
     ) {
         Genre genre = genreService.getGenreById(id);
         return new ResponseEntity<>(genre, HttpStatus.OK);
@@ -114,7 +114,7 @@ public class GenreResource {
     @DeleteMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteGenre(
-            @RequestParam String id
+            @RequestParam long id
     ) {
         genreService.deleteGenre(id);
         return new ResponseEntity<>(HttpStatus.OK);

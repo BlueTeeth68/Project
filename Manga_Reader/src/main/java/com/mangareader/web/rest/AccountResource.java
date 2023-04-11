@@ -5,7 +5,6 @@ import com.mangareader.exception.BadRequestException;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.dto.CommonUserDTO;
 import com.mangareader.service.mapper.UserMapper;
-import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangePasswordVM;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,6 +21,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/account")
@@ -50,7 +51,6 @@ public class AccountResource {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getCurrentLoginUser() {
         User user = userService.getCurrentUser();
-        user = userService.addServerNameToAvatarURL(user, APIUtil.getServerName(request));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -60,7 +60,7 @@ public class AccountResource {
             security = @SecurityRequirement(name = "authorize"))
     @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommonUserDTO> getUserByIdOrUsername(
-            @RequestParam(required = false) String id,
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false) String displayName
     ) {
         User user;
@@ -75,7 +75,6 @@ public class AccountResource {
         } else {
             throw new BadRequestException("Bad request for id and username value.");
         }
-        user = userService.addServerNameToAvatarURL(user, APIUtil.getServerName(request));
         CommonUserDTO result = userMapper.toCommonUserDTO(user);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -89,9 +88,7 @@ public class AccountResource {
     public ResponseEntity<User> changeDisplayName(
             @RequestParam String displayName
     ) {
-        String serverName = APIUtil.getServerName(request);
         User result = userService.changeDisplayName(displayName);
-        result = userService.addServerNameToAvatarURL(result, serverName);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -102,10 +99,8 @@ public class AccountResource {
     @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> changeUserAvatar(
             @RequestPart("file") MultipartFile file
-    ) {
-        String serverName = APIUtil.getServerName(request);
+    ) throws TimeoutException {
         User result = userService.updateAvatar(file);
-        result = userService.addServerNameToAvatarURL(result, serverName);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

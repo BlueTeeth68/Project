@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.concurrent.TimeoutException;
+
 @RestControllerAdvice
 @SuppressWarnings("unused")
 public class GlobalException extends ResponseEntityExceptionHandler {
@@ -76,12 +78,32 @@ public class GlobalException extends ResponseEntityExceptionHandler {
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }
 
-    @ExceptionHandler({AuthenticationException.class,})
+    @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<Object> handleAuthenticationException(
             RuntimeException ex, NativeWebRequest request) {
         String error = "Bad credential for JWT.";
         ErrorDetails errorDetails =
                 new ErrorDetails(HttpStatus.UNAUTHORIZED, error, ex.getMessage());
+        return new ResponseEntity<>(
+                errorDetails, new HttpHeaders(), errorDetails.getStatus());
+    }
+
+    @ExceptionHandler({TimeoutException.class})
+    public ResponseEntity<Object> handleTimeOutException(
+            RuntimeException ex, NativeWebRequest request) {
+        String error = "Time out for access resource.";
+        ErrorDetails errorDetails =
+                new ErrorDetails(HttpStatus.REQUEST_TIMEOUT, error, ex.getMessage());
+        return new ResponseEntity<>(
+                errorDetails, new HttpHeaders(), errorDetails.getStatus());
+    }
+
+    @ExceptionHandler({InterruptedException.class})
+    public ResponseEntity<Object> handleInterruptException(
+            RuntimeException ex, NativeWebRequest request) {
+        String error = "Thread interrupt.";
+        ErrorDetails errorDetails =
+                new ErrorDetails(HttpStatus.CONFLICT, error, ex.getMessage());
         return new ResponseEntity<>(
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }

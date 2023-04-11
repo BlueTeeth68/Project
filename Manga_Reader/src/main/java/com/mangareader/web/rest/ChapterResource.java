@@ -10,7 +10,6 @@ import com.mangareader.service.dto.ChapterImageDTO;
 import com.mangareader.service.dto.MangaDTO;
 import com.mangareader.service.mapper.ChapterMapper;
 import com.mangareader.service.mapper.MangaMapper;
-import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeChapterVM;
 import com.mangareader.web.rest.vm.CreateChapterVM;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +28,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/manga/chapter")
@@ -65,10 +66,7 @@ public class ChapterResource {
         Manga manga = chapter.getManga();
         //increase manga's view
         mangaService.increaseMangaView(manga.getId());
-        ChapterImageDTO chapterImageDTO = chapterMapper.toChapterImageDTO(
-                chapter,
-                APIUtil.getServerName(request)
-        );
+        ChapterImageDTO chapterImageDTO = chapterMapper.toChapterImageDTO(chapter);
         //update history
         if (userService.isUserLogin()) {
             historyService.createNewHistory(id);
@@ -89,7 +87,7 @@ public class ChapterResource {
     ) {
         chapterService.createChapter(vm);
         Manga manga = mangaService.getMangaById(vm.getMangaId());
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -103,9 +101,9 @@ public class ChapterResource {
     public ResponseEntity<MangaDTO> addImagesToChapter(
             @RequestPart MultipartFile[] files,
             @RequestParam long chapterId
-    ) {
+    ) throws TimeoutException {
         Manga manga = chapterService.addImagesToChapter(files, chapterId);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.CREATED);
     }
 
@@ -120,7 +118,7 @@ public class ChapterResource {
             @Valid @RequestBody ChangeChapterVM vm
     ) {
         Manga manga = chapterService.updateChapterInformation(vm);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 
@@ -132,10 +130,10 @@ public class ChapterResource {
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','TRANSLATOR')")
     public ResponseEntity<MangaDTO> deleteChapter(
-            @RequestParam String id
+            @RequestParam long id
     ) {
         Manga manga = chapterService.deleteChapter(id);
-        MangaDTO mangaDTO = mangaMapper.toDTO(manga, APIUtil.getServerName(request));
+        MangaDTO mangaDTO = mangaMapper.toDTO(manga);
         return new ResponseEntity<>(mangaDTO, HttpStatus.OK);
     }
 

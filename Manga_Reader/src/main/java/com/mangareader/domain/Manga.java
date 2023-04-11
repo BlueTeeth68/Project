@@ -30,7 +30,8 @@ public class Manga {
     @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(256)")
     private String name;
 
-    @Column(name = "cover_image_url", columnDefinition = "NVARCHAR(100)")
+    @Size(min = 1, max = 250)
+    @Column(name = "cover_image_url", columnDefinition = "NVARCHAR(250)")
     private String coverImageUrl;
 
     @Min(0)
@@ -42,7 +43,7 @@ public class Manga {
     private Float avgView = 0F;
 
     @Size(max = 1000)
-    @Column(name = "summary", columnDefinition = "NVARCHAR(1000)")
+    @Column(name = "summary", columnDefinition = "NVARCHAR(3000)")
     private String summary;
 
     @Min(0)
