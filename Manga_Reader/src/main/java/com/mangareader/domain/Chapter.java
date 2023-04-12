@@ -48,4 +48,8 @@ public class Chapter {
     @JsonIgnore
     @OneToMany(mappedBy = "chapter", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<ChapterImage> chapterImages = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chapter", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<ChapterImage> histories = new ArrayList<>();
 }

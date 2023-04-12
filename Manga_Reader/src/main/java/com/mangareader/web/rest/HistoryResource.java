@@ -17,10 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,6 +49,27 @@ public class HistoryResource {
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
+        Page<History> histories = historyService.getAllHistoryOfCurrentUser(page, size);
+        List<ReturnHistoryDTO> historyDTOs = historyMapper.toListReturnHistoryDTO(histories.getContent());
+        PagingReturnDTO<ReturnHistoryDTO> result = new PagingReturnDTO<>();
+        result.setTotalElements(histories.getTotalElements());
+        result.setTotalPages(histories.getTotalPages());
+        result.setContent(historyDTOs);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Delete a list of history",
+            description = "Logged in user can delete history by send a list of mangaId.",
+            security = @SecurityRequirement(name = "authorize")
+    )
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagingReturnDTO<ReturnHistoryDTO>> deleteListOfHistory(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestBody List<Long> mangaIds
+    ) {
+        historyService.deleteListHistory(mangaIds);
         Page<History> histories = historyService.getAllHistoryOfCurrentUser(page, size);
         List<ReturnHistoryDTO> historyDTOs = historyMapper.toListReturnHistoryDTO(histories.getContent());
         PagingReturnDTO<ReturnHistoryDTO> result = new PagingReturnDTO<>();

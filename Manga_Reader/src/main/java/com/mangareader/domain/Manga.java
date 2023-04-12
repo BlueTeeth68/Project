@@ -127,4 +127,10 @@ public class Manga {
             fetch = FetchType.LAZY)
     private Set<Report> reports = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "manga",
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
+    private Set<Report> histories = new HashSet<>();
+
 }

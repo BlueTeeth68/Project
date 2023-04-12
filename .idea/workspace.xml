@@ -4,43 +4,62 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf6209bd-5e4a-4c7e-9899-a3c5e3e157a6" name="Changes" comment="Build upload file to AWS; fix some bug">
-      <change afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/config/AWSConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/AWSStorageService.java" afterDir="false" />
+    <list default="true" id="cf6209bd-5e4a-4c7e-9899-a3c5e3e157a6" name="Changes" comment="Update history api">
+      <change afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/util/DateTimeUtil.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application-prod.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/ProjectApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/ProjectApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/ChapterImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/ChapterImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/10" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/11" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/12" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/13" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/14" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/15" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/16" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/17" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/18" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/9" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/Chapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/Chapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/Manga.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/Manga.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/exception/GlobalException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/exception/GlobalException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/security/jwt/JWTService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/security/jwt/JWTService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/AuthenticationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IAuthorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IAuthorService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IChapterService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IChapterService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/repository/ChapterRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/repository/ChapterRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IHistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IHistoryService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IMangaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IMangaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IUserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/AuthorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/AuthorServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/ChapterServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/ChapterServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/HistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/HistoryService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/MangaServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/MangaServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/mapper/BookmarkMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/mapper/BookmarkMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/mapper/ChapterMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/mapper/ChapterMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/mapper/HistoryMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/mapper/HistoryMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/mapper/MangaMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/mapper/MangaMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/AccountResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/AccountResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/AuthenticateResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/AuthenticateResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/AuthorResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/AuthorResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/BookmarkResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/BookmarkResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/ChapterResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/ChapterResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/GenreResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/GenreResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/HistoryResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/HistoryResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/ImageResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/ImageResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/KeywordResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/KeywordResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/MangaResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/MangaResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/UserResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/UserResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/avatar/1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/avatar/2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga1/cover_image" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga2/cover_image" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/10" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/11" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/12" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/13" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/14" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/9" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga3/cover_image" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/manga/manga4/cover_image" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +108,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "F:/AWS/demo",
+    "last_opened_file_path": "C:/Users/daomi/OneDrive/Máy tính/Manga Reader/Project",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2"
@@ -100,7 +119,7 @@
       <recent name="com.mangareader.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.project [install]">
+  <component name="RunManager" selected="Application.ProjectApplication">
     <configuration name="ProjectApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.mangareader.ProjectApplication" />
       <module name="project" />
@@ -217,14 +236,22 @@
       <option name="project" value="LOCAL" />
       <updated>1680431884609</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Build upload file to AWS; fix some bug">
+      <created>1681219861830</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1681219861830</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="config environment" />
     <MESSAGE value="add swagger document to comment resource api" />
     <MESSAGE value="Build upload file to AWS; fix some bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Build upload file to AWS; fix some bug" />
+    <MESSAGE value="Update history api" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update history api" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

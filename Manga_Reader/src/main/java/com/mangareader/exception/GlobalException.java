@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -78,7 +79,7 @@ public class GlobalException extends ResponseEntityExceptionHandler {
                 errorDetails, new HttpHeaders(), errorDetails.getStatus());
     }
 
-    @ExceptionHandler({AuthenticationException.class})
+    @ExceptionHandler({AuthenticationException.class, BadCredentialsException.class})
     public ResponseEntity<Object> handleAuthenticationException(
             RuntimeException ex, NativeWebRequest request) {
         String error = "Bad credential for JWT.";

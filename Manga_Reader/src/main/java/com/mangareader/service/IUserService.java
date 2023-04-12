@@ -33,7 +33,7 @@ public interface IUserService {
 
     Page<User> getAllUsersWithPageable(int page, int size);
 
-    Boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     User changeUserRole(Long id, RoleName roleName);
 

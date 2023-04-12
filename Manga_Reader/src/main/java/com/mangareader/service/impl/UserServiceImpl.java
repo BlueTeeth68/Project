@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -134,7 +135,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Boolean existsByUsername(String username) {
+    public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
@@ -199,11 +200,19 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void deleteUserById(Long id) {
         log.debug("Delete user by id: {}", id);
+        User user = getUserById(id);
+        //can not delete admin user
+        if(user.getRole().name().equals("ADMIN")) {
+            throw new BadRequestException("Admin account can not be deleted.");
+        }
         userRepository.deleteById(id);
     }
 
     @Override
     public User getCurrentUser() {
+        if(!isUserLogin()) {
+            throw new BadCredentialsException("You have not logged in yet.");
+        }
         log.debug("Get current user from Security Context Holder....");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -212,8 +221,12 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
+    //Test later
     public User setRoleToUser(Long userId, RoleName roleName) {
         User user = getUserById(userId);
+        if (user.getRole().name().equals("ADMIN")) {
+            throw new BadRequestException("Can not change role of Admin user.");
+        }
         user.setRole(roleName);
         return userRepository.save(user);
     }
@@ -222,6 +235,9 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     public User changeUserStatus(Long userId, Boolean status) {
         User user = getUserById(userId);
+        if (user.getRole().name().equals("ADMIN")) {
+            throw new BadRequestException("Can not change status of Admin user.");
+        }
         user.setActivate(status);
         return userRepository.save(user);
     }

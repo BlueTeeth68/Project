@@ -234,7 +234,7 @@ public class MangaServiceImpl implements IMangaService {
     }
 
     @Override
-    public Boolean existsById(Long id) {
+    public boolean existsById(Long id) {
         return mangaRepository.existsById(id);
     }
 

@@ -11,6 +11,6 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
 
     List<Chapter> findByMangaIdOrderByIdDesc(Long mangaId);
 
-    Boolean existsByMangaIdAndChapterNumber(Long mangaId, Float chapterNumber);
+    boolean existsByMangaIdAndChapterNumber(Long mangaId, Float chapterNumber);
 
 }
