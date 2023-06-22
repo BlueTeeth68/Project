@@ -4,62 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf6209bd-5e4a-4c7e-9899-a3c5e3e157a6" name="Changes" comment="Update history api">
-      <change afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/util/DateTimeUtil.java" afterDir="false" />
+    <list default="true" id="cf6209bd-5e4a-4c7e-9899-a3c5e3e157a6" name="Changes" comment="update cors config">
       <change afterPath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application-prod.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/10" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/11" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/12" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/13" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/14" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/15" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/16" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/17" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/18" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/image/manga/manga3/1.0/9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/Chapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/Chapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/Manga.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/domain/Manga.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/exception/GlobalException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/exception/GlobalException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/repository/ChapterRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/repository/ChapterRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IHistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IHistoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IMangaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IMangaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IUserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/HistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/HistoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/MangaServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/MangaServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/HistoryResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/HistoryResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/security/jwt/JWTService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/security/jwt/JWTService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/avatar/1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/avatar/2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga1/cover_image" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga2/cover_image" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/10" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/11" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/12" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/13" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/14" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/383.0/9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga3/cover_image" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/manga/manga4/cover_image" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,23 +53,53 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Users/daomi/OneDrive/Máy tính/Manga Reader/Project",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/Backup/Manga Reader/Project&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.language&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.mangareader.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ProjectApplication">
+  <component name="RunManager" selected="Application.ProjectApplication (1)">
+    <configuration name="ProjectApplication (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.mangareader.ProjectApplication" />
+      <module name="project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mangareader.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProjectApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="C:/Program Files/Java/jdk-17.0.5" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.mangareader.ProjectApplication" />
+      <module name="project" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Manga_Reader/src" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mangareader.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ProjectApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.mangareader.ProjectApplication" />
       <module name="project" />
@@ -204,12 +184,21 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Application.ProjectApplication (1)" />
+      <item itemvalue="Application.ProjectApplication" />
+      <item itemvalue="JUnit.ProjectApplicationTests" />
+      <item itemvalue="JUnit.TestSuite" />
+      <item itemvalue="JUnit.UserRepositoryTest" />
+      <item itemvalue="Maven.project [install]" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ProjectApplication (1)" />
+        <item itemvalue="Application.ProjectApplication" />
         <item itemvalue="Application.ProjectApplication" />
         <item itemvalue="JUnit.ProjectApplicationTests" />
         <item itemvalue="JUnit.UserRepositoryTest" />
-        <item itemvalue="JUnit.TestSuite" />
       </list>
     </recent_temporary>
   </component>
@@ -243,15 +232,57 @@
       <option name="project" value="LOCAL" />
       <updated>1681219861830</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Update history api">
+      <created>1681308116611</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1681308116611</updated>
+    </task>
+    <task id="LOCAL-00005" summary="remove images">
+      <created>1681308180557</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1681308180557</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-core" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.validation:jakarta.validation-api" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.persistence:jakarta.persistence-api" />
+    <option featureType="dependencySupport" implementationName="java:com.amazonaws:aws-java-sdk-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-commons" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate.validator:hibernate-validator" />
+    <option featureType="dependencySupport" implementationName="java:com.amazonaws:aws-java-sdk-s3" />
+    <option featureType="dependencySupport" implementationName="java:javax.validation:validation-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+    <option featureType="dependencySupport" implementationName="java:org.projectlombok:lombok" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="config environment" />
     <MESSAGE value="add swagger document to comment resource api" />
     <MESSAGE value="Build upload file to AWS; fix some bug" />
     <MESSAGE value="Update history api" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update history api" />
+    <MESSAGE value="remove images" />
+    <MESSAGE value="update cor config" />
+    <MESSAGE value="update cors config" />
+    <option name="LAST_COMMIT_MESSAGE" value="update cors config" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
