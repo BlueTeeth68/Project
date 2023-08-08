@@ -3,7 +3,7 @@
 # Swagger URL: 
 http://localhost:8080/swagger-ui/index.html#/
 # Swagger server URL:
-http://mangareaderproject-env.eba-simnmphm.us-east-1.elasticbeanstalk.com/swagger-ui/index.html
+http://mangareader.us-east-1.elasticbeanstalk.com/swagger-ui/index.html
 
 # Function list:
 
@@ -21,6 +21,9 @@ http://mangareaderproject-env.eba-simnmphm.us-east-1.elasticbeanstalk.com/swagge
 - Add manga to favorite (bookmark)
 - View reading history, comment history
 - Comment, reply comment
+
+# Database:
+![Database](manag-reader-db.png)
 
 # Framework
 
