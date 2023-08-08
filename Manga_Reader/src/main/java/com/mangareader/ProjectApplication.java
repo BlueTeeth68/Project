@@ -44,6 +44,7 @@ public class ProjectApplication {
         SpringApplication.run(ProjectApplication.class, args);
     }
 
+    /*Code for initiate data*/
     /*@Bean
     CommandLineRunner run(
             IUserService userService,

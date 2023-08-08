@@ -26,6 +26,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(CustomCorsConfiguration::new)
                 //disable csrf
                 .csrf().disable()
                 //add our custom filter before UsernamePasswordAuthenticationFilter
