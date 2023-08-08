@@ -36,6 +36,19 @@ springdoc:
 server:
   port: 8080
 
+cloud:
+  aws:
+    credentials:
+      access-key: your-access-key-here
+      secret-key: your-secret-key-here
+    region:
+      static: your-server-location-here
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: your-S3-bucket-name-here
 
 
 

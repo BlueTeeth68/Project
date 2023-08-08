@@ -4,12 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf6209bd-5e4a-4c7e-9899-a3c5e3e157a6" name="Changes" comment="update cors config">
+    <list default="true" id="cf6209bd-5e4a-4c7e-9899-a3c5e3e157a6" name="Changes" comment="Fix update image function; Config local version">
       <change afterPath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application-prod.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/ProjectApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/ProjectApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IMangaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IMangaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IStorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IStorageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/IUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/AWSStorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/AWSStorageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/ChapterServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/ChapterServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/FileSystemStorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/FileSystemStorageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/MangaServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/MangaServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/ImageResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/java/com/mangareader/web/rest/ImageResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Manga_Reader/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,7 +36,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -258,7 +264,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687395132300</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="update cors config">
+      <created>1691456867517</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1691456867517</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -294,7 +307,8 @@
     <MESSAGE value="remove images" />
     <MESSAGE value="update cor config" />
     <MESSAGE value="update cors config" />
-    <option name="LAST_COMMIT_MESSAGE" value="update cors config" />
+    <MESSAGE value="Fix update image function; Config local version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix update image function; Config local version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

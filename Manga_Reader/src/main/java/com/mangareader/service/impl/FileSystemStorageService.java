@@ -29,28 +29,12 @@ public class FileSystemStorageService implements IStorageService {
 
     private Path rootLocation;
 
-    @Override
-    public String store(MultipartFile file, String location) {
-        try {
-            if (file.isEmpty()) {
-                log.error("Failed to store empty file {}", file.getOriginalFilename());
-                throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
-            }
-            Path pathLocation = Paths.get(location);
-            log.info("Creating file {}", file.getOriginalFilename());
-            Path target = pathLocation.resolve(file.getOriginalFilename());
-            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-            return file.getOriginalFilename();
-        } catch (IOException e) {
-            log.error("Failed to store file {}", file.getOriginalFilename());
-            throw new StorageException("Failed to store file " + file.getOriginalFilename());
-        }
-    }
+    private final String SERVER_NAME = "http://localhost:8080/";
 
     @Override
-    public String store(MultipartFile file, String location, String fileName) {
+    public String uploadImage(MultipartFile file, String location, int id) {
         try {
-            if (file.isEmpty()) {
+            if (file == null || file.isEmpty()) {
                 log.error("Failed to store empty file {}", file.getOriginalFilename());
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
@@ -59,19 +43,47 @@ public class FileSystemStorageService implements IStorageService {
             if (!temp.exists()) {
                 temp.mkdirs();
             }
-            log.info("Creating file {}", file.getOriginalFilename());
-            Path target = pathLocation.resolve(fileName);
+
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            String newFileName = id + fileExtension;
+
+            log.info("Creating file {}", newFileName);
+
+//            Path target = pathLocation.resolve(file.getOriginalFilename());
+            Path target = pathLocation.resolve(newFileName);
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-            return fileName;
+            return SERVER_NAME + location + newFileName;
         } catch (IOException e) {
             log.error("Failed to store file {}", file.getOriginalFilename());
             throw new StorageException("Failed to store file " + file.getOriginalFilename());
         }
     }
 
+//    public String store(MultipartFile file, String location, String fileName) {
+//        try {
+//            if (file.isEmpty()) {
+//                log.error("Failed to store empty file {}", file.getOriginalFilename());
+//                throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
+//            }
+//            Path pathLocation = Paths.get(location);
+//            File temp = pathLocation.toFile();
+//            if (!temp.exists()) {
+//                temp.mkdirs();
+//            }
+//            log.info("Creating file {}", file.getOriginalFilename());
+//            Path target = pathLocation.resolve(fileName);
+//            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+//            return fileName;
+//        } catch (IOException e) {
+//            log.error("Failed to store file {}", file.getOriginalFilename());
+//            throw new StorageException("Failed to store file " + file.getOriginalFilename());
+//        }
+//    }
+
     @Override
     @Transactional
-    public List<String> storeMultipleFile(MultipartFile[] files, String location) {
+    public List<String> uploadMultiImage(MultipartFile[] files, String location) {
         try {
             if (files == null) {
                 log.error("Failed to store empty file: file is empty");
@@ -92,15 +104,36 @@ public class FileSystemStorageService implements IStorageService {
             temp.mkdirs();
 
             List<String> fileNames = new ArrayList<>();
-            int index = 1;
 
-            for (MultipartFile file : files) {
-                log.info("Creating file {}", file.getOriginalFilename());
-                Path target = pathLocation.resolve(String.valueOf(index));
-                Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-                fileNames.add(String.valueOf(index));
-                index++;
+//            for (MultipartFile file : files) {
+//                log.info("Creating file {}", file.getOriginalFilename());
+//                Path target = pathLocation.resolve(String.valueOf(index));
+//                Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+//                fileNames.add(SERVER_NAME + location + index);
+//
+//            }
+
+            try {
+                for (int index = 1; index <= files.length; index++) {
+                    MultipartFile file = files[index - 1];
+                    if (!file.isEmpty()) {
+                        log.info("Creating file {}", file.getOriginalFilename());
+
+                        String originalFileName = file.getOriginalFilename();
+                        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                        String newFileName = index + fileExtension;
+
+                        Path target = pathLocation.resolve(newFileName);
+                        Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+
+                        fileNames.add(SERVER_NAME + location + newFileName);
+                    }
+                }
+            } catch (Exception e) {
+                throw new StorageException("Failed to store file");
             }
+
+
             return fileNames;
         } catch (IOException e) {
             log.error("Failed to store file: store error");
@@ -108,7 +141,6 @@ public class FileSystemStorageService implements IStorageService {
         }
     }
 
-    @Override
     public Stream<Path> loadAll(String location) {
         try {
             log.info("Loading stored file ........");
@@ -126,7 +158,6 @@ public class FileSystemStorageService implements IStorageService {
 
     }
 
-    @Override
     public Path load(String filename, String location) {
         this.rootLocation = Paths.get(location);
         return rootLocation.resolve(filename);
@@ -147,13 +178,21 @@ public class FileSystemStorageService implements IStorageService {
         }
     }
 
-    @Override
     public void deleteAll(String location) {
         this.rootLocation = Paths.get(location);
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
 
     @Override
+    public byte[] downloadFile(String fileName) {
+        return new byte[0];
+    }
+
+    @Override
+    public void deleteFile(String fileName) {
+
+    }
+
     public void init(String location) {
         try {
             this.rootLocation = Paths.get(location);
@@ -162,5 +201,6 @@ public class FileSystemStorageService implements IStorageService {
             throw new StorageException("Could not initialize storage");
         }
     }
+
 
 }

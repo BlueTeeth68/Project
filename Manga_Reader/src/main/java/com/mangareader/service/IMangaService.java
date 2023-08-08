@@ -3,6 +3,7 @@ package com.mangareader.service;
 import com.mangareader.domain.Manga;
 import com.mangareader.domain.MangaStatus;
 import com.mangareader.web.rest.vm.ChangeMangaVM;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,4 +50,6 @@ public interface IMangaService {
     Manga saveManga(Manga manga);
 
     void increaseMangaView(Long mangaId);
+
+    Resource getCoverImage(String fileName);
 }

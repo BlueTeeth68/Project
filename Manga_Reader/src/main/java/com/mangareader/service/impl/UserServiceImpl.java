@@ -6,6 +6,7 @@ import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.DataAlreadyExistsException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.UserRepository;
+import com.mangareader.service.IStorageService;
 import com.mangareader.service.IUserService;
 import com.mangareader.service.error.InvalidPasswordException;
 import com.mangareader.service.error.InvalidUsernameException;
@@ -13,8 +14,9 @@ import com.mangareader.service.error.UsernameAlreadyUsedException;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangePasswordVM;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,15 +32,26 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-@RequiredArgsConstructor
 @Slf4j
 @Service
+@SuppressWarnings("Unused")
 public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
-    private final AWSStorageService storageService;
+
+    private final IStorageService storageService;
+
     private final PasswordEncoder passwordEncoder;
     private final String AVATAR_FOLDER = "image/avatar/";
+
+
+    //    @Qualifier("AWSStorageService")
+//    @Qualifier("fileSystemStorageService")
+    public UserServiceImpl(UserRepository userRepository, @Qualifier("fileSystemStorageService") IStorageService storageService, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.storageService = storageService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     @Transactional
@@ -174,7 +187,7 @@ public class UserServiceImpl implements IUserService {
         String oldUrl = user.getAvatarUrl();
         log.info("Old Url is: {}", oldUrl);
 
-        String url = storageService.uploadImage(file, AVATAR_FOLDER);
+        String url = storageService.uploadImage(file, AVATAR_FOLDER, user.getId().intValue());
         log.info("New url is: {}", url);
 
         user.setAvatarUrl(url);
@@ -192,17 +205,12 @@ public class UserServiceImpl implements IUserService {
         return userRepository.save(user);
     }
 
-//    @Override
-//    public Resource getAvatar(String fileName) {
-//        return storageService.loadAsResource(fileName, AVATAR_FOLDER);
-//    }
-
     @Override
     public void deleteUserById(Long id) {
         log.debug("Delete user by id: {}", id);
         User user = getUserById(id);
         //can not delete admin user
-        if(user.getRole().name().equals("ADMIN")) {
+        if (user.getRole().name().equals("ADMIN")) {
             throw new BadRequestException("Admin account can not be deleted.");
         }
         userRepository.deleteById(id);
@@ -210,7 +218,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User getCurrentUser() {
-        if(!isUserLogin()) {
+        if (!isUserLogin()) {
             throw new BadCredentialsException("You have not logged in yet.");
         }
         log.debug("Get current user from Security Context Holder....");
@@ -261,4 +269,10 @@ public class UserServiceImpl implements IUserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return (!(auth instanceof AnonymousAuthenticationToken) && auth != null && auth.isAuthenticated());
     }
+
+    @Override
+    public Resource getAvatar(String fileName) {
+        return storageService.loadAsResource(fileName, AVATAR_FOLDER);
+    }
+
 }

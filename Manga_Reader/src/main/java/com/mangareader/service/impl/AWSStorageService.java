@@ -5,9 +5,12 @@ import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.DataAlreadyExistsException;
+import com.mangareader.exception.StorageException;
+import com.mangareader.service.IStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,17 +24,24 @@ import java.util.concurrent.TimeoutException;
 @Service
 @Slf4j
 @SuppressWarnings("unused")
-public class AWSStorageService {
+public class AWSStorageService implements IStorageService {
     @Value("${application.bucket.name}")
     private String bucketName;
     @Autowired
     private AmazonS3 s3Client;
 
+
+    @Override
+    public Resource loadAsResource(String filename, String location) {
+        return null;
+    }
+
+
     @Async
-    public String uploadImage(MultipartFile file, String folderPath) throws TimeoutException {
+    public String uploadImage(MultipartFile file, String folderPath, int id) throws TimeoutException {
 
         if (checkFileFormat(file)) {
-            return uploadFile(file, folderPath);
+            return uploadFile(file, folderPath, id);
         } else {
             throw new BadRequestException("File is not image");
         }
@@ -65,16 +75,32 @@ public class AWSStorageService {
         }
 
         List<String> result = new ArrayList<>();
-        for (MultipartFile file : files) {
-            if (file != null && !file.isEmpty()) {
-                result.add(uploadFile(file, folderPath));
+
+//        for (MultipartFile file : files) {
+//            if (file != null && !file.isEmpty()) {
+//                result.add(uploadFile(file, folderPath));
+//            }
+//        }
+
+        try {
+            for (int index = 1; index <= files.length; index++) {
+
+                MultipartFile file = files[index - 1];
+
+                if (file != null && !file.isEmpty()) {
+
+                    result.add(uploadFile(file, folderPath, index));
+                }
             }
+        } catch (Exception e) {
+            throw new StorageException("Failed to store file");
         }
+
         return result;
     }
 
     @Async
-    public String uploadFile(MultipartFile file, String folderPath) throws TimeoutException {
+    public String uploadFile(MultipartFile file, String folderPath, int id) throws TimeoutException {
         if (file == null || file.isEmpty())
             throw new BadRequestException("File is null or empty.");
         String fileName = folderPath + file.getOriginalFilename();
@@ -92,7 +118,11 @@ public class AWSStorageService {
             waitForS3FolderToExist(bucketName, folderPath);
         }
 
-        fileName = folderPath + file.getOriginalFilename();
+        String originalFileName = file.getOriginalFilename();
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+        fileName = folderPath + id + fileExtension;
+//        fileName = folderPath + file.getOriginalFilename();
 
         //delete if object exists
 //        if (s3Client.doesObjectExist(bucketName, fileName)) {

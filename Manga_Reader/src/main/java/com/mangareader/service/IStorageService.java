@@ -3,25 +3,19 @@ package com.mangareader.service;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings("unused")
 public interface IStorageService {
-    void init(String location);
-
-    String store(MultipartFile file, String location);
-
-    String store(MultipartFile file, String location, String fileName);
-
-    List<String> storeMultipleFile(MultipartFile[] files, String location);
-
-    Stream<Path> loadAll(String location);
-
-    Path load(String filename, String location);
-
     Resource loadAsResource(String filename, String location);
 
-    void deleteAll(String location);
+    String uploadImage(MultipartFile file, String folderPath, int id) throws TimeoutException;
+
+    List<String> uploadMultiImage(MultipartFile[] files, String folderPath) throws TimeoutException;
+
+    byte[] downloadFile(String fileName);
+
+    void deleteFile(String fileName);
+
 }

@@ -4,15 +4,13 @@ import com.mangareader.domain.*;
 import com.mangareader.exception.BadRequestException;
 import com.mangareader.exception.ResourceNotFoundException;
 import com.mangareader.repository.MangaRepository;
-import com.mangareader.service.IAuthorService;
-import com.mangareader.service.IGenreService;
-import com.mangareader.service.IMangaService;
-import com.mangareader.service.IUserService;
+import com.mangareader.service.*;
 import com.mangareader.service.util.APIUtil;
 import com.mangareader.web.rest.vm.ChangeMangaVM;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,15 +24,30 @@ import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@SuppressWarnings("Unused")
 public class MangaServiceImpl implements IMangaService {
 
-    private final String MANGA_FOLDER = "image/manga/cover-image/";
+    private final String MANGA_COVER_IMAGE_FOLDER = "image/manga/cover-image/";
+    private final String MANGA_FOLDER = "image/manga/";
+
     private final MangaRepository mangaRepository;
     private final IGenreService genreService;
     private final IAuthorService authorService;
-    private final AWSStorageService storageService;
+
+
+    private final IStorageService storageService;
+
     private final IUserService userService;
+
+    //    @Qualifier("AWSStorageService")
+//    @Qualifier("fileSystemStorageService")
+    public MangaServiceImpl(MangaRepository mangaRepository, IGenreService genreService, IAuthorService authorService, @Qualifier("fileSystemStorageService") IStorageService storageService, IUserService userService) {
+        this.mangaRepository = mangaRepository;
+        this.genreService = genreService;
+        this.authorService = authorService;
+        this.storageService = storageService;
+        this.userService = userService;
+    }
 
     @Override
     public Manga getMangaById(Long id) {
@@ -207,7 +220,7 @@ public class MangaServiceImpl implements IMangaService {
         String oldUrl = manga.getCoverImageUrl();
         log.info("Old Url is: {}", oldUrl);
 
-        String coverImageUrl = storageService.uploadImage(file, MANGA_FOLDER);
+        String coverImageUrl = storageService.uploadImage(file, MANGA_COVER_IMAGE_FOLDER, id.intValue());
         log.info("New url is: {}", coverImageUrl);
 
         manga.setCoverImageUrl(coverImageUrl);
@@ -281,5 +294,10 @@ public class MangaServiceImpl implements IMangaService {
         Manga manga = getMangaById(mangaId);
         manga.setView(manga.getView() + 1);
         mangaRepository.save(manga);
+    }
+
+    @Override
+    public Resource getCoverImage(String fileName) {
+        return storageService.loadAsResource(fileName, MANGA_FOLDER);
     }
 }

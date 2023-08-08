@@ -44,8 +44,8 @@ public class ProjectApplication {
         SpringApplication.run(ProjectApplication.class, args);
     }
 
-    /*Code for initiate data*/
-    /*@Bean
+    /*Code for initiating data*/
+    @Bean
     CommandLineRunner run(
             IUserService userService,
             IGenreService genreService,
@@ -392,5 +392,5 @@ public class ProjectApplication {
             SecurityContextHolder.clearContext();
 
         };
-    }*/
+    }
 }
