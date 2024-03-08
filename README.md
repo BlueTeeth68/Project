@@ -41,3 +41,6 @@ http://localhost:8080/swagger-ui/index.html#/
 ### Set up environment:
 - Install MySQL
 - Install jdk 17 or later
+### Run project:
+- Change database information in application.yml.
+- Run project
