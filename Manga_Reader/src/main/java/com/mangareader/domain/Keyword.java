@@ -21,7 +21,5 @@ public class Keyword {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manga_id", nullable = false)
-//    @JsonIgnoreProperties(value = {"user", "genres", "authors", "comments", "reports",
-//            "keywords", "bookmarks", "chapters"}, allowSetters = true)
     private Manga manga;
 }
