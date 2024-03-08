@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -18,8 +19,11 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private static final String ACCESS_SECRET_KEY = "2B4B6250655368566D5971337336763979244226452948404D635166546A576E";
-    private static final String REFRESH_SECRET_KEY = "7638792F423F4528482B4D6251655468576D5A7134743777217A24432646294A";
+    @Value("${jwt.accessKey}")
+    private String accessKey;
+
+    @Value("${jwt.refreshKey}")
+    private String refreshKey;
 
     //create a secret key with HMAC-SHA algorithms
     private Key getSignInKey(String key) {
@@ -45,11 +49,11 @@ public class JWTService {
 
     //get object from claims
     public String extractAccessUserName(String token) {
-        return extractClaim(token, Claims::getSubject, ACCESS_SECRET_KEY);
+        return extractClaim(token, Claims::getSubject, accessKey);
     }
 
     public String extractRefreshUserName(String token) {
-        return extractClaim(token, Claims::getSubject, REFRESH_SECRET_KEY);
+        return extractClaim(token, Claims::getSubject, refreshKey);
     }
 
     public Date extractExpiration(String token, String key) {
@@ -69,7 +73,7 @@ public class JWTService {
                 .setClaims(claim)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 ))
-                .signWith(getSignInKey(ACCESS_SECRET_KEY), SignatureAlgorithm.HS256)
+                .signWith(getSignInKey(accessKey), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -82,28 +86,28 @@ public class JWTService {
                 .builder()
                 .setSubject(user.getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
-                .signWith(getSignInKey(REFRESH_SECRET_KEY), SignatureAlgorithm.HS256)
+                .signWith(getSignInKey(refreshKey), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public boolean isAccessTokenValid(String compactJws) {
         try {
             //check if the token is legally generated
-            Jwts.parserBuilder().setSigningKey(getSignInKey(ACCESS_SECRET_KEY)).build().parseClaimsJws(compactJws);
+            Jwts.parserBuilder().setSigningKey(getSignInKey(accessKey)).build().parseClaimsJws(compactJws);
         } catch (JwtException e) {
             return false;
         }
-        return (!isTokenExpired(compactJws, ACCESS_SECRET_KEY));
+        return (!isTokenExpired(compactJws, accessKey));
     }
 
     public boolean isRefreshTokenValid(String compactJws) {
         try {
             //check if the token is legally generated
-            Jwts.parserBuilder().setSigningKey(getSignInKey(REFRESH_SECRET_KEY)).build().parseClaimsJws(compactJws);
+            Jwts.parserBuilder().setSigningKey(getSignInKey(refreshKey)).build().parseClaimsJws(compactJws);
         } catch (JwtException e) {
             return false;
         }
-        return (!isTokenExpired(compactJws, REFRESH_SECRET_KEY));
+        return (!isTokenExpired(compactJws, refreshKey));
     }
 
     public boolean isTokenExpired(String token, String key) {

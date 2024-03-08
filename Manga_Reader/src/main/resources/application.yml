@@ -23,6 +23,11 @@ spring:
       max-request-size: 100MB
 #        auto_quote_keyword: true
 
+## Jwt setting:
+jwt:
+  accessKey: 2B4B6250655368566D5971337336763979244226452948404D635166546A576E,
+  refreshKey: 7638792F423F4528482B4D6251655468576D5A7134743777217A24432646294A
+
 ## Hibernate Logging
 logging:
   level:
