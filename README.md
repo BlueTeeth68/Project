@@ -20,6 +20,12 @@ http://localhost:8080/swagger-ui/index.html#/
 - View reading history, comment history
 - Comment, reply comment
 
+# Feature:
+- Jwt authentication
+- Error handling
+- Paging
+- Upload files to aws
+
 # Database:
 ![Database](manag-reader-db.png)
 
